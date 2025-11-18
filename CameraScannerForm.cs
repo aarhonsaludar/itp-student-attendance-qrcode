@@ -194,5 +194,10 @@ namespace ITP104_FINAL_PROJECT
         {
             StopCamera();
         }
+
+        private void pictureBoxCamera_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
