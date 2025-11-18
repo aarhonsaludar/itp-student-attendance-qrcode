@@ -373,18 +373,27 @@ namespace ITP104_FINAL_PROJECT
                 AutoSize = true
             };
 
-            Label lblComingSoon = new Label
+            // Button to open full settings screen
+            Guna.UI2.WinForms.Guna2Button btnOpenSettings = new Guna.UI2.WinForms.Guna2Button
             {
-                Text = "🔧 This section is under development.\nSystem configuration options will be available here.",
-                Font = new Font("Segoe UI", 10F, FontStyle.Italic),
-                ForeColor = Color.FromArgb(150, 150, 150),
-                Location = new Point(30, 100),
-                AutoSize = true
+                Text = "⚙️ Open Settings",
+                Location = new Point(30, 110),
+                Size = new Size(250, 60),
+                BorderRadius = 10,
+                FillColor = Color.FromArgb(52, 73, 94),
+                Font = new Font("Segoe UI Semibold", 12F),
+                ForeColor = Color.White
+            };
+            btnOpenSettings.Click += (s, e) =>
+            {
+                // Open the settings screen
+                SettingsScreen settingsForm = new SettingsScreen();
+                settingsForm.ShowDialog();
             };
 
             panel.Controls.Add(lblTitle);
             panel.Controls.Add(lblDescription);
-            panel.Controls.Add(lblComingSoon);
+            panel.Controls.Add(btnOpenSettings);
 
             return panel;
         }

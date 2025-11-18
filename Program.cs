@@ -16,7 +16,7 @@ namespace ITP104_FINAL_PROJECT
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CameraScannerForm());
+            Application.Run(new SplashScreen());
         }
     }
 }
