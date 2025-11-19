@@ -419,7 +419,7 @@ namespace ITP104_FINAL_PROJECT
                 try
                 {
                     var students = await studentRepository.GetAllAsync(activeOnly: false);
-                    
+
                     // Create display list with formatted data
                     var displayList = students.Select(s => new
                     {
@@ -494,7 +494,7 @@ namespace ITP104_FINAL_PROJECT
                 {
                     txtSearch.Text = "Search by name or student number...";
                     txtSearch.ForeColor = Color.Gray;
-                    
+
                     var students = await studentRepository.GetAllAsync(activeOnly: false);
                     var displayList = students.Select(st => new
                     {

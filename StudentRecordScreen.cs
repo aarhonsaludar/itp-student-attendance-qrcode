@@ -225,12 +225,12 @@ namespace ITP104_FINAL_PROJECT
                     lblStudentIDValue.Text = student.StudentNumber;
                     lblFullNameValue.Text = $"{student.FirstName} {(string.IsNullOrEmpty(student.MiddleName) ? "" : student.MiddleName + " ")}{student.LastName}";
                     lblCourseValue.Text = student.Program;
-                    
+
                     // Format year level
                     string yearLevel = student.YearLevel;
                     string suffix = yearLevel == "1" ? "st" : yearLevel == "2" ? "nd" : yearLevel == "3" ? "rd" : "th";
                     lblYearLevelValue.Text = $"{yearLevel}{suffix} Year";
-                    
+
                     lblEmailValue.Text = student.Email ?? "N/A";
                     lblPhoneValue.Text = student.Phone ?? "N/A";
                     lblAddressValue.Text = "N/A"; // Address not in current schema

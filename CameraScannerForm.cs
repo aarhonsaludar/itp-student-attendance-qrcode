@@ -17,7 +17,7 @@ namespace ITP104_FINAL_PROJECT
         private readonly StudentRepository studentRepository;
         private readonly ScanHistoryRepository scanHistoryRepository;
         private const int DEFAULT_DEVICE_ID = 1; // QR Scanner 01 from database
-        
+
         // QR Code detection
         private readonly BarcodeReader barcodeReader;
         private bool isProcessingScan = false;
@@ -30,7 +30,7 @@ namespace ITP104_FINAL_PROJECT
             InitializeComponent();
             studentRepository = new StudentRepository();
             scanHistoryRepository = new ScanHistoryRepository();
-            
+
             // Initialize ZXing barcode reader for QR code detection
             barcodeReader = new BarcodeReader
             {
@@ -42,7 +42,7 @@ namespace ITP104_FINAL_PROJECT
                     PossibleFormats = new[] { BarcodeFormat.QR_CODE }
                 }
             };
-            
+
             InitializeCameraScanner();
         }
 
@@ -160,7 +160,7 @@ namespace ITP104_FINAL_PROJECT
             {
                 // Clone the frame to avoid threading issues
                 Bitmap frame = (Bitmap)eventArgs.Frame.Clone();
-                
+
                 // Increment frame counter for visual feedback
                 frameCounter++;
 
@@ -180,14 +180,14 @@ namespace ITP104_FINAL_PROJECT
                             }
                         }));
                     }
-                    
+
                     var result = barcodeReader.Decode(frame);
                     if (result != null && !string.IsNullOrEmpty(result.Text))
                     {
                         // QR Code detected!
                         lastScanTime = DateTime.Now;
                         isProcessingScan = true;
-                        
+
                         // Draw green border around detected area
                         using (Graphics g = Graphics.FromImage(frame))
                         {
@@ -196,7 +196,7 @@ namespace ITP104_FINAL_PROJECT
                                 g.DrawRectangle(pen, 10, 10, frame.Width - 20, frame.Height - 20);
                             }
                         }
-                        
+
                         // Process on UI thread
                         this.BeginInvoke(new Action(async () =>
                         {
@@ -362,7 +362,7 @@ namespace ITP104_FINAL_PROJECT
                     {
                         lblScanFeedback.Text = $"✅ Scan Successful!\n\n{student.FullName}\n{student.StudentNumber}\n{student.Program} - {student.YearLevel}\n\nTime: {DateTime.Now:hh:mm tt}";
                         lblScanFeedback.ForeColor = Color.Green;
-                        
+
                         // Play beep sound (optional)
                         System.Media.SystemSounds.Beep.Play();
                     }

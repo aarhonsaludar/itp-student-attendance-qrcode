@@ -46,7 +46,7 @@ namespace ITP104_FINAL_PROJECT.Data
                         // Determine success based on result message
                         bool success = result.Contains("SUCCESS") || result.Contains("WARNING");
                         string message = result;
-                        
+
                         if (success && !string.IsNullOrEmpty(studentName))
                         {
                             message = $"{result} - {studentName} ({studentNumber})";
