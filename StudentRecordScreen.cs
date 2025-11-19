@@ -136,23 +136,31 @@ namespace ITP104_FINAL_PROJECT
             {
                 Name = "Date",
                 HeaderText = "Date",
-                Width = 180,
+                Width = 150,
                 DataPropertyName = "Date"
             };
 
-            DataGridViewTextBoxColumn colTime = new DataGridViewTextBoxColumn
+            DataGridViewTextBoxColumn colTimeIn = new DataGridViewTextBoxColumn
             {
-                Name = "Time",
-                HeaderText = "Time",
-                Width = 150,
-                DataPropertyName = "Time"
+                Name = "TimeIn",
+                HeaderText = "Time In",
+                Width = 120,
+                DataPropertyName = "TimeIn"
+            };
+
+            DataGridViewTextBoxColumn colTimeOut = new DataGridViewTextBoxColumn
+            {
+                Name = "TimeOut",
+                HeaderText = "Time Out",
+                Width = 120,
+                DataPropertyName = "TimeOut"
             };
 
             DataGridViewTextBoxColumn colScanType = new DataGridViewTextBoxColumn
             {
                 Name = "ScanType",
                 HeaderText = "Scan Type",
-                Width = 180,
+                Width = 150,
                 DataPropertyName = "ScanType"
             };
 
@@ -160,12 +168,12 @@ namespace ITP104_FINAL_PROJECT
             {
                 Name = "Location",
                 HeaderText = "Location",
-                Width = 250,
+                Width = 200,
                 DataPropertyName = "Location",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
 
-            dgvScanHistory.Columns.AddRange(new DataGridViewColumn[] { colDate, colTime, colScanType, colLocation });
+            dgvScanHistory.Columns.AddRange(new DataGridViewColumn[] { colDate, colTimeIn, colTimeOut, colScanType, colLocation });
 
             // Style the DataGridView
             dgvScanHistory.BackgroundColor = Color.White;
@@ -260,16 +268,16 @@ namespace ITP104_FINAL_PROJECT
                 dgvScanHistory.Rows.Clear();
 
                 // Sample scan history data - Replace with actual database query
-                dgvScanHistory.Rows.Add("Nov 16, 2025", "08:15 AM", "Entrance - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 16, 2025", "10:30 AM", "Library - QR", "University Library");
-                dgvScanHistory.Rows.Add("Nov 16, 2025", "02:45 PM", "Cafeteria - QR", "Student Cafeteria");
-                dgvScanHistory.Rows.Add("Nov 15, 2025", "08:00 AM", "Entrance - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 15, 2025", "11:20 AM", "Laboratory - Barcode", "Computer Lab 3");
-                dgvScanHistory.Rows.Add("Nov 15, 2025", "03:15 PM", "Exit - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "08:10 AM", "Entrance - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "09:45 AM", "Classroom - QR", "Room 301");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "01:30 PM", "Library - QR", "University Library");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "04:00 PM", "Exit - QR", "Main Building");
+                dgvScanHistory.Rows.Add("Nov 16, 2025", "08:15 AM", "05:00 PM", "Entrance - QR", "Main Building");
+                dgvScanHistory.Rows.Add("Nov 16, 2025", "08:30 AM", "04:45 PM", "Library - QR", "University Library");
+                dgvScanHistory.Rows.Add("Nov 16, 2025", "08:20 AM", "05:10 PM", "Cafeteria - QR", "Student Cafeteria");
+                dgvScanHistory.Rows.Add("Nov 15, 2025", "08:00 AM", "04:50 PM", "Entrance - QR", "Main Building");
+                dgvScanHistory.Rows.Add("Nov 15, 2025", "08:10 AM", "05:00 PM", "Laboratory - Barcode", "Computer Lab 3");
+                dgvScanHistory.Rows.Add("Nov 15, 2025", "08:05 AM", "04:30 PM", "Exit - QR", "Main Building");
+                dgvScanHistory.Rows.Add("Nov 14, 2025", "08:10 AM", "04:45 PM", "Entrance - QR", "Main Building");
+                dgvScanHistory.Rows.Add("Nov 14, 2025", "08:25 AM", "05:15 PM", "Classroom - QR", "Room 301");
+                dgvScanHistory.Rows.Add("Nov 14, 2025", "08:00 AM", "04:40 PM", "Library - QR", "University Library");
+                dgvScanHistory.Rows.Add("Nov 14, 2025", "07:50 AM", "04:55 PM", "Exit - QR", "Main Building");
 
                 // Update scan count
                 lblScanCountValue.Text = dgvScanHistory.Rows.Count.ToString();

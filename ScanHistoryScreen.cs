@@ -139,25 +139,39 @@ namespace ITP104_FINAL_PROJECT
             dgvScanHistory.ReadOnly = true;
 
             // Create columns
-            DataGridViewTextBoxColumn colTimestamp = new DataGridViewTextBoxColumn
+            DataGridViewTextBoxColumn colDate = new DataGridViewTextBoxColumn
             {
-                Name = "Timestamp",
-                HeaderText = "Timestamp",
-                Width = 180
+                Name = "Date",
+                HeaderText = "Date",
+                Width = 150
+            };
+
+            DataGridViewTextBoxColumn colTimeIn = new DataGridViewTextBoxColumn
+            {
+                Name = "TimeIn",
+                HeaderText = "Time In",
+                Width = 130
+            };
+
+            DataGridViewTextBoxColumn colTimeOut = new DataGridViewTextBoxColumn
+            {
+                Name = "TimeOut",
+                HeaderText = "Time Out",
+                Width = 130
             };
 
             DataGridViewTextBoxColumn colStudentID = new DataGridViewTextBoxColumn
             {
                 Name = "StudentID",
                 HeaderText = "Student ID",
-                Width = 150
+                Width = 130
             };
 
             DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn
             {
                 Name = "Name",
                 HeaderText = "Student Name",
-                Width = 250
+                Width = 200
             };
 
             DataGridViewTextBoxColumn colScanType = new DataGridViewTextBoxColumn
@@ -185,7 +199,7 @@ namespace ITP104_FINAL_PROJECT
 
             dgvScanHistory.Columns.AddRange(new DataGridViewColumn[]
             {
-                colTimestamp, colStudentID, colName, colScanType, colStatus, colAction
+                colDate, colTimeIn, colTimeOut, colStudentID, colName, colScanType, colStatus, colAction
             });
 
             // Style the DataGridView
@@ -232,26 +246,26 @@ namespace ITP104_FINAL_PROJECT
             // Sample data - 20 entries
             var sampleData = new[]
             {
-                new { Time = "Nov 16, 2025 08:15 AM", ID = "2300001", Name = "Juan Dela Cruz", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 16, 2025 08:12 AM", ID = "2300002", Name = "Emilia Santos", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 16, 2025 08:10 AM", ID = "2300003", Name = "Miguel Navarro", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 16, 2025 08:05 AM", ID = "2300004", Name = "Sarah Del Rosario", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 16, 2025 08:00 AM", ID = "2300005", Name = "David Buhain", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 04:45 PM", ID = "2300006", Name = "Jennifer Magbanua", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 04:30 PM", ID = "2300007", Name = "Roberto Galang", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 04:15 PM", ID = "2300008", Name = "Liza Andres", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 04:00 PM", ID = "2300009", Name = "Jaime Tolentino", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 03:45 PM", ID = "2300010", Name = "Maria Rodriguez", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 02:30 PM", ID = "2300011", Name = "Wilfredo Lim", Type = "QR Code", Status = "Failed" },
-                new { Time = "Nov 15, 2025 02:15 PM", ID = "2300012", Name = "Patricia Balagtas", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 02:00 PM", ID = "2300013", Name = "Kristopher Mendoza", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 01:45 PM", ID = "2300014", Name = "Linda Yumul", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 01:30 PM", ID = "2300015", Name = "Daniel Dizon", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 11:15 AM", ID = "2300016", Name = "Nancy Arriola", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 11:00 AM", ID = "2300017", Name = "Mateo Lopez", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 10:45 AM", ID = "2300018", Name = "Sandra Malig", Type = "QR Code", Status = "Success" },
-                new { Time = "Nov 15, 2025 10:30 AM", ID = "2300019", Name = "Antonio Pascual", Type = "QR Code", Status = "Failed" },
-                new { Time = "Nov 15, 2025 10:15 AM", ID = "2300020", Name = "Beatrice Vergara", Type = "QR Code", Status = "Success" }
+                new { Date = "Nov 16, 2025", TimeIn = "08:15 AM", TimeOut = "05:00 PM", ID = "2300001", Name = "Juan Dela Cruz", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 16, 2025", TimeIn = "08:12 AM", TimeOut = "05:10 PM", ID = "2300002", Name = "Emilia Santos", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 16, 2025", TimeIn = "08:10 AM", TimeOut = "04:45 PM", ID = "2300003", Name = "Miguel Navarro", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 16, 2025", TimeIn = "08:05 AM", TimeOut = "05:15 PM", ID = "2300004", Name = "Sarah Del Rosario", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 16, 2025", TimeIn = "08:00 AM", TimeOut = "04:30 PM", ID = "2300005", Name = "David Buhain", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "08:45 AM", TimeOut = "04:45 PM", ID = "2300006", Name = "Jennifer Magbanua", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "08:30 AM", TimeOut = "04:30 PM", ID = "2300007", Name = "Roberto Galang", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "08:15 AM", TimeOut = "05:00 PM", ID = "2300008", Name = "Liza Andres", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "08:00 AM", TimeOut = "04:50 PM", ID = "2300009", Name = "Jaime Tolentino", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "07:45 AM", TimeOut = "03:45 PM", ID = "2300010", Name = "Maria Rodriguez", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "09:30 AM", TimeOut = "--", ID = "2300011", Name = "Wilfredo Lim", Type = "QR Code", Status = "Failed" },
+                new { Date = "Nov 15, 2025", TimeIn = "08:15 AM", TimeOut = "05:00 PM", ID = "2300012", Name = "Patricia Balagtas", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "08:00 AM", TimeOut = "04:40 PM", ID = "2300013", Name = "Kristopher Mendoza", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "07:45 AM", TimeOut = "04:30 PM", ID = "2300014", Name = "Linda Yumul", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 15, 2025", TimeIn = "08:30 AM", TimeOut = "05:10 PM", ID = "2300015", Name = "Daniel Dizon", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 14, 2025", TimeIn = "08:15 AM", TimeOut = "04:45 PM", ID = "2300016", Name = "Nancy Arriola", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 14, 2025", TimeIn = "08:00 AM", TimeOut = "05:00 PM", ID = "2300017", Name = "Mateo Lopez", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 14, 2025", TimeIn = "07:45 AM", TimeOut = "04:30 PM", ID = "2300018", Name = "Sandra Malig", Type = "QR Code", Status = "Success" },
+                new { Date = "Nov 14, 2025", TimeIn = "09:30 AM", TimeOut = "--", ID = "2300019", Name = "Antonio Pascual", Type = "QR Code", Status = "Failed" },
+                new { Date = "Nov 14, 2025", TimeIn = "08:15 AM", TimeOut = "04:55 PM", ID = "2300020", Name = "Beatrice Vergara", Type = "QR Code", Status = "Success" }
             };
 
 
@@ -262,7 +276,7 @@ namespace ITP104_FINAL_PROJECT
             for (int i = startIndex; i < endIndex; i++)
             {
                 var data = sampleData[i];
-                dgvScanHistory.Rows.Add(data.Time, data.ID, data.Name, data.Type, data.Status);
+                dgvScanHistory.Rows.Add(data.Date, data.TimeIn, data.TimeOut, data.ID, data.Name, data.Type, data.Status);
             }
 
             // Update pagination info
@@ -285,13 +299,17 @@ namespace ITP104_FINAL_PROJECT
             {
                 var studentID = dgvScanHistory.Rows[e.RowIndex].Cells["StudentID"].Value.ToString();
                 var studentName = dgvScanHistory.Rows[e.RowIndex].Cells["Name"].Value.ToString();
-                var timestamp = dgvScanHistory.Rows[e.RowIndex].Cells["Timestamp"].Value.ToString();
+                var date = dgvScanHistory.Rows[e.RowIndex].Cells["Date"].Value.ToString();
+                var timeIn = dgvScanHistory.Rows[e.RowIndex].Cells["TimeIn"].Value.ToString();
+                var timeOut = dgvScanHistory.Rows[e.RowIndex].Cells["TimeOut"].Value.ToString();
 
                 MessageBox.Show(
                     $"Scan Details:\n\n" +
                     $"Student ID: {studentID}\n" +
                     $"Name: {studentName}\n" +
-                    $"Timestamp: {timestamp}\n\n" +
+                    $"Date: {date}\n" +
+                    $"Time In: {timeIn}\n" +
+                    $"Time Out: {timeOut}\n\n" +
                     "Full details screen will be available in Phase 2.",
                     "Scan Details",
                     MessageBoxButtons.OK,
