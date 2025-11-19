@@ -32,60 +32,72 @@
             this.pnlForm = new Guna.UI2.WinForms.Guna2Panel();
             this.lblNote = new System.Windows.Forms.Label();
             this.guna2HtmlLabel2 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.btnSaveDownload = new Guna.UI2.WinForms.Guna2Button();
+            this.btnClearForm = new Guna.UI2.WinForms.Guna2Button();
+            this.btnRegisterStudent = new Guna.UI2.WinForms.Guna2Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnGenerateQR = new Guna.UI2.WinForms.Guna2Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblStudentID = new System.Windows.Forms.Label();
+            this.lblPhone = new System.Windows.Forms.Label();
+            this.lblSection = new System.Windows.Forms.Label();
             this.cmbYearLevel = new Guna.UI2.WinForms.Guna2ComboBox();
             this.cmbCourse = new Guna.UI2.WinForms.Guna2ComboBox();
             this.txtEmail = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtName = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtStudentID = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtPhone = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtSection = new Guna.UI2.WinForms.Guna2TextBox();
             this.pnlQRPreview = new Guna.UI2.WinForms.Guna2Panel();
             this.lblStudentDetails = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel3 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.picQRCode = new System.Windows.Forms.PictureBox();
             this.guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
             this.guna2ControlBox3 = new Guna.UI2.WinForms.Guna2ControlBox();
             this.guna2ControlBox1 = new Guna.UI2.WinForms.Guna2ControlBox();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.guna2HtmlLabel4 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnExit = new Guna.UI2.WinForms.Guna2Button();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.picQRCode = new System.Windows.Forms.PictureBox();
-            this.btnSaveDownload = new Guna.UI2.WinForms.Guna2Button();
-            this.btnClearForm = new Guna.UI2.WinForms.Guna2Button();
-            this.btnGenerateQR = new Guna.UI2.WinForms.Guna2Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.pnlForm.SuspendLayout();
             this.pnlQRPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlForm
             // 
             this.pnlForm.BackColor = System.Drawing.Color.Transparent;
             this.pnlForm.BorderRadius = 10;
+            this.pnlForm.Controls.Add(this.label4);
             this.pnlForm.Controls.Add(this.lblNote);
             this.pnlForm.Controls.Add(this.guna2HtmlLabel2);
             this.pnlForm.Controls.Add(this.btnSaveDownload);
+            this.pnlForm.Controls.Add(this.cmbYearLevel);
             this.pnlForm.Controls.Add(this.btnClearForm);
+            this.pnlForm.Controls.Add(this.btnRegisterStudent);
             this.pnlForm.Controls.Add(this.label3);
             this.pnlForm.Controls.Add(this.btnGenerateQR);
             this.pnlForm.Controls.Add(this.label2);
             this.pnlForm.Controls.Add(this.label1);
             this.pnlForm.Controls.Add(this.lblStudentID);
-            this.pnlForm.Controls.Add(this.cmbYearLevel);
+            this.pnlForm.Controls.Add(this.lblPhone);
+            this.pnlForm.Controls.Add(this.lblSection);
             this.pnlForm.Controls.Add(this.cmbCourse);
             this.pnlForm.Controls.Add(this.txtEmail);
             this.pnlForm.Controls.Add(this.txtName);
             this.pnlForm.Controls.Add(this.txtStudentID);
+            this.pnlForm.Controls.Add(this.txtPhone);
+            this.pnlForm.Controls.Add(this.txtSection);
             this.pnlForm.FillColor = System.Drawing.Color.Gainsboro;
             this.pnlForm.Location = new System.Drawing.Point(27, 101);
             this.pnlForm.Margin = new System.Windows.Forms.Padding(2);
             this.pnlForm.Name = "pnlForm";
-            this.pnlForm.Size = new System.Drawing.Size(515, 643);
+            this.pnlForm.Size = new System.Drawing.Size(515, 730);
             this.pnlForm.TabIndex = 5;
             this.pnlForm.UseTransparentBackground = true;
             // 
@@ -113,6 +125,52 @@
             this.guna2HtmlLabel2.TabIndex = 18;
             this.guna2HtmlLabel2.Text = "Student Register";
             // 
+            // btnSaveDownload
+            // 
+            this.btnSaveDownload.BorderRadius = 10;
+            this.btnSaveDownload.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
+            this.btnSaveDownload.ForeColor = System.Drawing.Color.White;
+            this.btnSaveDownload.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.download;
+            this.btnSaveDownload.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btnSaveDownload.ImageOffset = new System.Drawing.Point(-5, 0);
+            this.btnSaveDownload.ImageSize = new System.Drawing.Size(30, 30);
+            this.btnSaveDownload.Location = new System.Drawing.Point(187, 678);
+            this.btnSaveDownload.Margin = new System.Windows.Forms.Padding(2);
+            this.btnSaveDownload.Name = "btnSaveDownload";
+            this.btnSaveDownload.Size = new System.Drawing.Size(135, 40);
+            this.btnSaveDownload.TabIndex = 0;
+            this.btnSaveDownload.Text = "Download QR";
+            this.btnSaveDownload.TextOffset = new System.Drawing.Point(15, 0);
+            // 
+            // btnClearForm
+            // 
+            this.btnClearForm.BorderRadius = 10;
+            this.btnClearForm.FillColor = System.Drawing.Color.Red;
+            this.btnClearForm.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
+            this.btnClearForm.ForeColor = System.Drawing.Color.White;
+            this.btnClearForm.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.clean;
+            this.btnClearForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btnClearForm.ImageSize = new System.Drawing.Size(30, 30);
+            this.btnClearForm.Location = new System.Drawing.Point(343, 678);
+            this.btnClearForm.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClearForm.Name = "btnClearForm";
+            this.btnClearForm.Size = new System.Drawing.Size(135, 40);
+            this.btnClearForm.TabIndex = 1;
+            this.btnClearForm.Text = "Clear Form";
+            this.btnClearForm.TextOffset = new System.Drawing.Point(10, 0);
+            // 
+            // btnRegisterStudent
+            // 
+            this.btnRegisterStudent.BorderRadius = 10;
+            this.btnRegisterStudent.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
+            this.btnRegisterStudent.ForeColor = System.Drawing.Color.White;
+            this.btnRegisterStudent.Location = new System.Drawing.Point(187, 618);
+            this.btnRegisterStudent.Margin = new System.Windows.Forms.Padding(2);
+            this.btnRegisterStudent.Name = "btnRegisterStudent";
+            this.btnRegisterStudent.Size = new System.Drawing.Size(291, 40);
+            this.btnRegisterStudent.TabIndex = 23;
+            this.btnRegisterStudent.Text = "Register to Database";
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -123,6 +181,24 @@
             this.label3.Size = new System.Drawing.Size(88, 26);
             this.label3.TabIndex = 3;
             this.label3.Text = "Course:";
+            // 
+            // btnGenerateQR
+            // 
+            this.btnGenerateQR.BorderRadius = 10;
+            this.btnGenerateQR.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(255)))), ((int)(((byte)(80)))));
+            this.btnGenerateQR.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
+            this.btnGenerateQR.ForeColor = System.Drawing.Color.White;
+            this.btnGenerateQR.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.scan_icon;
+            this.btnGenerateQR.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btnGenerateQR.ImageOffset = new System.Drawing.Point(-5, 0);
+            this.btnGenerateQR.ImageSize = new System.Drawing.Size(30, 30);
+            this.btnGenerateQR.Location = new System.Drawing.Point(29, 618);
+            this.btnGenerateQR.Margin = new System.Windows.Forms.Padding(2);
+            this.btnGenerateQR.Name = "btnGenerateQR";
+            this.btnGenerateQR.Size = new System.Drawing.Size(135, 40);
+            this.btnGenerateQR.TabIndex = 4;
+            this.btnGenerateQR.Text = "Generate QR";
+            this.btnGenerateQR.TextOffset = new System.Drawing.Point(17, 0);
             // 
             // label2
             // 
@@ -157,6 +233,28 @@
             this.lblStudentID.TabIndex = 8;
             this.lblStudentID.Text = "Student ID:";
             // 
+            // lblPhone
+            // 
+            this.lblPhone.AutoSize = true;
+            this.lblPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPhone.Location = new System.Drawing.Point(282, 334);
+            this.lblPhone.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblPhone.Name = "lblPhone";
+            this.lblPhone.Size = new System.Drawing.Size(81, 26);
+            this.lblPhone.TabIndex = 19;
+            this.lblPhone.Text = "Phone:";
+            // 
+            // lblSection
+            // 
+            this.lblSection.AutoSize = true;
+            this.lblSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSection.Location = new System.Drawing.Point(282, 449);
+            this.lblSection.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblSection.Name = "lblSection";
+            this.lblSection.Size = new System.Drawing.Size(91, 26);
+            this.lblSection.TabIndex = 20;
+            this.lblSection.Text = "Section:";
+            // 
             // cmbYearLevel
             // 
             this.cmbYearLevel.BackColor = System.Drawing.Color.Transparent;
@@ -174,7 +272,7 @@
             "Second Year",
             "Third Year",
             "Fourth Year"});
-            this.cmbYearLevel.Location = new System.Drawing.Point(282, 482);
+            this.cmbYearLevel.Location = new System.Drawing.Point(29, 562);
             this.cmbYearLevel.Margin = new System.Windows.Forms.Padding(2);
             this.cmbYearLevel.Name = "cmbYearLevel";
             this.cmbYearLevel.Size = new System.Drawing.Size(196, 36);
@@ -218,7 +316,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.PlaceholderText = "Enter Student Email";
             this.txtEmail.SelectedText = "";
-            this.txtEmail.Size = new System.Drawing.Size(449, 53);
+            this.txtEmail.Size = new System.Drawing.Size(235, 53);
             this.txtEmail.TabIndex = 12;
             // 
             // txtName
@@ -253,6 +351,38 @@
             this.txtStudentID.Size = new System.Drawing.Size(449, 58);
             this.txtStudentID.TabIndex = 14;
             // 
+            // txtPhone
+            // 
+            this.txtPhone.BorderColor = System.Drawing.Color.Black;
+            this.txtPhone.BorderRadius = 10;
+            this.txtPhone.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtPhone.DefaultText = "";
+            this.txtPhone.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.txtPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPhone.Location = new System.Drawing.Point(282, 363);
+            this.txtPhone.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.txtPhone.Name = "txtPhone";
+            this.txtPhone.PlaceholderText = "Phone (Optional)";
+            this.txtPhone.SelectedText = "";
+            this.txtPhone.Size = new System.Drawing.Size(196, 53);
+            this.txtPhone.TabIndex = 21;
+            // 
+            // txtSection
+            // 
+            this.txtSection.BorderColor = System.Drawing.Color.Black;
+            this.txtSection.BorderRadius = 10;
+            this.txtSection.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtSection.DefaultText = "";
+            this.txtSection.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.txtSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSection.Location = new System.Drawing.Point(282, 482);
+            this.txtSection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.txtSection.Name = "txtSection";
+            this.txtSection.PlaceholderText = "Section (Optional)";
+            this.txtSection.SelectedText = "";
+            this.txtSection.Size = new System.Drawing.Size(196, 40);
+            this.txtSection.TabIndex = 22;
+            // 
             // pnlQRPreview
             // 
             this.pnlQRPreview.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -263,7 +393,7 @@
             this.pnlQRPreview.Margin = new System.Windows.Forms.Padding(2);
             this.pnlQRPreview.Name = "pnlQRPreview";
             this.pnlQRPreview.ShadowDecoration.Enabled = true;
-            this.pnlQRPreview.Size = new System.Drawing.Size(529, 644);
+            this.pnlQRPreview.Size = new System.Drawing.Size(529, 731);
             this.pnlQRPreview.TabIndex = 4;
             // 
             // lblStudentDetails
@@ -292,6 +422,15 @@
             this.guna2HtmlLabel3.Size = new System.Drawing.Size(389, 59);
             this.guna2HtmlLabel3.TabIndex = 0;
             this.guna2HtmlLabel3.Text = "QR Code Preview";
+            // 
+            // picQRCode
+            // 
+            this.picQRCode.Location = new System.Drawing.Point(146, 81);
+            this.picQRCode.Margin = new System.Windows.Forms.Padding(2);
+            this.picQRCode.Name = "picQRCode";
+            this.picQRCode.Size = new System.Drawing.Size(262, 237);
+            this.picQRCode.TabIndex = 1;
+            this.picQRCode.TabStop = false;
             // 
             // guna2BorderlessForm1
             // 
@@ -336,6 +475,20 @@
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(1182, 85);
             this.guna2Panel1.TabIndex = 6;
+            // 
+            // guna2PictureBox1
+            // 
+            this.guna2PictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.guna2PictureBox1.BackgroundImage = global::ITP104_FINAL_PROJECT.Properties.Resources.attendancelogo3;
+            this.guna2PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.guna2PictureBox1.FillColor = System.Drawing.Color.Transparent;
+            this.guna2PictureBox1.ImageRotate = 0F;
+            this.guna2PictureBox1.Location = new System.Drawing.Point(29, 13);
+            this.guna2PictureBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.guna2PictureBox1.Name = "guna2PictureBox1";
+            this.guna2PictureBox1.Size = new System.Drawing.Size(57, 61);
+            this.guna2PictureBox1.TabIndex = 18;
+            this.guna2PictureBox1.TabStop = false;
             // 
             // guna2HtmlLabel4
             // 
@@ -382,87 +535,23 @@
             this.guna2HtmlLabel1.TabIndex = 15;
             this.guna2HtmlLabel1.Text = "Student Register Screen";
             // 
-            // guna2PictureBox1
+            // label4
             // 
-            this.guna2PictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2PictureBox1.BackgroundImage = global::ITP104_FINAL_PROJECT.Properties.Resources.attendancelogo3;
-            this.guna2PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.guna2PictureBox1.FillColor = System.Drawing.Color.Transparent;
-            this.guna2PictureBox1.ImageRotate = 0F;
-            this.guna2PictureBox1.Location = new System.Drawing.Point(29, 13);
-            this.guna2PictureBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.guna2PictureBox1.Name = "guna2PictureBox1";
-            this.guna2PictureBox1.Size = new System.Drawing.Size(57, 61);
-            this.guna2PictureBox1.TabIndex = 18;
-            this.guna2PictureBox1.TabStop = false;
-            // 
-            // picQRCode
-            // 
-            this.picQRCode.Location = new System.Drawing.Point(146, 81);
-            this.picQRCode.Margin = new System.Windows.Forms.Padding(2);
-            this.picQRCode.Name = "picQRCode";
-            this.picQRCode.Size = new System.Drawing.Size(262, 237);
-            this.picQRCode.TabIndex = 1;
-            this.picQRCode.TabStop = false;
-            // 
-            // btnSaveDownload
-            // 
-            this.btnSaveDownload.BorderRadius = 10;
-            this.btnSaveDownload.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
-            this.btnSaveDownload.ForeColor = System.Drawing.Color.White;
-            this.btnSaveDownload.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.download;
-            this.btnSaveDownload.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btnSaveDownload.ImageOffset = new System.Drawing.Point(-5, 0);
-            this.btnSaveDownload.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnSaveDownload.Location = new System.Drawing.Point(187, 536);
-            this.btnSaveDownload.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSaveDownload.Name = "btnSaveDownload";
-            this.btnSaveDownload.Size = new System.Drawing.Size(135, 40);
-            this.btnSaveDownload.TabIndex = 0;
-            this.btnSaveDownload.Text = "Download QR";
-            this.btnSaveDownload.TextOffset = new System.Drawing.Point(15, 0);
-            // 
-            // btnClearForm
-            // 
-            this.btnClearForm.BorderRadius = 10;
-            this.btnClearForm.FillColor = System.Drawing.Color.Red;
-            this.btnClearForm.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
-            this.btnClearForm.ForeColor = System.Drawing.Color.White;
-            this.btnClearForm.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.clean;
-            this.btnClearForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btnClearForm.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnClearForm.Location = new System.Drawing.Point(343, 536);
-            this.btnClearForm.Margin = new System.Windows.Forms.Padding(2);
-            this.btnClearForm.Name = "btnClearForm";
-            this.btnClearForm.Size = new System.Drawing.Size(135, 40);
-            this.btnClearForm.TabIndex = 1;
-            this.btnClearForm.Text = "Clear Form";
-            this.btnClearForm.TextOffset = new System.Drawing.Point(10, 0);
-            // 
-            // btnGenerateQR
-            // 
-            this.btnGenerateQR.BorderRadius = 10;
-            this.btnGenerateQR.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(255)))), ((int)(((byte)(80)))));
-            this.btnGenerateQR.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
-            this.btnGenerateQR.ForeColor = System.Drawing.Color.White;
-            this.btnGenerateQR.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.scan_icon;
-            this.btnGenerateQR.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btnGenerateQR.ImageOffset = new System.Drawing.Point(-5, 0);
-            this.btnGenerateQR.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnGenerateQR.Location = new System.Drawing.Point(29, 536);
-            this.btnGenerateQR.Margin = new System.Windows.Forms.Padding(2);
-            this.btnGenerateQR.Name = "btnGenerateQR";
-            this.btnGenerateQR.Size = new System.Drawing.Size(135, 40);
-            this.btnGenerateQR.TabIndex = 4;
-            this.btnGenerateQR.Text = "Generate QR";
-            this.btnGenerateQR.TextOffset = new System.Drawing.Point(17, 0);
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(35, 534);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(123, 26);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "Year Level:";
             // 
             // StudentRegistration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1178, 762);
+            this.ClientSize = new System.Drawing.Size(1178, 868);
             this.Controls.Add(this.guna2Panel1);
             this.Controls.Add(this.pnlQRPreview);
             this.Controls.Add(this.pnlForm);
@@ -475,9 +564,9 @@
             this.pnlForm.ResumeLayout(false);
             this.pnlForm.PerformLayout();
             this.pnlQRPreview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).EndInit();
             this.guna2Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -492,12 +581,17 @@
         private Guna.UI2.WinForms.Guna2TextBox txtEmail;
         private Guna.UI2.WinForms.Guna2TextBox txtName;
         private Guna.UI2.WinForms.Guna2TextBox txtStudentID;
+        private Guna.UI2.WinForms.Guna2TextBox txtPhone;
+        private Guna.UI2.WinForms.Guna2TextBox txtSection;
         private Guna.UI2.WinForms.Guna2Button btnClearForm;
         private Guna.UI2.WinForms.Guna2Button btnSaveDownload;
         private Guna.UI2.WinForms.Guna2Button btnGenerateQR;
+        private Guna.UI2.WinForms.Guna2Button btnRegisterStudent;
 
         private System.Windows.Forms.Label lblStudentID;
         private System.Windows.Forms.Label lblNote;
+        private System.Windows.Forms.Label lblPhone;
+        private System.Windows.Forms.Label lblSection;
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
         private Guna.UI2.WinForms.Guna2ControlBox guna2ControlBox3;
         private Guna.UI2.WinForms.Guna2ControlBox guna2ControlBox1;
@@ -512,5 +606,6 @@
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel4;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel2;
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox1;
+        private System.Windows.Forms.Label label4;
     }
 }

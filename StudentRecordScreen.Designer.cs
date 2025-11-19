@@ -34,12 +34,15 @@
             this.btnClose = new Guna.UI2.WinForms.Guna2ControlBox();
             this.guna2ControlBox2 = new Guna.UI2.WinForms.Guna2ControlBox();
             this.lblHeaderTitle = new System.Windows.Forms.Label();
+            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.pnlMainContent = new Guna.UI2.WinForms.Guna2Panel();
-            this.lblLoadingIndicator = new System.Windows.Forms.Label();
             this.pnlScanHistory = new Guna.UI2.WinForms.Guna2Panel();
             this.dgvScanHistory = new System.Windows.Forms.DataGridView();
             this.lblScanHistoryTitle = new System.Windows.Forms.Label();
             this.pnlStudentInfo = new Guna.UI2.WinForms.Guna2Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblLoadingIndicator = new System.Windows.Forms.Label();
             this.lblEnrollmentDateValue = new System.Windows.Forms.Label();
             this.lblEnrollmentDate = new System.Windows.Forms.Label();
             this.lblAddressValue = new System.Windows.Forms.Label();
@@ -63,23 +66,20 @@
             this.lblStudentID = new System.Windows.Forms.Label();
             this.guna2Separator1 = new Guna.UI2.WinForms.Guna2Separator();
             this.lblStudentInfoTitle = new System.Windows.Forms.Label();
+            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.pnlActions = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnExport = new Guna.UI2.WinForms.Guna2Button();
             this.btnPrint = new Guna.UI2.WinForms.Guna2Button();
             this.btnBackToScan = new Guna.UI2.WinForms.Guna2Button();
             this.btnEdit = new Guna.UI2.WinForms.Guna2Button();
-            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
-            this.btnExport = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             this.pnlMainContent.SuspendLayout();
             this.pnlScanHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvScanHistory)).BeginInit();
             this.pnlStudentInfo.SuspendLayout();
-            this.pnlActions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
+            this.pnlActions.SuspendLayout();
             this.SuspendLayout();
             // 
             // guna2BorderlessForm1
@@ -98,9 +98,9 @@
             this.pnlHeader.Controls.Add(this.guna2PictureBox1);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlHeader.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1050, 65);
+            this.pnlHeader.Size = new System.Drawing.Size(1400, 80);
             this.pnlHeader.TabIndex = 0;
             // 
             // btnClose
@@ -108,10 +108,10 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
             this.btnClose.IconColor = System.Drawing.Color.White;
-            this.btnClose.Location = new System.Drawing.Point(1010, 10);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnClose.Location = new System.Drawing.Point(1347, 12);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(34, 24);
+            this.btnClose.Size = new System.Drawing.Size(45, 30);
             this.btnClose.TabIndex = 3;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -121,10 +121,10 @@
             this.guna2ControlBox2.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox;
             this.guna2ControlBox2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
             this.guna2ControlBox2.IconColor = System.Drawing.Color.White;
-            this.guna2ControlBox2.Location = new System.Drawing.Point(972, 10);
-            this.guna2ControlBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.guna2ControlBox2.Location = new System.Drawing.Point(1296, 12);
+            this.guna2ControlBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.guna2ControlBox2.Name = "guna2ControlBox2";
-            this.guna2ControlBox2.Size = new System.Drawing.Size(34, 24);
+            this.guna2ControlBox2.Size = new System.Drawing.Size(45, 30);
             this.guna2ControlBox2.TabIndex = 2;
             // 
             // lblHeaderTitle
@@ -132,12 +132,24 @@
             this.lblHeaderTitle.AutoSize = true;
             this.lblHeaderTitle.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
             this.lblHeaderTitle.ForeColor = System.Drawing.Color.White;
-            this.lblHeaderTitle.Location = new System.Drawing.Point(35, 10);
-            this.lblHeaderTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblHeaderTitle.Location = new System.Drawing.Point(47, 12);
             this.lblHeaderTitle.Name = "lblHeaderTitle";
-            this.lblHeaderTitle.Size = new System.Drawing.Size(259, 37);
+            this.lblHeaderTitle.Size = new System.Drawing.Size(322, 46);
             this.lblHeaderTitle.TabIndex = 1;
             this.lblHeaderTitle.Text = "👤 Student Record";
+            // 
+            // guna2PictureBox1
+            // 
+            this.guna2PictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.guna2PictureBox1.FillColor = System.Drawing.Color.Transparent;
+            this.guna2PictureBox1.ImageRotate = 0F;
+            this.guna2PictureBox1.Location = new System.Drawing.Point(15, 10);
+            this.guna2PictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.guna2PictureBox1.Name = "guna2PictureBox1";
+            this.guna2PictureBox1.Size = new System.Drawing.Size(60, 60);
+            this.guna2PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.guna2PictureBox1.TabIndex = 0;
+            this.guna2PictureBox1.TabStop = false;
             // 
             // pnlMainContent
             // 
@@ -147,25 +159,12 @@
             this.pnlMainContent.Controls.Add(this.pnlStudentInfo);
             this.pnlMainContent.Controls.Add(this.pnlActions);
             this.pnlMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMainContent.Location = new System.Drawing.Point(0, 65);
-            this.pnlMainContent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlMainContent.Location = new System.Drawing.Point(0, 80);
+            this.pnlMainContent.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Padding = new System.Windows.Forms.Padding(22, 24, 22, 24);
-            this.pnlMainContent.Size = new System.Drawing.Size(1050, 666);
+            this.pnlMainContent.Padding = new System.Windows.Forms.Padding(29, 30, 29, 30);
+            this.pnlMainContent.Size = new System.Drawing.Size(1400, 820);
             this.pnlMainContent.TabIndex = 1;
-            // 
-            // lblLoadingIndicator
-            // 
-            this.lblLoadingIndicator.AutoSize = true;
-            this.lblLoadingIndicator.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic);
-            this.lblLoadingIndicator.ForeColor = System.Drawing.Color.Black;
-            this.lblLoadingIndicator.Location = new System.Drawing.Point(344, 10);
-            this.lblLoadingIndicator.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblLoadingIndicator.Name = "lblLoadingIndicator";
-            this.lblLoadingIndicator.Size = new System.Drawing.Size(243, 21);
-            this.lblLoadingIndicator.TabIndex = 3;
-            this.lblLoadingIndicator.Text = "⏳ Loading student information...";
-            this.lblLoadingIndicator.Visible = false;
             // 
             // pnlScanHistory
             // 
@@ -173,14 +172,14 @@
             this.pnlScanHistory.BorderRadius = 15;
             this.pnlScanHistory.Controls.Add(this.dgvScanHistory);
             this.pnlScanHistory.Controls.Add(this.lblScanHistoryTitle);
-            this.pnlScanHistory.Location = new System.Drawing.Point(38, 500);
-            this.pnlScanHistory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlScanHistory.Location = new System.Drawing.Point(51, 615);
+            this.pnlScanHistory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlScanHistory.Name = "pnlScanHistory";
-            this.pnlScanHistory.Padding = new System.Windows.Forms.Padding(19, 20, 19, 20);
+            this.pnlScanHistory.Padding = new System.Windows.Forms.Padding(25, 25, 25, 25);
             this.pnlScanHistory.ShadowDecoration.BorderRadius = 15;
             this.pnlScanHistory.ShadowDecoration.Depth = 10;
             this.pnlScanHistory.ShadowDecoration.Enabled = true;
-            this.pnlScanHistory.Size = new System.Drawing.Size(975, 366);
+            this.pnlScanHistory.Size = new System.Drawing.Size(1300, 450);
             this.pnlScanHistory.TabIndex = 2;
             // 
             // dgvScanHistory
@@ -193,13 +192,13 @@
             this.dgvScanHistory.BackgroundColor = System.Drawing.Color.White;
             this.dgvScanHistory.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvScanHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvScanHistory.Location = new System.Drawing.Point(21, 57);
-            this.dgvScanHistory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvScanHistory.Location = new System.Drawing.Point(28, 70);
+            this.dgvScanHistory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvScanHistory.Name = "dgvScanHistory";
             this.dgvScanHistory.ReadOnly = true;
             this.dgvScanHistory.RowHeadersWidth = 51;
             this.dgvScanHistory.RowTemplate.Height = 24;
-            this.dgvScanHistory.Size = new System.Drawing.Size(933, 286);
+            this.dgvScanHistory.Size = new System.Drawing.Size(1244, 352);
             this.dgvScanHistory.TabIndex = 1;
             // 
             // lblScanHistoryTitle
@@ -207,10 +206,9 @@
             this.lblScanHistoryTitle.AutoSize = true;
             this.lblScanHistoryTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblScanHistoryTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
-            this.lblScanHistoryTitle.Location = new System.Drawing.Point(15, 16);
-            this.lblScanHistoryTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblScanHistoryTitle.Location = new System.Drawing.Point(20, 20);
             this.lblScanHistoryTitle.Name = "lblScanHistoryTitle";
-            this.lblScanHistoryTitle.Size = new System.Drawing.Size(304, 30);
+            this.lblScanHistoryTitle.Size = new System.Drawing.Size(376, 37);
             this.lblScanHistoryTitle.TabIndex = 0;
             this.lblScanHistoryTitle.Text = "📊 Scan History for Student";
             // 
@@ -245,24 +243,57 @@
             this.pnlStudentInfo.Controls.Add(this.guna2Separator1);
             this.pnlStudentInfo.Controls.Add(this.lblStudentInfoTitle);
             this.pnlStudentInfo.Controls.Add(this.picProfilePhoto);
-            this.pnlStudentInfo.Location = new System.Drawing.Point(38, 24);
-            this.pnlStudentInfo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlStudentInfo.Location = new System.Drawing.Point(51, 30);
+            this.pnlStudentInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlStudentInfo.Name = "pnlStudentInfo";
-            this.pnlStudentInfo.Padding = new System.Windows.Forms.Padding(19, 20, 19, 20);
+            this.pnlStudentInfo.Padding = new System.Windows.Forms.Padding(25, 25, 25, 25);
             this.pnlStudentInfo.ShadowDecoration.BorderRadius = 15;
             this.pnlStudentInfo.ShadowDecoration.Depth = 10;
-            this.pnlStudentInfo.Size = new System.Drawing.Size(975, 385);
+            this.pnlStudentInfo.Size = new System.Drawing.Size(1300, 474);
             this.pnlStudentInfo.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.Navy;
+            this.label2.Location = new System.Drawing.Point(693, 68);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(59, 28);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Male";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(693, 44);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 23);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "Gender :";
+            // 
+            // lblLoadingIndicator
+            // 
+            this.lblLoadingIndicator.AutoSize = true;
+            this.lblLoadingIndicator.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic);
+            this.lblLoadingIndicator.ForeColor = System.Drawing.Color.Black;
+            this.lblLoadingIndicator.Location = new System.Drawing.Point(459, 12);
+            this.lblLoadingIndicator.Name = "lblLoadingIndicator";
+            this.lblLoadingIndicator.Size = new System.Drawing.Size(302, 28);
+            this.lblLoadingIndicator.TabIndex = 3;
+            this.lblLoadingIndicator.Text = "⏳ Loading student information...";
+            this.lblLoadingIndicator.Visible = false;
             // 
             // lblEnrollmentDateValue
             // 
             this.lblEnrollmentDateValue.AutoSize = true;
             this.lblEnrollmentDateValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEnrollmentDateValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblEnrollmentDateValue.Location = new System.Drawing.Point(689, 339);
-            this.lblEnrollmentDateValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblEnrollmentDateValue.Location = new System.Drawing.Point(919, 417);
             this.lblEnrollmentDateValue.Name = "lblEnrollmentDateValue";
-            this.lblEnrollmentDateValue.Size = new System.Drawing.Size(115, 20);
+            this.lblEnrollmentDateValue.Size = new System.Drawing.Size(151, 25);
             this.lblEnrollmentDateValue.TabIndex = 24;
             this.lblEnrollmentDateValue.Text = "August 15, 2022";
             // 
@@ -271,10 +302,9 @@
             this.lblEnrollmentDate.AutoSize = true;
             this.lblEnrollmentDate.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblEnrollmentDate.ForeColor = System.Drawing.Color.White;
-            this.lblEnrollmentDate.Location = new System.Drawing.Point(520, 339);
-            this.lblEnrollmentDate.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblEnrollmentDate.Location = new System.Drawing.Point(693, 417);
             this.lblEnrollmentDate.Name = "lblEnrollmentDate";
-            this.lblEnrollmentDate.Size = new System.Drawing.Size(124, 20);
+            this.lblEnrollmentDate.Size = new System.Drawing.Size(157, 25);
             this.lblEnrollmentDate.TabIndex = 23;
             this.lblEnrollmentDate.Text = "Enrollment Date:";
             // 
@@ -283,10 +313,9 @@
             this.lblAddressValue.AutoSize = true;
             this.lblAddressValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAddressValue.ForeColor = System.Drawing.Color.White;
-            this.lblAddressValue.Location = new System.Drawing.Point(689, 303);
-            this.lblAddressValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAddressValue.Location = new System.Drawing.Point(919, 373);
             this.lblAddressValue.Name = "lblAddressValue";
-            this.lblAddressValue.Size = new System.Drawing.Size(225, 20);
+            this.lblAddressValue.Size = new System.Drawing.Size(284, 25);
             this.lblAddressValue.TabIndex = 22;
             this.lblAddressValue.Text = "123 Main St, Manila, Philippines";
             // 
@@ -295,10 +324,9 @@
             this.lblAddress.AutoSize = true;
             this.lblAddress.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblAddress.ForeColor = System.Drawing.Color.White;
-            this.lblAddress.Location = new System.Drawing.Point(520, 303);
-            this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAddress.Location = new System.Drawing.Point(693, 373);
             this.lblAddress.Name = "lblAddress";
-            this.lblAddress.Size = new System.Drawing.Size(112, 20);
+            this.lblAddress.Size = new System.Drawing.Size(142, 25);
             this.lblAddress.TabIndex = 21;
             this.lblAddress.Text = "Home Address:";
             // 
@@ -307,10 +335,9 @@
             this.lblPhoneValue.AutoSize = true;
             this.lblPhoneValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPhoneValue.ForeColor = System.Drawing.Color.White;
-            this.lblPhoneValue.Location = new System.Drawing.Point(689, 266);
-            this.lblPhoneValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblPhoneValue.Location = new System.Drawing.Point(919, 327);
             this.lblPhoneValue.Name = "lblPhoneValue";
-            this.lblPhoneValue.Size = new System.Drawing.Size(126, 20);
+            this.lblPhoneValue.Size = new System.Drawing.Size(168, 25);
             this.lblPhoneValue.TabIndex = 20;
             this.lblPhoneValue.Text = "+63 912 345 6789";
             this.lblPhoneValue.Click += new System.EventHandler(this.lblPhoneValue_Click);
@@ -320,10 +347,9 @@
             this.lblPhone.AutoSize = true;
             this.lblPhone.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblPhone.ForeColor = System.Drawing.Color.White;
-            this.lblPhone.Location = new System.Drawing.Point(520, 266);
-            this.lblPhone.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblPhone.Location = new System.Drawing.Point(693, 327);
             this.lblPhone.Name = "lblPhone";
-            this.lblPhone.Size = new System.Drawing.Size(119, 20);
+            this.lblPhone.Size = new System.Drawing.Size(148, 25);
             this.lblPhone.TabIndex = 19;
             this.lblPhone.Text = "Phone Number:";
             // 
@@ -332,10 +358,9 @@
             this.lblEmailValue.AutoSize = true;
             this.lblEmailValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEmailValue.ForeColor = System.Drawing.Color.White;
-            this.lblEmailValue.Location = new System.Drawing.Point(696, 230);
-            this.lblEmailValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblEmailValue.Location = new System.Drawing.Point(928, 283);
             this.lblEmailValue.Name = "lblEmailValue";
-            this.lblEmailValue.Size = new System.Drawing.Size(211, 20);
+            this.lblEmailValue.Size = new System.Drawing.Size(264, 25);
             this.lblEmailValue.TabIndex = 18;
             this.lblEmailValue.Text = "juan.delacruz@university.edu";
             // 
@@ -344,22 +369,20 @@
             this.lblEmail.AutoSize = true;
             this.lblEmail.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblEmail.ForeColor = System.Drawing.Color.White;
-            this.lblEmail.Location = new System.Drawing.Point(520, 230);
-            this.lblEmail.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblEmail.Location = new System.Drawing.Point(693, 283);
             this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(108, 20);
+            this.lblEmail.Size = new System.Drawing.Size(137, 25);
             this.lblEmail.TabIndex = 17;
             this.lblEmail.Text = "Email Address:";
             // 
             // lblContactInfo
             // 
             this.lblContactInfo.AutoSize = true;
-            this.lblContactInfo.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblContactInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblContactInfo.ForeColor = System.Drawing.Color.Navy;
-            this.lblContactInfo.Location = new System.Drawing.Point(520, 187);
-            this.lblContactInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblContactInfo.Location = new System.Drawing.Point(693, 230);
             this.lblContactInfo.Name = "lblContactInfo";
-            this.lblContactInfo.Size = new System.Drawing.Size(225, 23);
+            this.lblContactInfo.Size = new System.Drawing.Size(272, 29);
             this.lblContactInfo.TabIndex = 15;
             this.lblContactInfo.Text = "📞 Contact Information";
             // 
@@ -368,10 +391,9 @@
             this.lblScanCountValue.AutoSize = true;
             this.lblScanCountValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblScanCountValue.ForeColor = System.Drawing.Color.White;
-            this.lblScanCountValue.Location = new System.Drawing.Point(209, 339);
-            this.lblScanCountValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblScanCountValue.Location = new System.Drawing.Point(279, 417);
             this.lblScanCountValue.Name = "lblScanCountValue";
-            this.lblScanCountValue.Size = new System.Drawing.Size(26, 20);
+            this.lblScanCountValue.Size = new System.Drawing.Size(33, 25);
             this.lblScanCountValue.TabIndex = 14;
             this.lblScanCountValue.Text = "47";
             // 
@@ -380,10 +402,9 @@
             this.lblScanCount.AutoSize = true;
             this.lblScanCount.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblScanCount.ForeColor = System.Drawing.Color.White;
-            this.lblScanCount.Location = new System.Drawing.Point(40, 339);
-            this.lblScanCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblScanCount.Location = new System.Drawing.Point(53, 417);
             this.lblScanCount.Name = "lblScanCount";
-            this.lblScanCount.Size = new System.Drawing.Size(90, 20);
+            this.lblScanCount.Size = new System.Drawing.Size(114, 25);
             this.lblScanCount.TabIndex = 13;
             this.lblScanCount.Text = "Scan Count:";
             // 
@@ -392,10 +413,9 @@
             this.lblStatusValue.AutoSize = true;
             this.lblStatusValue.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
-            this.lblStatusValue.Location = new System.Drawing.Point(209, 303);
-            this.lblStatusValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblStatusValue.Location = new System.Drawing.Point(279, 373);
             this.lblStatusValue.Name = "lblStatusValue";
-            this.lblStatusValue.Size = new System.Drawing.Size(66, 20);
+            this.lblStatusValue.Size = new System.Drawing.Size(82, 25);
             this.lblStatusValue.TabIndex = 12;
             this.lblStatusValue.Text = "● Active";
             // 
@@ -404,10 +424,9 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblStatus.ForeColor = System.Drawing.Color.White;
-            this.lblStatus.Location = new System.Drawing.Point(40, 303);
-            this.lblStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblStatus.Location = new System.Drawing.Point(53, 373);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(54, 20);
+            this.lblStatus.Size = new System.Drawing.Size(69, 25);
             this.lblStatus.TabIndex = 11;
             this.lblStatus.Text = "Status:";
             // 
@@ -416,10 +435,9 @@
             this.lblYearLevelValue.AutoSize = true;
             this.lblYearLevelValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblYearLevelValue.ForeColor = System.Drawing.Color.White;
-            this.lblYearLevelValue.Location = new System.Drawing.Point(209, 266);
-            this.lblYearLevelValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblYearLevelValue.Location = new System.Drawing.Point(279, 327);
             this.lblYearLevelValue.Name = "lblYearLevelValue";
-            this.lblYearLevelValue.Size = new System.Drawing.Size(66, 20);
+            this.lblYearLevelValue.Size = new System.Drawing.Size(82, 25);
             this.lblYearLevelValue.TabIndex = 10;
             this.lblYearLevelValue.Text = "3rd Year";
             // 
@@ -428,10 +446,9 @@
             this.lblYearLevel.AutoSize = true;
             this.lblYearLevel.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblYearLevel.ForeColor = System.Drawing.Color.White;
-            this.lblYearLevel.Location = new System.Drawing.Point(40, 266);
-            this.lblYearLevel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblYearLevel.Location = new System.Drawing.Point(53, 327);
             this.lblYearLevel.Name = "lblYearLevel";
-            this.lblYearLevel.Size = new System.Drawing.Size(82, 20);
+            this.lblYearLevel.Size = new System.Drawing.Size(102, 25);
             this.lblYearLevel.TabIndex = 9;
             this.lblYearLevel.Text = "Year Level:";
             // 
@@ -440,10 +457,9 @@
             this.lblCourseValue.AutoSize = true;
             this.lblCourseValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCourseValue.ForeColor = System.Drawing.Color.White;
-            this.lblCourseValue.Location = new System.Drawing.Point(209, 230);
-            this.lblCourseValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCourseValue.Location = new System.Drawing.Point(279, 283);
             this.lblCourseValue.Name = "lblCourseValue";
-            this.lblCourseValue.Size = new System.Drawing.Size(132, 20);
+            this.lblCourseValue.Size = new System.Drawing.Size(167, 25);
             this.lblCourseValue.TabIndex = 8;
             this.lblCourseValue.Text = "Computer Science";
             // 
@@ -452,10 +468,9 @@
             this.lblCourse.AutoSize = true;
             this.lblCourse.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblCourse.ForeColor = System.Drawing.Color.White;
-            this.lblCourse.Location = new System.Drawing.Point(40, 230);
-            this.lblCourse.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCourse.Location = new System.Drawing.Point(53, 283);
             this.lblCourse.Name = "lblCourse";
-            this.lblCourse.Size = new System.Drawing.Size(134, 20);
+            this.lblCourse.Size = new System.Drawing.Size(168, 25);
             this.lblCourse.TabIndex = 7;
             this.lblCourse.Text = "Course / Program:";
             // 
@@ -464,22 +479,20 @@
             this.lblFullNameValue.AutoSize = true;
             this.lblFullNameValue.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             this.lblFullNameValue.ForeColor = System.Drawing.Color.Navy;
-            this.lblFullNameValue.Location = new System.Drawing.Point(208, 108);
-            this.lblFullNameValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblFullNameValue.Location = new System.Drawing.Point(277, 133);
             this.lblFullNameValue.Name = "lblFullNameValue";
-            this.lblFullNameValue.Size = new System.Drawing.Size(144, 25);
+            this.lblFullNameValue.Size = new System.Drawing.Size(185, 32);
             this.lblFullNameValue.TabIndex = 6;
             this.lblFullNameValue.Text = "Juan Dela Cruz";
             // 
             // lblFullName
             // 
             this.lblFullName.AutoSize = true;
-            this.lblFullName.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFullName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFullName.ForeColor = System.Drawing.Color.White;
-            this.lblFullName.Location = new System.Drawing.Point(213, 89);
-            this.lblFullName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblFullName.Location = new System.Drawing.Point(284, 110);
             this.lblFullName.Name = "lblFullName";
-            this.lblFullName.Size = new System.Drawing.Size(77, 15);
+            this.lblFullName.Size = new System.Drawing.Size(100, 20);
             this.lblFullName.TabIndex = 5;
             this.lblFullName.Text = "Full Name:";
             // 
@@ -488,22 +501,20 @@
             this.lblStudentIDValue.AutoSize = true;
             this.lblStudentIDValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblStudentIDValue.ForeColor = System.Drawing.Color.Navy;
-            this.lblStudentIDValue.Location = new System.Drawing.Point(213, 55);
-            this.lblStudentIDValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblStudentIDValue.Location = new System.Drawing.Point(284, 68);
             this.lblStudentIDValue.Name = "lblStudentIDValue";
-            this.lblStudentIDValue.Size = new System.Drawing.Size(133, 21);
+            this.lblStudentIDValue.Size = new System.Drawing.Size(173, 28);
             this.lblStudentIDValue.TabIndex = 4;
             this.lblStudentIDValue.Text = "2024-STU-00001";
             // 
             // lblStudentID
             // 
             this.lblStudentID.AutoSize = true;
-            this.lblStudentID.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStudentID.ForeColor = System.Drawing.Color.White;
-            this.lblStudentID.Location = new System.Drawing.Point(213, 36);
-            this.lblStudentID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblStudentID.Location = new System.Drawing.Point(284, 44);
             this.lblStudentID.Name = "lblStudentID";
-            this.lblStudentID.Size = new System.Drawing.Size(81, 15);
+            this.lblStudentID.Size = new System.Drawing.Size(104, 20);
             this.lblStudentID.TabIndex = 3;
             this.lblStudentID.Text = "Student ID:";
             // 
@@ -511,23 +522,37 @@
             // 
             this.guna2Separator1.BackColor = System.Drawing.Color.Transparent;
             this.guna2Separator1.FillColor = System.Drawing.Color.Black;
-            this.guna2Separator1.Location = new System.Drawing.Point(44, 152);
-            this.guna2Separator1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.guna2Separator1.Location = new System.Drawing.Point(59, 187);
+            this.guna2Separator1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.guna2Separator1.Name = "guna2Separator1";
-            this.guna2Separator1.Size = new System.Drawing.Size(863, 21);
+            this.guna2Separator1.Size = new System.Drawing.Size(1151, 26);
             this.guna2Separator1.TabIndex = 2;
             // 
             // lblStudentInfoTitle
             // 
             this.lblStudentInfoTitle.AutoSize = true;
-            this.lblStudentInfoTitle.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStudentInfoTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStudentInfoTitle.ForeColor = System.Drawing.Color.Navy;
-            this.lblStudentInfoTitle.Location = new System.Drawing.Point(40, 187);
-            this.lblStudentInfoTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblStudentInfoTitle.Location = new System.Drawing.Point(53, 230);
             this.lblStudentInfoTitle.Name = "lblStudentInfoTitle";
-            this.lblStudentInfoTitle.Size = new System.Drawing.Size(224, 23);
+            this.lblStudentInfoTitle.Size = new System.Drawing.Size(273, 29);
             this.lblStudentInfoTitle.TabIndex = 1;
             this.lblStudentInfoTitle.Text = "📋 Student Information";
+            // 
+            // picProfilePhoto
+            // 
+            this.picProfilePhoto.BackColor = System.Drawing.Color.Transparent;
+            this.picProfilePhoto.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(195)))), ((int)(((byte)(199)))));
+            this.picProfilePhoto.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.user_avatar;
+            this.picProfilePhoto.ImageRotate = 0F;
+            this.picProfilePhoto.Location = new System.Drawing.Point(44, 25);
+            this.picProfilePhoto.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.picProfilePhoto.Name = "picProfilePhoto";
+            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
+            this.picProfilePhoto.Size = new System.Drawing.Size(188, 158);
+            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picProfilePhoto.TabIndex = 0;
+            this.picProfilePhoto.TabStop = false;
             // 
             // pnlActions
             // 
@@ -536,11 +561,31 @@
             this.pnlActions.Controls.Add(this.btnPrint);
             this.pnlActions.Controls.Add(this.btnBackToScan);
             this.pnlActions.Controls.Add(this.btnEdit);
-            this.pnlActions.Location = new System.Drawing.Point(38, 435);
-            this.pnlActions.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlActions.Location = new System.Drawing.Point(51, 535);
+            this.pnlActions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlActions.Name = "pnlActions";
-            this.pnlActions.Size = new System.Drawing.Size(975, 49);
+            this.pnlActions.Size = new System.Drawing.Size(1300, 60);
             this.pnlActions.TabIndex = 0;
+            // 
+            // btnExport
+            // 
+            this.btnExport.BorderRadius = 10;
+            this.btnExport.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnExport.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnExport.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnExport.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnExport.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(89)))), ((int)(((byte)(182)))));
+            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnExport.ForeColor = System.Drawing.Color.White;
+            this.btnExport.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.download;
+            this.btnExport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btnExport.ImageSize = new System.Drawing.Size(24, 24);
+            this.btnExport.Location = new System.Drawing.Point(720, 10);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(200, 46);
+            this.btnExport.TabIndex = 3;
+            this.btnExport.Text = "   Export";
             // 
             // btnPrint
             // 
@@ -554,10 +599,10 @@
             this.btnPrint.ForeColor = System.Drawing.Color.White;
             this.btnPrint.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnPrint.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnPrint.Location = new System.Drawing.Point(368, 8);
-            this.btnPrint.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnPrint.Location = new System.Drawing.Point(491, 10);
+            this.btnPrint.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(150, 37);
+            this.btnPrint.Size = new System.Drawing.Size(200, 46);
             this.btnPrint.TabIndex = 2;
             this.btnPrint.Text = "🖨️  Print";
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click_1);
@@ -574,10 +619,10 @@
             this.btnBackToScan.ForeColor = System.Drawing.Color.White;
             this.btnBackToScan.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnBackToScan.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnBackToScan.Location = new System.Drawing.Point(802, 8);
-            this.btnBackToScan.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnBackToScan.Location = new System.Drawing.Point(1069, 10);
+            this.btnBackToScan.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnBackToScan.Name = "btnBackToScan";
-            this.btnBackToScan.Size = new System.Drawing.Size(150, 37);
+            this.btnBackToScan.Size = new System.Drawing.Size(200, 46);
             this.btnBackToScan.TabIndex = 1;
             this.btnBackToScan.Text = "⬅️  Back to Scan";
             // 
@@ -594,110 +639,38 @@
             this.btnEdit.ForeColor = System.Drawing.Color.White;
             this.btnEdit.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnEdit.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnEdit.Location = new System.Drawing.Point(4, 8);
-            this.btnEdit.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEdit.Location = new System.Drawing.Point(5, 10);
+            this.btnEdit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(130, 37);
+            this.btnEdit.Size = new System.Drawing.Size(173, 46);
             this.btnEdit.TabIndex = 0;
             this.btnEdit.Text = "✏️  Edit ";
             this.btnEdit.UseTransparentBackground = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click_1);
             // 
-            // picProfilePhoto
-            // 
-            this.picProfilePhoto.BackColor = System.Drawing.Color.Transparent;
-            this.picProfilePhoto.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(195)))), ((int)(((byte)(199)))));
-            this.picProfilePhoto.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.user_avatar;
-            this.picProfilePhoto.ImageRotate = 0F;
-            this.picProfilePhoto.Location = new System.Drawing.Point(33, 20);
-            this.picProfilePhoto.Margin = new System.Windows.Forms.Padding(2);
-            this.picProfilePhoto.Name = "picProfilePhoto";
-            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.picProfilePhoto.Size = new System.Drawing.Size(141, 128);
-            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picProfilePhoto.TabIndex = 0;
-            this.picProfilePhoto.TabStop = false;
-            // 
-            // btnExport
-            // 
-            this.btnExport.BorderRadius = 10;
-            this.btnExport.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnExport.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnExport.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnExport.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnExport.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(89)))), ((int)(((byte)(182)))));
-            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.download;
-            this.btnExport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btnExport.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnExport.Location = new System.Drawing.Point(540, 8);
-            this.btnExport.Margin = new System.Windows.Forms.Padding(2);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(150, 37);
-            this.btnExport.TabIndex = 3;
-            this.btnExport.Text = "   Export";
-            // 
-            // guna2PictureBox1
-            // 
-            this.guna2PictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2PictureBox1.FillColor = System.Drawing.Color.Transparent;
-            this.guna2PictureBox1.ImageRotate = 0F;
-            this.guna2PictureBox1.Location = new System.Drawing.Point(11, 8);
-            this.guna2PictureBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.guna2PictureBox1.Name = "guna2PictureBox1";
-            this.guna2PictureBox1.Size = new System.Drawing.Size(45, 49);
-            this.guna2PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.guna2PictureBox1.TabIndex = 0;
-            this.guna2PictureBox1.TabStop = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(520, 36);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 19);
-            this.label1.TabIndex = 25;
-            this.label1.Text = "Gender :";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.label2.ForeColor = System.Drawing.Color.Navy;
-            this.label2.Location = new System.Drawing.Point(520, 55);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(48, 21);
-            this.label2.TabIndex = 26;
-            this.label2.Text = "Male";
-            // 
             // StudentRecordScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1050, 731);
+            this.ClientSize = new System.Drawing.Size(1400, 900);
             this.Controls.Add(this.pnlMainContent);
             this.Controls.Add(this.pnlHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "StudentRecordScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Student Record";
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
             this.pnlMainContent.ResumeLayout(false);
             this.pnlScanHistory.ResumeLayout(false);
             this.pnlScanHistory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvScanHistory)).EndInit();
             this.pnlStudentInfo.ResumeLayout(false);
             this.pnlStudentInfo.PerformLayout();
-            this.pnlActions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
+            this.pnlActions.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

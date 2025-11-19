@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using QRCoder;
+using ITP104_FINAL_PROJECT.Data;
+using ITP104_FINAL_PROJECT.Models;
 
 namespace ITP104_FINAL_PROJECT
 {
@@ -16,6 +18,7 @@ namespace ITP104_FINAL_PROJECT
         private string currentUser = "Admin";
         private Timer statusUpdateTimer;
         private Random random = new Random();
+        private readonly StudentRepository studentRepository;
 
         // Panel references for navigation
         private Panel pnlDashboardContent;
@@ -53,6 +56,7 @@ namespace ITP104_FINAL_PROJECT
         public MainDashboard()
         {
             InitializeComponent();
+            studentRepository = new StudentRepository();
             InitializeDashboard();
         }
 
@@ -237,14 +241,16 @@ namespace ITP104_FINAL_PROJECT
                 Dock = DockStyle.Fill,
                 AutoScroll = true,
                 BackColor = Color.FromArgb(240, 242, 245),
-                Padding = new Padding(30)
+                Padding = new Padding(20)
             };
 
-            // Create a container panel to center content
-            Panel centerContainer = new Panel
+            // Header Panel
+            Panel headerPanel = new Panel
             {
-                AutoSize = true,
-                BackColor = Color.Transparent
+                Dock = DockStyle.Top,
+                Height = 80,
+                BackColor = Color.White,
+                Padding = new Padding(20, 15, 20, 15)
             };
 
             Label lblTitle = new Label
@@ -252,50 +258,304 @@ namespace ITP104_FINAL_PROJECT
                 Text = "👥 Student Records",
                 Font = new Font("Segoe UI", 18F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(64, 64, 64),
-                Location = new Point(0, 0),
-                AutoSize = true,
-                TextAlign = ContentAlignment.MiddleCenter
+                Location = new Point(20, 10),
+                AutoSize = true
             };
 
             Label lblDescription = new Label
             {
-                Text = "Browse and manage student records",
+                Text = "Browse and manage registered students",
+                Font = new Font("Segoe UI", 10F),
+                ForeColor = Color.FromArgb(120, 120, 120),
+                Location = new Point(20, 42),
+                AutoSize = true
+            };
+
+            headerPanel.Controls.AddRange(new Control[] { lblTitle, lblDescription });
+
+            // Search Panel
+            Panel searchPanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 70,
+                BackColor = Color.Transparent,
+                Padding = new Padding(0, 10, 0, 10)
+            };
+
+            TextBox txtSearch = new TextBox
+            {
+                Location = new Point(0, 15),
+                Width = 300,
+                Height = 35,
                 Font = new Font("Segoe UI", 11F),
-                ForeColor = Color.FromArgb(100, 100, 100),
-                Location = new Point(0, 40),
-                AutoSize = true,
-                TextAlign = ContentAlignment.MiddleCenter
+                Text = "Search by name or student number..."
             };
 
-            Label lblComingSoon = new Label
+            // Add placeholder text behavior
+            txtSearch.ForeColor = Color.Gray;
+            txtSearch.GotFocus += (s, e) =>
             {
-                Text = "📋 This section is under development.\nStudent records management will be available here.",
-                Font = new Font("Segoe UI", 10F, FontStyle.Italic),
-                ForeColor = Color.FromArgb(150, 150, 150),
-                Location = new Point(0, 85),
-                AutoSize = true,
-                TextAlign = ContentAlignment.MiddleCenter
+                if (txtSearch.Text == "Search by name or student number...")
+                {
+                    txtSearch.Text = "";
+                    txtSearch.ForeColor = Color.Black;
+                }
+            };
+            txtSearch.LostFocus += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(txtSearch.Text))
+                {
+                    txtSearch.Text = "Search by name or student number...";
+                    txtSearch.ForeColor = Color.Gray;
+                }
             };
 
-            // Add labels to center container
-            centerContainer.Controls.Add(lblTitle);
-            centerContainer.Controls.Add(lblDescription);
-            centerContainer.Controls.Add(lblComingSoon);
-
-            // Calculate center position after adding controls
-            panel.Resize += (s, e) =>
+            Button btnSearch = new Button
             {
-                centerContainer.Left = (panel.Width - centerContainer.Width) / 2;
-                centerContainer.Top = (panel.Height - centerContainer.Height) / 2;
+                Text = "🔍 Search",
+                Location = new Point(310, 15),
+                Width = 100,
+                Height = 35,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                BackColor = Color.FromArgb(52, 152, 219),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnSearch.FlatAppearance.BorderSize = 0;
+
+            Button btnRefresh = new Button
+            {
+                Text = "🔄 Refresh",
+                Location = new Point(420, 15),
+                Width = 100,
+                Height = 35,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnRefresh.FlatAppearance.BorderSize = 0;
+
+            searchPanel.Controls.AddRange(new Control[] { txtSearch, btnSearch, btnRefresh });
+
+            // DataGridView for students
+            DataGridView dgvStudents = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
+                AutoGenerateColumns = false,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                ReadOnly = true,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = false,
+                RowHeadersVisible = false,
+                EnableHeadersVisualStyles = false
             };
 
-            panel.Controls.Add(centerContainer);
+            // Column styling
+            dgvStudents.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94);
+            dgvStudents.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvStudents.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dgvStudents.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
+            dgvStudents.ColumnHeadersHeight = 45;
 
-            // Trigger initial centering
-            centerContainer.SizeChanged += (s, e) =>
+            dgvStudents.DefaultCellStyle.BackColor = Color.White;
+            dgvStudents.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
+            dgvStudents.DefaultCellStyle.SelectionBackColor = Color.FromArgb(189, 195, 199);
+            dgvStudents.DefaultCellStyle.SelectionForeColor = Color.FromArgb(44, 62, 80);
+            dgvStudents.DefaultCellStyle.Font = new Font("Segoe UI", 9.5F);
+            dgvStudents.DefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
+            dgvStudents.RowTemplate.Height = 45;
+            dgvStudents.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
+
+            // Define columns
+            dgvStudents.Columns.AddRange(new DataGridViewColumn[]
             {
-                centerContainer.Left = (panel.Width - centerContainer.Width) / 2;
-                centerContainer.Top = (panel.Height - centerContainer.Height) / 2;
+                new DataGridViewTextBoxColumn { Name = "StudentId", HeaderText = "ID", Width = 60, DataPropertyName = "StudentId", Visible = false },
+                new DataGridViewTextBoxColumn { Name = "StudentNumber", HeaderText = "Student Number", Width = 130, DataPropertyName = "StudentNumber" },
+                new DataGridViewTextBoxColumn { Name = "FullName", HeaderText = "Full Name", Width = 200, DataPropertyName = "FullName" },
+                new DataGridViewTextBoxColumn { Name = "Email", HeaderText = "Email", Width = 200, DataPropertyName = "Email" },
+                new DataGridViewTextBoxColumn { Name = "Program", HeaderText = "Program", Width = 160, DataPropertyName = "Program" },
+                new DataGridViewTextBoxColumn { Name = "YearLevel", HeaderText = "Year", Width = 60, DataPropertyName = "YearLevel" },
+                new DataGridViewTextBoxColumn { Name = "Section", HeaderText = "Section", Width = 80, DataPropertyName = "Section" },
+                new DataGridViewTextBoxColumn { Name = "Status", HeaderText = "Status", Width = 80, DataPropertyName = "Status" }
+            });
+
+            // Add View Details button column
+            DataGridViewButtonColumn btnViewDetails = new DataGridViewButtonColumn
+            {
+                Name = "btnViewDetails",
+                HeaderText = "Action",
+                Text = "View Details",
+                UseColumnTextForButtonValue = true,
+                Width = 100,
+                FlatStyle = FlatStyle.Flat
+            };
+            dgvStudents.Columns.Add(btnViewDetails);
+
+            // Container for DataGridView
+            Panel dgvContainer = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White,
+                Padding = new Padding(0, 10, 0, 0)
+            };
+            dgvContainer.Controls.Add(dgvStudents);
+
+            // Add all controls to main panel
+            panel.Controls.Add(dgvContainer);
+            panel.Controls.Add(searchPanel);
+            panel.Controls.Add(headerPanel);
+
+            // Load students asynchronously
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var students = await studentRepository.GetAllAsync(activeOnly: false);
+                    
+                    // Create display list with formatted data
+                    var displayList = students.Select(s => new
+                    {
+                        s.StudentId,
+                        s.StudentNumber,
+                        FullName = $"{s.FirstName} {(string.IsNullOrEmpty(s.MiddleName) ? "" : s.MiddleName + " ")}{s.LastName}",
+                        s.Email,
+                        s.Program,
+                        YearLevel = s.YearLevel + (s.YearLevel == "1" ? "st" : s.YearLevel == "2" ? "nd" : s.YearLevel == "3" ? "rd" : "th"),
+                        s.Section,
+                        s.Status
+                    }).ToList();
+
+                    // Update UI on main thread
+                    if (dgvStudents.InvokeRequired)
+                    {
+                        dgvStudents.Invoke(new Action(() =>
+                        {
+                            dgvStudents.DataSource = displayList;
+                        }));
+                    }
+                    else
+                    {
+                        dgvStudents.DataSource = displayList;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading students: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            });
+
+            // Search button click event
+            btnSearch.Click += async (s, e) =>
+            {
+                string searchTerm = txtSearch.Text.Trim();
+                if (string.IsNullOrEmpty(searchTerm) || searchTerm == "Search by name or student number...")
+                {
+                    btnRefresh.PerformClick();
+                    return;
+                }
+
+                try
+                {
+                    var students = await studentRepository.SearchAsync(searchTerm);
+                    var displayList = students.Select(st => new
+                    {
+                        st.StudentId,
+                        st.StudentNumber,
+                        FullName = $"{st.FirstName} {(string.IsNullOrEmpty(st.MiddleName) ? "" : st.MiddleName + " ")}{st.LastName}",
+                        st.Email,
+                        st.Program,
+                        YearLevel = st.YearLevel + (st.YearLevel == "1" ? "st" : st.YearLevel == "2" ? "nd" : st.YearLevel == "3" ? "rd" : "th"),
+                        st.Section,
+                        st.Status
+                    }).ToList();
+
+                    dgvStudents.DataSource = displayList;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error searching students: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
+
+            // Refresh button click event
+            btnRefresh.Click += async (s, e) =>
+            {
+                try
+                {
+                    txtSearch.Text = "Search by name or student number...";
+                    txtSearch.ForeColor = Color.Gray;
+                    
+                    var students = await studentRepository.GetAllAsync(activeOnly: false);
+                    var displayList = students.Select(st => new
+                    {
+                        st.StudentId,
+                        st.StudentNumber,
+                        FullName = $"{st.FirstName} {(string.IsNullOrEmpty(st.MiddleName) ? "" : st.MiddleName + " ")}{st.LastName}",
+                        st.Email,
+                        st.Program,
+                        YearLevel = st.YearLevel + (st.YearLevel == "1" ? "st" : st.YearLevel == "2" ? "nd" : st.YearLevel == "3" ? "rd" : "th"),
+                        st.Section,
+                        st.Status
+                    }).ToList();
+
+                    dgvStudents.DataSource = displayList;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error refreshing students: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
+
+            // Handle View Details button click
+            dgvStudents.CellContentClick += (s, e) =>
+            {
+                if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+                {
+                    if (dgvStudents.Columns[e.ColumnIndex].Name == "btnViewDetails")
+                    {
+                        var studentId = dgvStudents.Rows[e.RowIndex].Cells["StudentId"].Value?.ToString();
+                        if (!string.IsNullOrEmpty(studentId))
+                        {
+                            StudentRecordScreen recordScreen = new StudentRecordScreen(studentId);
+                            recordScreen.ShowDialog();
+                        }
+                    }
+                }
+            };
+
+            // Double-click also opens student details for convenience
+            dgvStudents.CellDoubleClick += (s, e) =>
+            {
+                if (e.RowIndex >= 0)
+                {
+                    var studentId = dgvStudents.Rows[e.RowIndex].Cells["StudentId"].Value?.ToString();
+                    if (!string.IsNullOrEmpty(studentId))
+                    {
+                        StudentRecordScreen recordScreen = new StudentRecordScreen(studentId);
+                        recordScreen.ShowDialog();
+                    }
+                }
+            };
+
+            // Enter key search
+            txtSearch.KeyPress += (s, e) =>
+            {
+                if (e.KeyChar == (char)Keys.Enter)
+                {
+                    btnSearch.PerformClick();
+                    e.Handled = true;
+                }
             };
 
             return panel;
@@ -440,6 +700,7 @@ namespace ITP104_FINAL_PROJECT
             btnNavDashboard.Click += (s, e) => { NavigateToPage(0); };
             // btnNavRegisterStudent.Click is handled by its own event handler
             btnNavScanQr.Click += (s, e) => { NavigateToPage(2); };
+            // Navigation to Student Records page - button does not open StudentRecordScreen directly
             btnNavStudentRecords.Click += (s, e) => { NavigateToPage(3); };
             btnNavScanHistory.Click += (s, e) => { NavigateToPage(4); };
             btnNavSettings.Click += (s, e) => { NavigateToPage(5); };
@@ -892,8 +1153,7 @@ namespace ITP104_FINAL_PROJECT
 
         private void btnNavStudentRecords_Click(object sender, EventArgs e)
         {
-            StudentRecordScreen studentRecordScreen = new StudentRecordScreen();
-            studentRecordScreen.Show();
+            // Navigation behavior removed - StudentRecordScreen now opened via View Details button in grid
         }
 
         private void btnLogout_Click_1(object sender, EventArgs e)

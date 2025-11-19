@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Data;
+using System.Threading.Tasks;
+using ITP104_FINAL_PROJECT.Data;
+using ITP104_FINAL_PROJECT.Models;
 
 namespace ITP104_FINAL_PROJECT
 {
@@ -10,17 +14,21 @@ namespace ITP104_FINAL_PROJECT
         private string studentId;
         private Timer animationTimer;
         private int animationStep = 0;
+        private readonly StudentRepository studentRepository;
+        private readonly ScanHistoryRepository scanHistoryRepository;
 
         public StudentRecordScreen()
         {
             InitializeComponent();
+            studentRepository = new StudentRepository();
+            scanHistoryRepository = new ScanHistoryRepository();
             InitializeForm();
         }
 
         public StudentRecordScreen(string studentId) : this()
         {
             this.studentId = studentId;
-            LoadStudentData(studentId);
+            LoadStudentDataAsync(studentId);
         }
 
         private void InitializeForm()
@@ -200,87 +208,111 @@ namespace ITP104_FINAL_PROJECT
             dgvScanHistory.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
         }
 
-        private void LoadStudentData(string studentId)
+        private async void LoadStudentDataAsync(string studentId)
         {
             try
             {
                 // Show loading indicator
                 ShowLoadingIndicator(true);
 
-                // Simulate loading delay for smooth animation
-                System.Threading.Thread.Sleep(300);
+                // Load student data from database
+                int studentIdInt = int.Parse(studentId);
+                Student student = await studentRepository.GetByIdAsync(studentIdInt);
 
-                // In a real application, this would load from database
-                // For now, we'll use sample data
-                LoadSampleStudentData(studentId);
+                if (student != null)
+                {
+                    // Populate student information
+                    lblStudentIDValue.Text = student.StudentNumber;
+                    lblFullNameValue.Text = $"{student.FirstName} {(string.IsNullOrEmpty(student.MiddleName) ? "" : student.MiddleName + " ")}{student.LastName}";
+                    lblCourseValue.Text = student.Program;
+                    
+                    // Format year level
+                    string yearLevel = student.YearLevel;
+                    string suffix = yearLevel == "1" ? "st" : yearLevel == "2" ? "nd" : yearLevel == "3" ? "rd" : "th";
+                    lblYearLevelValue.Text = $"{yearLevel}{suffix} Year";
+                    
+                    lblEmailValue.Text = student.Email ?? "N/A";
+                    lblPhoneValue.Text = student.Phone ?? "N/A";
+                    lblAddressValue.Text = "N/A"; // Address not in current schema
+                    lblEnrollmentDateValue.Text = student.EnrollmentDate.ToString("MMMM dd, yyyy");
 
-                // Load scan history
-                LoadScanHistory(studentId);
+                    // Update status badge
+                    UpdateStatusBadge(student.Status);
+
+                    // Load scan history for this student
+                    await LoadScanHistoryAsync(studentIdInt);
+                }
+                else
+                {
+                    MessageBox.Show("Student not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Close();
+                }
 
                 // Hide loading indicator
                 ShowLoadingIndicator(false);
             }
             catch (Exception ex)
             {
+                ShowLoadingIndicator(false);
                 MessageBox.Show($"Error loading student data: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void LoadSampleStudentData(string studentId)
+        private void LoadStudentData(string studentId)
         {
-            // Sample student data - Replace with actual database query
-            lblStudentIDValue.Text = studentId ?? "2024-STU-0001";
-            lblFullNameValue.Text = "Juan Dela Cruz";
-            lblCourseValue.Text = "Computer Science";
-            lblYearLevelValue.Text = "3rd Year";
-            lblStatusValue.Text = "Active";
-            lblStatusValue.ForeColor = Color.FromArgb(46, 204, 113);
-
-            lblEmailValue.Text = "juan.delacruz@university.edu";
-            lblPhoneValue.Text = "+63 912 345 6789";
-            lblAddressValue.Text = "123 Main Street, Manila, Philippines";
-            lblEnrollmentDateValue.Text = "August 15, 2022";
-
-            // Update status badge
-            UpdateStatusBadge("Active");
+            // Redirect to async method
+            LoadStudentDataAsync(studentId);
         }
 
         private void UpdateStatusBadge(string status)
         {
-            if (status.ToLower() == "active")
+            if (lblStatusValue != null)
             {
-                lblStatusValue.Text = "● Active";
-                lblStatusValue.ForeColor = Color.FromArgb(46, 204, 113);
-            }
-            else
-            {
-                lblStatusValue.Text = "● Inactive";
-                lblStatusValue.ForeColor = Color.FromArgb(231, 76, 60);
+                if (status.ToLower() == "active")
+                {
+                    lblStatusValue.Text = "● Active";
+                    lblStatusValue.ForeColor = Color.FromArgb(46, 204, 113);
+                }
+                else
+                {
+                    lblStatusValue.Text = "● Inactive";
+                    lblStatusValue.ForeColor = Color.FromArgb(231, 76, 60);
+                }
             }
         }
 
-        private void LoadScanHistory(string studentId)
+        private async Task LoadScanHistoryAsync(int studentId)
         {
             try
             {
-                // Clear existing data
+                // Get scan history from database
+                var scanHistory = await scanHistoryRepository.GetStudentScansAsync(studentId);
+
+                // Clear existing rows
                 dgvScanHistory.Rows.Clear();
 
-                // Sample scan history data - Replace with actual database query
-                dgvScanHistory.Rows.Add("Nov 16, 2025", "08:15 AM", "05:00 PM", "Entrance - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 16, 2025", "08:30 AM", "04:45 PM", "Library - QR", "University Library");
-                dgvScanHistory.Rows.Add("Nov 16, 2025", "08:20 AM", "05:10 PM", "Cafeteria - QR", "Student Cafeteria");
-                dgvScanHistory.Rows.Add("Nov 15, 2025", "08:00 AM", "04:50 PM", "Entrance - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 15, 2025", "08:10 AM", "05:00 PM", "Laboratory - Barcode", "Computer Lab 3");
-                dgvScanHistory.Rows.Add("Nov 15, 2025", "08:05 AM", "04:30 PM", "Exit - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "08:10 AM", "04:45 PM", "Entrance - QR", "Main Building");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "08:25 AM", "05:15 PM", "Classroom - QR", "Room 301");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "08:00 AM", "04:40 PM", "Library - QR", "University Library");
-                dgvScanHistory.Rows.Add("Nov 14, 2025", "07:50 AM", "04:55 PM", "Exit - QR", "Main Building");
+                if (scanHistory != null && scanHistory.Count > 0)
+                {
+                    foreach (var scan in scanHistory)
+                    {
+                        string date = scan.ScanDateTime.ToString("MM/dd/yyyy");
+                        string timeIn = scan.ScanDateTime.ToString("hh:mm tt");
+                        string timeOut = "-"; // TimeOut not available in current schema
+                        string scanType = scan.ScanType;
+                        string location = scan.Location ?? "Main Building";
 
-                // Update scan count
-                lblScanCountValue.Text = dgvScanHistory.Rows.Count.ToString();
+                        dgvScanHistory.Rows.Add(date, timeIn, timeOut, scanType, location);
+                    }
+
+                    // Update scan statistics
+                    UpdateScanStatistics(scanHistory);
+                }
+                else
+                {
+                    // No scan history found
+                    dgvScanHistory.Rows.Add("-", "No scan history", "-", "-", "-");
+                }
             }
             catch (Exception ex)
             {
@@ -289,16 +321,37 @@ namespace ITP104_FINAL_PROJECT
             }
         }
 
+        private void UpdateScanStatistics(List<ScanHistory> scanHistory)
+        {
+            // Calculate statistics from scan history
+            int totalScans = scanHistory.Count;
+            int timeIns = scanHistory.Count;  // All scans are time-in for now
+            int timeOuts = 0; // TimeOut not available in current schema
+
+            // You can add labels to display these statistics if needed
+            // For now, this method is a placeholder for future enhancements
+        }
+
+        private void LoadScanHistory(string studentId)
+        {
+            // Redirect to async method
+            int studentIdInt = int.Parse(studentId);
+            _ = LoadScanHistoryAsync(studentIdInt);
+        }
+
         private void ShowLoadingIndicator(bool show)
         {
-            if (show)
+            if (lblLoadingIndicator != null)
             {
-                lblLoadingIndicator.Visible = true;
-                lblLoadingIndicator.Text = "⏳ Loading student information...";
-            }
-            else
-            {
-                lblLoadingIndicator.Visible = false;
+                if (show)
+                {
+                    lblLoadingIndicator.Visible = true;
+                    lblLoadingIndicator.Text = "⏳ Loading student information...";
+                }
+                else
+                {
+                    lblLoadingIndicator.Visible = false;
+                }
             }
         }
 
