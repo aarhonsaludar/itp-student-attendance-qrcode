@@ -325,6 +325,125 @@ Restart-Service MySQL80
 
 ---
 
+## Clearing Registered Students
+
+### Option 1: Delete All Students (Keep Structure)
+
+```powershell
+# Delete all students and their related data
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students;"
+```
+
+This will automatically delete:
+
+- ✅ All student records
+- ✅ All associated tokens (QR codes)
+- ✅ All scan history (due to CASCADE)
+- ✅ Auto-increments are preserved (next student_id continues from where it left off)
+
+### Option 2: Delete All Students + Reset IDs
+
+```powershell
+# Delete all students and reset auto-increment
+mysql -u root -padmin -D student_attendance_db -e "TRUNCATE TABLE tokens; TRUNCATE TABLE scan_history; TRUNCATE TABLE students;"
+```
+
+This will:
+
+- ✅ Delete all student data
+- ✅ Reset student_id back to 1
+- ⚠️ Must truncate tokens and scan_history first (foreign key constraints)
+
+### Option 3: Delete Specific Student
+
+```powershell
+# Delete by student number
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE student_number = '2300401';"
+
+# Delete by name
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE first_name = 'Jaycee' AND last_name = 'Aguilan';"
+
+# Delete by student ID
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE student_id = 1;"
+```
+
+### Option 4: Delete All Except Sample Students
+
+```powershell
+# Keep only the 5 default sample students (student_id 1-5)
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE student_id > 5;"
+```
+
+### Option 5: Delete Sample Students Only
+
+```powershell
+# Remove the 5 default sample students, keep your registered students
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE student_id <= 5;"
+```
+
+### Option 6: Clear Scan History Only (Keep Students)
+
+```powershell
+# Delete all scan records but keep students
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM scan_history;"
+
+# Or delete scans for specific student
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM scan_history WHERE student_id = 6;"
+
+# Or delete scans older than a specific date
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM scan_history WHERE scan_datetime < '2025-11-01';"
+```
+
+### Verify Deletion
+
+```powershell
+# Check remaining students
+mysql -u root -padmin -D student_attendance_db -e "SELECT student_id, student_number, first_name, last_name, status FROM students;"
+
+# Count students
+mysql -u root -padmin -D student_attendance_db -e "SELECT COUNT(*) as total_students FROM students;"
+
+# Check scan history count
+mysql -u root -padmin -D student_attendance_db -e "SELECT COUNT(*) as total_scans FROM scan_history;"
+```
+
+### Batch Delete Examples
+
+```powershell
+# Delete all inactive students
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE status = 'Inactive';"
+
+# Delete all suspended students
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE status = 'Suspended';"
+
+# Delete students from specific program
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE program = 'Computer Science';"
+
+# Delete students from specific year level
+mysql -u root -padmin -D student_attendance_db -e "DELETE FROM students WHERE year_level = '4';"
+```
+
+### Safety Tips
+
+⚠️ **Always backup before mass deletion:**
+
+```powershell
+# Export students to backup file
+mysql -u root -padmin -D student_attendance_db -e "SELECT * FROM students;" > students_backup.csv
+
+# Or backup entire database
+mysqldump -u root -padmin student_attendance_db > backup_$(Get-Date -Format 'yyyyMMdd_HHmmss').sql
+```
+
+✅ **Check count before deletion:**
+
+```powershell
+# See how many will be deleted
+mysql -u root -padmin -D student_attendance_db -e "SELECT COUNT(*) as will_be_deleted FROM students WHERE status = 'Inactive';"
+```
+
+---
+
 ## Quick Reset (Start Over)
 
 If you need to completely reset the database:
