@@ -2,6 +2,10 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using ITP104_FINAL_PROJECT.Data;
+using ITP104_FINAL_PROJECT.Models;
 
 namespace ITP104_FINAL_PROJECT
 {
@@ -10,12 +14,14 @@ namespace ITP104_FINAL_PROJECT
         private Timer animationTimer;
         private int animationStep = 0;
         private int currentPage = 1;
-        private int itemsPerPage = 10;
-        private int totalPages = 2;
+        private int itemsPerPage = 50; // Increased for better display
+        private int totalRecords = 0;
+        private readonly ScanHistoryRepository scanHistoryRepository;
 
         public ScanHistoryScreen()
         {
             InitializeComponent();
+            scanHistoryRepository = new ScanHistoryRepository();
             InitializeForm();
         }
 
@@ -40,8 +46,8 @@ namespace ITP104_FINAL_PROJECT
             // Setup hover effects
             SetupHoverEffects();
 
-            // Load sample data
-            LoadSampleData();
+            // Load real data from database
+            _ = LoadScanHistoryAsync();
 
             // Start animation
             animationTimer.Start();
@@ -239,55 +245,121 @@ namespace ITP104_FINAL_PROJECT
             }
         }
 
-        private void LoadSampleData()
+        private async Task LoadScanHistoryAsync()
         {
-            dgvScanHistory.Rows.Clear();
-
-            // Sample data - 20 entries
-            var sampleData = new[]
+            try
             {
-                new { Date = "Nov 16, 2025", TimeIn = "08:15 AM", TimeOut = "05:00 PM", ID = "2300001", Name = "Juan Dela Cruz", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 16, 2025", TimeIn = "08:12 AM", TimeOut = "05:10 PM", ID = "2300002", Name = "Emilia Santos", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 16, 2025", TimeIn = "08:10 AM", TimeOut = "04:45 PM", ID = "2300003", Name = "Miguel Navarro", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 16, 2025", TimeIn = "08:05 AM", TimeOut = "05:15 PM", ID = "2300004", Name = "Sarah Del Rosario", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 16, 2025", TimeIn = "08:00 AM", TimeOut = "04:30 PM", ID = "2300005", Name = "David Buhain", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "08:45 AM", TimeOut = "04:45 PM", ID = "2300006", Name = "Jennifer Magbanua", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "08:30 AM", TimeOut = "04:30 PM", ID = "2300007", Name = "Roberto Galang", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "08:15 AM", TimeOut = "05:00 PM", ID = "2300008", Name = "Liza Andres", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "08:00 AM", TimeOut = "04:50 PM", ID = "2300009", Name = "Jaime Tolentino", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "07:45 AM", TimeOut = "03:45 PM", ID = "2300010", Name = "Maria Rodriguez", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "09:30 AM", TimeOut = "--", ID = "2300011", Name = "Wilfredo Lim", Type = "QR Code", Status = "Failed" },
-                new { Date = "Nov 15, 2025", TimeIn = "08:15 AM", TimeOut = "05:00 PM", ID = "2300012", Name = "Patricia Balagtas", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "08:00 AM", TimeOut = "04:40 PM", ID = "2300013", Name = "Kristopher Mendoza", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "07:45 AM", TimeOut = "04:30 PM", ID = "2300014", Name = "Linda Yumul", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 15, 2025", TimeIn = "08:30 AM", TimeOut = "05:10 PM", ID = "2300015", Name = "Daniel Dizon", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 14, 2025", TimeIn = "08:15 AM", TimeOut = "04:45 PM", ID = "2300016", Name = "Nancy Arriola", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 14, 2025", TimeIn = "08:00 AM", TimeOut = "05:00 PM", ID = "2300017", Name = "Mateo Lopez", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 14, 2025", TimeIn = "07:45 AM", TimeOut = "04:30 PM", ID = "2300018", Name = "Sandra Malig", Type = "QR Code", Status = "Success" },
-                new { Date = "Nov 14, 2025", TimeIn = "09:30 AM", TimeOut = "--", ID = "2300019", Name = "Antonio Pascual", Type = "QR Code", Status = "Failed" },
-                new { Date = "Nov 14, 2025", TimeIn = "08:15 AM", TimeOut = "04:55 PM", ID = "2300020", Name = "Beatrice Vergara", Type = "QR Code", Status = "Success" }
-            };
+                dgvScanHistory.Rows.Clear();
 
+                // Get filter criteria - only apply if date pickers are explicitly checked
+                DateTime? startDate = null;
+                DateTime? endDate = null;
 
-            // Load data for current page
-            int startIndex = (currentPage - 1) * itemsPerPage;
-            int endIndex = Math.Min(startIndex + itemsPerPage, sampleData.Length);
+                // Only apply date filter if user has explicitly checked the date picker
+                if (dtpDateFrom.Checked && dtpDateTo.Checked)
+                {
+                    startDate = dtpDateFrom.Value.Date;
+                    endDate = dtpDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+                }
+                else if (dtpDateFrom.Checked)
+                {
+                    startDate = dtpDateFrom.Value.Date;
+                }
+                else if (dtpDateTo.Checked)
+                {
+                    endDate = dtpDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+                }
 
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                var data = sampleData[i];
-                dgvScanHistory.Rows.Add(data.Date, data.TimeIn, data.TimeOut, data.ID, data.Name, data.Type, data.Status);
+                // Load scan history from database
+                var scanHistory = await scanHistoryRepository.GetHistoryAsync(
+                    startDate: startDate,
+                    endDate: endDate,
+                    studentId: null,
+                    scanType: null
+                );
+
+                // Filter by search text if provided
+                string searchText = txtSearch.Text.Trim().ToLower();
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    scanHistory = scanHistory.Where(s =>
+                        s.StudentNumber?.ToLower().Contains(searchText) == true ||
+                        s.StudentName?.ToLower().Contains(searchText) == true
+                    ).ToList();
+                }
+
+                // Filter by scan type if selected
+                if (cmbScanType.SelectedIndex > 0) // Index 0 is "All"
+                {
+                    string selectedType = cmbScanType.Text;
+                    scanHistory = scanHistory.Where(s =>
+                        s.ScanType?.Equals(selectedType, StringComparison.OrdinalIgnoreCase) == true
+                    ).ToList();
+                }
+
+                totalRecords = scanHistory.Count;
+
+                // Apply pagination
+                var pagedData = scanHistory
+                    .OrderByDescending(s => s.ScanDateTime)
+                    .Skip((currentPage - 1) * itemsPerPage)
+                    .Take(itemsPerPage)
+                    .ToList();
+
+                // Populate DataGridView
+                foreach (var scan in pagedData)
+                {
+                    string date = scan.ScanDateTime.ToString("MMM dd, yyyy");
+                    string timeIn = scan.ScanDateTime.ToString("hh:mm tt");
+                    string timeOut = "-"; // Not tracked in current schema
+                    string studentNumber = scan.StudentNumber ?? "N/A";
+                    string studentName = scan.StudentName ?? "Unknown";
+                    string scanType = scan.ScanType ?? "QR";
+                    string status = scan.Status ?? "success";
+
+                    // Format status with color coding
+                    status = status.ToLower() == "success" ? "Success" :
+                             status.ToLower() == "duplicate" ? "Duplicate" : "Failed";
+
+                    dgvScanHistory.Rows.Add(date, timeIn, timeOut, studentNumber, studentName, scanType, status);
+
+                    // Apply row color based on status
+                    int rowIndex = dgvScanHistory.Rows.Count - 1;
+                    if (status == "Duplicate")
+                    {
+                        dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Orange;
+                    }
+                    else if (status == "Failed")
+                    {
+                        dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Red;
+                    }
+                }
+
+                // Update pagination info
+                UpdatePaginationInfo();
+
+                // Update total records label
+                lblTotalRecords.Text = $"Total Records: {totalRecords}";
+
+                // Only show message if user has applied filters
+                if (totalRecords == 0 && (startDate.HasValue || endDate.HasValue || !string.IsNullOrEmpty(searchText) || cmbScanType.SelectedIndex > 0))
+                {
+                    MessageBox.Show("No scan records found matching the criteria.", "No Records",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
-
-            // Update pagination info
-            UpdatePaginationInfo();
-
-            // Update total records label
-            lblTotalRecords.Text = $"Total Records: {sampleData.Length}";
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading scan history: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void UpdatePaginationInfo()
         {
+            int totalPages = (int)Math.Ceiling((double)totalRecords / itemsPerPage);
+            totalPages = Math.Max(1, totalPages); // At least 1 page
+
             lblPageInfo.Text = $"Page {currentPage} of {totalPages}";
             btnPreviousPage.Enabled = currentPage > 1;
             btnNextPage.Enabled = currentPage < totalPages;
@@ -318,42 +390,20 @@ namespace ITP104_FINAL_PROJECT
             }
         }
 
-        private void BtnSearch_Click(object sender, EventArgs e)
+        private async void BtnSearch_Click(object sender, EventArgs e)
         {
-            string searchText = txtSearch.Text.Trim().ToLower();
-            DateTime? dateFrom = dtpDateFrom.Checked ? dtpDateFrom.Value.Date : (DateTime?)null;
-            DateTime? dateTo = dtpDateTo.Checked ? dtpDateTo.Value.Date : (DateTime?)null;
-            string scanType = cmbScanType.SelectedIndex >= 0 ? cmbScanType.Text : "";
-
-            if (string.IsNullOrEmpty(searchText) && !dateFrom.HasValue && !dateTo.HasValue && string.IsNullOrEmpty(scanType))
-            {
-                MessageBox.Show("Please enter search criteria.", "Search", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            // Show filtering message
-            string filters = "Filtering by:\n";
-            if (!string.IsNullOrEmpty(searchText)) filters += $"- Search: {searchText}\n";
-            if (dateFrom.HasValue) filters += $"- From: {dateFrom.Value:MMM dd, yyyy}\n";
-            if (dateTo.HasValue) filters += $"- To: {dateTo.Value:MMM dd, yyyy}\n";
-            if (!string.IsNullOrEmpty(scanType)) filters += $"- Type: {scanType}\n";
-
-            MessageBox.Show(
-                filters + "\nFiltering functionality will be fully implemented with database integration.",
-                "Search Applied",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+            currentPage = 1; // Reset to first page on search
+            await LoadScanHistoryAsync();
         }
 
-        private void BtnClearFilter_Click(object sender, EventArgs e)
+        private async void BtnClearFilter_Click(object sender, EventArgs e)
         {
             txtSearch.Clear();
             dtpDateFrom.Checked = false;
             dtpDateTo.Checked = false;
             cmbScanType.SelectedIndex = -1;
             currentPage = 1;
-            LoadSampleData();
+            await LoadScanHistoryAsync();
         }
 
         private void BtnExport_Click(object sender, EventArgs e)
@@ -377,21 +427,22 @@ namespace ITP104_FINAL_PROJECT
             }
         }
 
-        private void BtnPreviousPage_Click(object sender, EventArgs e)
+        private async void BtnPreviousPage_Click(object sender, EventArgs e)
         {
             if (currentPage > 1)
             {
                 currentPage--;
-                LoadSampleData();
+                await LoadScanHistoryAsync();
             }
         }
 
-        private void BtnNextPage_Click(object sender, EventArgs e)
+        private async void BtnNextPage_Click(object sender, EventArgs e)
         {
+            int totalPages = (int)Math.Ceiling((double)totalRecords / itemsPerPage);
             if (currentPage < totalPages)
             {
                 currentPage++;
-                LoadSampleData();
+                await LoadScanHistoryAsync();
             }
         }
 
@@ -412,10 +463,10 @@ namespace ITP104_FINAL_PROJECT
         }
 
         // Public method to refresh data
-        public void RefreshData()
+        public async void RefreshData()
         {
             currentPage = 1;
-            LoadSampleData();
+            await LoadScanHistoryAsync();
         }
 
         private void lblHeaderTitle_Click(object sender, EventArgs e)

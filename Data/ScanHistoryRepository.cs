@@ -10,7 +10,67 @@ namespace ITP104_FINAL_PROJECT.Data
     public class ScanHistoryRepository
     {
         /// <summary>
-        /// Record a QR scan using stored procedure with duplicate detection
+        /// Record a QR scan with Time In/Time Out logic using new stored procedure
+        /// </summary>
+        public async Task<(bool success, string message, string scanType)> RecordAttendanceScanAsync(
+            string qrData,
+            int deviceId,
+            string location = null)
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    await connection.OpenAsync();
+                    using (var command = new MySqlCommand("sp_record_attendance_scan", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Input parameters
+                        command.Parameters.AddWithValue("@p_scan_data", qrData);
+                        command.Parameters.AddWithValue("@p_device_id", deviceId);
+                        command.Parameters.AddWithValue("@p_location", location ?? (object)DBNull.Value);
+
+                        // Output parameters
+                        var resultParam = new MySqlParameter("@p_result", MySqlDbType.VarChar, 200) { Direction = ParameterDirection.Output };
+                        var studentNameParam = new MySqlParameter("@p_student_name", MySqlDbType.VarChar, 200) { Direction = ParameterDirection.Output };
+                        var studentNumberParam = new MySqlParameter("@p_student_number", MySqlDbType.VarChar, 50) { Direction = ParameterDirection.Output };
+                        var scanTypeParam = new MySqlParameter("@p_scan_type", MySqlDbType.VarChar, 20) { Direction = ParameterDirection.Output };
+
+                        command.Parameters.Add(resultParam);
+                        command.Parameters.Add(studentNameParam);
+                        command.Parameters.Add(studentNumberParam);
+                        command.Parameters.Add(scanTypeParam);
+
+                        await command.ExecuteNonQueryAsync();
+
+                        string result = resultParam.Value?.ToString() ?? "Unknown error";
+                        string studentName = studentNameParam.Value?.ToString();
+                        string studentNumber = studentNumberParam.Value?.ToString();
+                        string scanType = scanTypeParam.Value?.ToString() ?? "ERROR";
+
+                        // Determine success based on result message
+                        bool success = result.StartsWith("SUCCESS");
+
+                        // Format message to include student info if available
+                        string message = result;
+                        if (!string.IsNullOrEmpty(studentName) && !string.IsNullOrEmpty(studentNumber))
+                        {
+                            message = $"{studentName} ({studentNumber})\n{result}";
+                        }
+
+                        return (success, message, scanType);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Database error: {ex.Message}", "ERROR");
+            }
+        }
+
+        /// <summary>
+        /// Record a QR scan using stored procedure with duplicate detection (OLD METHOD - kept for compatibility)
         /// </summary>
         public async Task<(bool success, string message, int scanId)> RecordScanAsync(int studentId, int deviceId, string scanData, string scanPurpose = "attendance", string location = null, string notes = null)
         {
@@ -287,16 +347,16 @@ namespace ITP104_FINAL_PROJECT.Data
             return new ScanHistory
             {
                 ScanId = reader.GetInt32("scan_id"),
-                StudentId = reader.GetInt32("student_id"),
-                DeviceId = reader.GetInt32("device_id"),
+                StudentId = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("student_id")) ? reader.GetInt32("student_id") : 0,
+                DeviceId = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("device_id")) ? reader.GetInt32("device_id") : 0,
                 ScanType = reader.GetString("scan_type"),
-                ScanData = reader.GetString("scan_data"),
+                ScanData = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("scan_data")) ? reader.GetString("scan_data") : null,
                 ScanDateTime = reader.GetDateTime("scan_datetime"),
-                ScanPurpose = reader.GetString("scan_purpose"),
+                ScanPurpose = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("scan_purpose")) ? reader.GetString("scan_purpose") : null,
                 Location = reader.IsDBNull(reader.GetOrdinal("location")) ? null : reader.GetString("location"),
                 Status = reader.GetString("status"),
-                Notes = reader.IsDBNull(reader.GetOrdinal("notes")) ? null : reader.GetString("notes"),
-                CreatedAt = reader.GetDateTime("created_at"),
+                Notes = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("notes")) ? reader.GetString("notes") : null,
+                CreatedAt = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("created_at")) ? reader.GetDateTime("created_at") : DateTime.MinValue,
                 StudentNumber = reader.IsDBNull(reader.GetOrdinal("student_number")) ? null : reader.GetString("student_number"),
                 StudentName = reader.IsDBNull(reader.GetOrdinal("student_name")) ? null : reader.GetString("student_name"),
                 DeviceName = reader.IsDBNull(reader.GetOrdinal("device_name")) ? null : reader.GetString("device_name")

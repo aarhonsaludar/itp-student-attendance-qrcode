@@ -222,8 +222,8 @@ namespace ITP104_FINAL_PROJECT
             };
             btnOpenScanner.Click += (s, e) =>
             {
-                // Open the camera scanner form
-                CameraScannerForm scannerForm = new CameraScannerForm();
+                // Open the QR scanner form with centered scan box
+                QRScannerForm scannerForm = new QRScannerForm();
                 scannerForm.ShowDialog();
             };
 

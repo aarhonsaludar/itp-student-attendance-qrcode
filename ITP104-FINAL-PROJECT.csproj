@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <LangVersion>8.0</LangVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -127,11 +128,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CameraScannerForm.cs">
+    <Compile Include="QRScannerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CameraScannerForm.Designer.cs">
-      <DependentUpon>CameraScannerForm.cs</DependentUpon>
+    <Compile Include="QRScannerForm.Designer.cs">
+      <DependentUpon>QRScannerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LoginScreen.cs">
       <SubType>Form</SubType>
@@ -189,8 +190,8 @@
     <EmbeddedResource Include="LoginScreen.resx">
       <DependentUpon>LoginScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CameraScannerForm.resx">
-      <DependentUpon>CameraScannerForm.cs</DependentUpon>
+    <EmbeddedResource Include="QRScannerForm.resx">
+      <DependentUpon>QRScannerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainDashboard.resx">
       <DependentUpon>MainDashboard.cs</DependentUpon>

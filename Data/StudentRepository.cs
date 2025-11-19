@@ -145,15 +145,55 @@ namespace ITP104_FINAL_PROJECT.Data
                     using (var command = new MySqlCommand("sp_get_student_by_qrcode", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@p_qr_code_data", qrCodeData);
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        // Input parameter
+                        command.Parameters.AddWithValue("@p_qr_code", qrCodeData);
+
+                        // Output parameters
+                        var studentIdParam = new MySqlParameter("@p_student_id", MySqlDbType.Int32) { Direction = ParameterDirection.Output };
+                        var studentNumberParam = new MySqlParameter("@p_student_number", MySqlDbType.VarChar, 50) { Direction = ParameterDirection.Output };
+                        var fullNameParam = new MySqlParameter("@p_full_name", MySqlDbType.VarChar, 200) { Direction = ParameterDirection.Output };
+                        var emailParam = new MySqlParameter("@p_email", MySqlDbType.VarChar, 100) { Direction = ParameterDirection.Output };
+                        var programParam = new MySqlParameter("@p_program", MySqlDbType.VarChar, 100) { Direction = ParameterDirection.Output };
+                        var yearLevelParam = new MySqlParameter("@p_year_level", MySqlDbType.VarChar, 10) { Direction = ParameterDirection.Output };
+                        var statusParam = new MySqlParameter("@p_status", MySqlDbType.VarChar, 20) { Direction = ParameterDirection.Output };
+
+                        command.Parameters.Add(studentIdParam);
+                        command.Parameters.Add(studentNumberParam);
+                        command.Parameters.Add(fullNameParam);
+                        command.Parameters.Add(emailParam);
+                        command.Parameters.Add(programParam);
+                        command.Parameters.Add(yearLevelParam);
+                        command.Parameters.Add(statusParam);
+
+                        await command.ExecuteNonQueryAsync();
+
+                        // Check if student was found (student_id will be null if not found)
+                        if (studentIdParam.Value == DBNull.Value || studentIdParam.Value == null)
                         {
-                            if (await reader.ReadAsync())
-                            {
-                                return MapStudent(reader);
-                            }
+                            return null;
                         }
+
+                        // Parse the full name into first/middle/last
+                        string fullName = fullNameParam.Value?.ToString() ?? "";
+                        string[] nameParts = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        string firstName = nameParts.Length > 0 ? nameParts[0] : "";
+                        string lastName = nameParts.Length > 1 ? nameParts[nameParts.Length - 1] : "";
+                        string middleName = nameParts.Length > 2 ? string.Join(" ", nameParts, 1, nameParts.Length - 2) : "";
+
+                        return new Student
+                        {
+                            StudentId = Convert.ToInt32(studentIdParam.Value),
+                            StudentNumber = studentNumberParam.Value?.ToString(),
+                            FirstName = firstName,
+                            MiddleName = middleName,
+                            LastName = lastName,
+                            Email = emailParam.Value?.ToString(),
+                            Program = programParam.Value?.ToString(),
+                            YearLevel = yearLevelParam.Value?.ToString(),
+                            Status = statusParam.Value?.ToString(),
+                            QRCodeData = qrCodeData
+                        };
                     }
                 }
             }
@@ -161,8 +201,6 @@ namespace ITP104_FINAL_PROJECT.Data
             {
                 throw new Exception($"Error retrieving student by QR code: {ex.Message}", ex);
             }
-
-            return null;
         }
 
         /// <summary>
