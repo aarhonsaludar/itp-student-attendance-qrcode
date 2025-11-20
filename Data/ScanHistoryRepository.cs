@@ -142,15 +142,44 @@ namespace ITP104_FINAL_PROJECT.Data
                 using (var connection = DatabaseHelper.GetConnection())
                 {
                     await connection.OpenAsync();
-                    using (var command = new MySqlCommand("sp_get_scan_history", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
+                    
+                    // Use direct query instead of stored procedure to ensure correct filtering and avoid duplicates
+                    var sqlBuilder = new System.Text.StringBuilder();
+                    sqlBuilder.Append(@"SELECT sh.*, s.student_number, 
+                                    CONCAT(s.first_name, ' ', s.last_name) as student_name,
+                                    d.device_name
+                                    FROM scan_history sh
+                                    LEFT JOIN students s ON sh.student_id = s.student_id
+                                    LEFT JOIN devices d ON sh.device_id = d.device_id
+                                    WHERE 1=1");
 
-                        command.Parameters.AddWithValue("@p_start_date", startDate ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@p_end_date", endDate ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@p_student_id", studentId ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@p_limit", 1000); // Default limit
-                        command.Parameters.AddWithValue("@p_offset", 0); // Default offset
+                    if (startDate.HasValue)
+                        sqlBuilder.Append(" AND sh.scan_datetime >= @startDate");
+                    
+                    if (endDate.HasValue)
+                        sqlBuilder.Append(" AND sh.scan_datetime <= @endDate");
+                        
+                    if (studentId.HasValue)
+                        sqlBuilder.Append(" AND sh.student_id = @studentId");
+                        
+                    if (!string.IsNullOrEmpty(scanType))
+                        sqlBuilder.Append(" AND sh.scan_type = @scanType");
+                        
+                    sqlBuilder.Append(" ORDER BY sh.scan_datetime DESC LIMIT 1000");
+
+                    using (var command = new MySqlCommand(sqlBuilder.ToString(), connection))
+                    {
+                        if (startDate.HasValue)
+                            command.Parameters.AddWithValue("@startDate", startDate.Value);
+                            
+                        if (endDate.HasValue)
+                            command.Parameters.AddWithValue("@endDate", endDate.Value);
+                            
+                        if (studentId.HasValue)
+                            command.Parameters.AddWithValue("@studentId", studentId.Value);
+                            
+                        if (!string.IsNullOrEmpty(scanType))
+                            command.Parameters.AddWithValue("@scanType", scanType);
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -183,7 +212,8 @@ namespace ITP104_FINAL_PROJECT.Data
                     using (var command = new MySqlCommand("sp_get_daily_summary", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@p_target_date", targetDate ?? DateTime.Today);
+                        // Fixed: Parameter name must match stored procedure definition (p_date, not p_target_date)
+                        command.Parameters.AddWithValue("@p_date", targetDate ?? DateTime.Today);
 
                         using (var adapter = new MySqlDataAdapter(command))
                         {
@@ -344,6 +374,39 @@ namespace ITP104_FINAL_PROJECT.Data
 
         private ScanHistory MapScanHistory(MySqlDataReader reader)
         {
+            // Check if time_out column exists in the result set
+            DateTime? timeOut = null;
+            try
+            {
+                int timeOutOrdinal = reader.GetOrdinal("time_out");
+                if (!reader.IsDBNull(timeOutOrdinal))
+                {
+                    timeOut = reader.GetDateTime(timeOutOrdinal);
+                }
+            }
+            catch
+            {
+                // Column doesn't exist, leave as null
+            }
+
+            // Handle scan_datetime vs time_in (view uses time_in, stored procedure uses scan_datetime)
+            DateTime scanDateTime;
+            try
+            {
+                scanDateTime = reader.GetDateTime("scan_datetime");
+            }
+            catch
+            {
+                try
+                {
+                    scanDateTime = reader.GetDateTime("time_in");
+                }
+                catch
+                {
+                    scanDateTime = DateTime.MinValue;
+                }
+            }
+
             return new ScanHistory
             {
                 ScanId = reader.GetInt32("scan_id"),
@@ -351,7 +414,8 @@ namespace ITP104_FINAL_PROJECT.Data
                 DeviceId = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("device_id")) ? reader.GetInt32("device_id") : 0,
                 ScanType = reader.GetString("scan_type"),
                 ScanData = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("scan_data")) ? reader.GetString("scan_data") : null,
-                ScanDateTime = reader.GetDateTime("scan_datetime"),
+                ScanDateTime = scanDateTime,
+                TimeOut = timeOut,
                 ScanPurpose = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("scan_purpose")) ? reader.GetString("scan_purpose") : null,
                 Location = reader.IsDBNull(reader.GetOrdinal("location")) ? null : reader.GetString("location"),
                 Status = reader.GetString("status"),

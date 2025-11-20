@@ -344,6 +344,7 @@ BEGIN
         CONCAT(s.first_name, ' ', s.last_name) AS student_name,
         sh.scan_type,
         sh.scan_datetime,
+        sh.time_out,
         sh.location,
         sh.status,
         d.device_name

@@ -17,8 +17,10 @@ namespace ITP104_FINAL_PROJECT
     {
         private string currentUser = "Admin";
         private Timer statusUpdateTimer;
+        private Timer dashboardRefreshTimer;
         private Random random = new Random();
         private readonly StudentRepository studentRepository;
+        private readonly ScanHistoryRepository scanHistoryRepository;
 
         // Panel references for navigation
         private Panel pnlDashboardContent;
@@ -57,6 +59,7 @@ namespace ITP104_FINAL_PROJECT
         {
             InitializeComponent();
             studentRepository = new StudentRepository();
+            scanHistoryRepository = new ScanHistoryRepository();
             InitializeDashboard();
         }
 
@@ -589,18 +592,8 @@ namespace ITP104_FINAL_PROJECT
                 AutoSize = true
             };
 
-            Label lblComingSoon = new Label
-            {
-                Text = "📊 This section is under development.\nComplete scan history will be available here.",
-                Font = new Font("Segoe UI", 10F, FontStyle.Italic),
-                ForeColor = Color.FromArgb(150, 150, 150),
-                Location = new Point(30, 100),
-                AutoSize = true
-            };
-
             panel.Controls.Add(lblTitle);
             panel.Controls.Add(lblDescription);
-            panel.Controls.Add(lblComingSoon);
 
             return panel;
         }
@@ -880,16 +873,30 @@ namespace ITP104_FINAL_PROJECT
 
         private void InitializeStatusTimer()
         {
+            // Status update timer
             statusUpdateTimer = new Timer();
             statusUpdateTimer.Interval = 5000; // Update every 5 seconds
             statusUpdateTimer.Tick += StatusUpdateTimer_Tick;
             statusUpdateTimer.Start();
+
+            // Dashboard refresh timer for real-time stats
+            dashboardRefreshTimer = new Timer();
+            dashboardRefreshTimer.Interval = 5000; // Refresh every 5 seconds
+            dashboardRefreshTimer.Tick += DashboardRefreshTimer_Tick;
+            dashboardRefreshTimer.Start();
         }
 
         private void StatusUpdateTimer_Tick(object sender, EventArgs e)
         {
             // Simulate real-time updates
             UpdateSystemStatus();
+        }
+
+        private async void DashboardRefreshTimer_Tick(object sender, EventArgs e)
+        {
+            // Auto-refresh dashboard stats every 5 seconds
+            await LoadDashboardStatsAsync();
+            await LoadRecentScansAsync();
         }
 
         private void UpdateSystemStatus()
@@ -915,41 +922,222 @@ namespace ITP104_FINAL_PROJECT
 
         private void LoadDashboardStats()
         {
+            // Synchronous wrapper for async method
+            Task.Run(async () => await LoadDashboardStatsAsync());
+        }
+
+        private async Task LoadDashboardStatsAsync()
+        {
             try
             {
-                // Simulate loading statistics from database
-                lblTotalStudentsValue.Text = "1,247";
-                lblScansTodayValue.Text = "89";
-                lblMostUsedScanValue.Text = "QR Code";
+                // Get total students count from database
+                var students = await studentRepository.GetAllAsync(activeOnly: true);
+                int totalStudents = students.Count;
+
+                // Get daily summary from stored procedure
+                var summaryTable = await scanHistoryRepository.GetDailySummaryAsync(DateTime.Today);
+                
+                int scansToday = 0;
+                int qrScans = 0;
+                int manualScans = 0;
+                
+                if (summaryTable != null && summaryTable.Rows.Count > 0)
+                {
+                    var row = summaryTable.Rows[0];
+                    scansToday = row["total_scans"] != DBNull.Value ? Convert.ToInt32(row["total_scans"]) : 0;
+                    qrScans = row["qr_scans"] != DBNull.Value ? Convert.ToInt32(row["qr_scans"]) : 0;
+                }
+
+                // Calculate most used scan type from actual data
+                manualScans = scansToday - qrScans;
+                string mostUsedScanType = "N/A";
+                
+                if (scansToday > 0)
+                {
+                    if (qrScans >= manualScans)
+                    {
+                        mostUsedScanType = $"QR Code ({qrScans})";
+                    }
+                    else
+                    {
+                        mostUsedScanType = $"Manual ({manualScans})";
+                    }
+                }
+                else
+                {
+                    mostUsedScanType = "No scans today";
+                }
+
+                // Update UI on main thread
+                if (lblTotalStudentsValue.InvokeRequired)
+                {
+                    lblTotalStudentsValue.Invoke(new Action(() =>
+                    {
+                        lblTotalStudentsValue.Text = totalStudents.ToString("N0");
+                        lblScansTodayValue.Text = scansToday.ToString("N0");
+                        lblMostUsedScanValue.Text = mostUsedScanType;
+                    }));
+                }
+                else
+                {
+                    lblTotalStudentsValue.Text = totalStudents.ToString("N0");
+                    lblScansTodayValue.Text = scansToday.ToString("N0");
+                    lblMostUsedScanValue.Text = mostUsedScanType;
+                }
             }
-            catch { /* Prevent errors during UI updates */ }
+            catch (Exception ex)
+            {
+                // Log detailed error information
+                string errorDetails = $"Error loading dashboard stats:\n" +
+                                    $"Message: {ex.Message}\n" +
+                                    $"Type: {ex.GetType().Name}\n" +
+                                    $"Stack: {ex.StackTrace}";
+                
+                if (ex.InnerException != null)
+                {
+                    errorDetails += $"\nInner Exception: {ex.InnerException.Message}";
+                }
+                
+                System.Diagnostics.Debug.WriteLine(errorDetails);
+                
+                // Show error to user (only once, not on every refresh)
+                if (lblTotalStudentsValue.Text != "Error")
+                {
+                    MessageBox.Show(
+                        $"Failed to load dashboard statistics.\n\n" +
+                        $"Error: {ex.Message}\n\n" +
+                        $"Please check:\n" +
+                        $"1. Database connection is active\n" +
+                        $"2. Stored procedure 'sp_get_daily_summary' exists\n" +
+                        $"3. Database tables have data",
+                        "Dashboard Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
+                
+                // Update UI with error state on main thread
+                if (lblTotalStudentsValue.InvokeRequired)
+                {
+                    lblTotalStudentsValue.Invoke(new Action(() =>
+                    {
+                        lblTotalStudentsValue.Text = "Error";
+                        lblScansTodayValue.Text = "Error";
+                        lblMostUsedScanValue.Text = "Error";
+                    }));
+                }
+                else
+                {
+                    lblTotalStudentsValue.Text = "Error";
+                    lblScansTodayValue.Text = "Error";
+                    lblMostUsedScanValue.Text = "Error";
+                }
+            }
         }
 
         private void LoadRecentScans()
         {
+            // Synchronous wrapper for async method
+            Task.Run(async () => await LoadRecentScansAsync());
+        }
+
+        private async Task LoadRecentScansAsync()
+        {
             try
             {
-                // Create columns
-                dgvRecentScans.Columns.Clear();
-                dgvRecentScans.Columns.Add("StudentID", "Student ID");
-                dgvRecentScans.Columns.Add("Name", "Name");
-                dgvRecentScans.Columns.Add("ScanType", "Scan Type");
-                dgvRecentScans.Columns.Add("Time", "Time");
+                // Get recent scans from view
+                var recentScans = await scanHistoryRepository.GetRecentScansAsync(limit: 10);
 
-                // Set column widths
-                dgvRecentScans.Columns["StudentID"].Width = 200;
-                dgvRecentScans.Columns["Name"].Width = 300;
-                dgvRecentScans.Columns["ScanType"].Width = 200;
-                dgvRecentScans.Columns["Time"].Width = 250;
+                // Update UI on main thread
+                if (dgvRecentScans.InvokeRequired)
+                {
+                    dgvRecentScans.Invoke(new Action(() =>
+                    {
+                        // Initialize columns if not already done
+                        if (dgvRecentScans.Columns.Count == 0)
+                        {
+                            dgvRecentScans.Columns.Add("StudentNumber", "Student ID");
+                            dgvRecentScans.Columns.Add("StudentName", "Name");
+                            dgvRecentScans.Columns.Add("ScanType", "Scan Type");
+                            dgvRecentScans.Columns.Add("ScanDateTime", "Time");
+                            dgvRecentScans.Columns.Add("Location", "Location");
 
-                // Add sample data
-                dgvRecentScans.Rows.Add("2024-STU-0089", "John Smith", "QR Code", DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt"));
-                dgvRecentScans.Rows.Add("2024-STU-0088", "Emily Johnson", "Barcode", DateTime.Now.AddMinutes(-5).ToString("MM/dd/yyyy hh:mm:ss tt"));
-                dgvRecentScans.Rows.Add("2024-STU-0087", "Michael Brown", "QR Code", DateTime.Now.AddMinutes(-12).ToString("MM/dd/yyyy hh:mm:ss tt"));
-                dgvRecentScans.Rows.Add("2024-STU-0086", "Sarah Davis", "Barcode", DateTime.Now.AddMinutes(-18).ToString("MM/dd/yyyy hh:mm:ss tt"));
-                dgvRecentScans.Rows.Add("2024-STU-0085", "David Wilson", "QR Code", DateTime.Now.AddMinutes(-25).ToString("MM/dd/yyyy hh:mm:ss tt"));
+                            // Set column widths
+                            dgvRecentScans.Columns["StudentNumber"].Width = 150;
+                            dgvRecentScans.Columns["StudentName"].Width = 200;
+                            dgvRecentScans.Columns["ScanType"].Width = 100;
+                            dgvRecentScans.Columns["ScanDateTime"].Width = 180;
+                            dgvRecentScans.Columns["Location"].Width = 150;
+                        }
+
+                        // Clear existing rows
+                        dgvRecentScans.Rows.Clear();
+
+                        // Add recent scans
+                        foreach (var scan in recentScans)
+                        {
+                            dgvRecentScans.Rows.Add(
+                                scan.StudentNumber ?? "N/A",
+                                scan.StudentName ?? "Unknown",
+                                scan.ScanType ?? "QR",
+                                scan.ScanDateTime.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                                scan.Location ?? "N/A"
+                            );
+                        }
+                    }));
+                }
+                else
+                {
+                    // Initialize columns if not already done
+                    if (dgvRecentScans.Columns.Count == 0)
+                    {
+                        dgvRecentScans.Columns.Add("StudentNumber", "Student ID");
+                        dgvRecentScans.Columns.Add("StudentName", "Name");
+                        dgvRecentScans.Columns.Add("ScanType", "Scan Type");
+                        dgvRecentScans.Columns.Add("ScanDateTime", "Time");
+                        dgvRecentScans.Columns.Add("Location", "Location");
+
+                        // Set column widths
+                        dgvRecentScans.Columns["StudentNumber"].Width = 150;
+                        dgvRecentScans.Columns["StudentName"].Width = 200;
+                        dgvRecentScans.Columns["ScanType"].Width = 100;
+                        dgvRecentScans.Columns["ScanDateTime"].Width = 180;
+                        dgvRecentScans.Columns["Location"].Width = 150;
+                    }
+
+                    // Clear existing rows
+                    dgvRecentScans.Rows.Clear();
+
+                    // Add recent scans
+                    foreach (var scan in recentScans)
+                    {
+                        dgvRecentScans.Rows.Add(
+                            scan.StudentNumber ?? "N/A",
+                            scan.StudentName ?? "Unknown",
+                            scan.ScanType ?? "QR",
+                            scan.ScanDateTime.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                            scan.Location ?? "N/A"
+                        );
+                    }
+                }
             }
-            catch { /* Prevent errors during UI updates */ }
+            catch (Exception ex)
+            {
+                // Log detailed error information
+                string errorDetails = $"Error loading recent scans:\n" +
+                                    $"Message: {ex.Message}\n" +
+                                    $"Type: {ex.GetType().Name}";
+                
+                if (ex.InnerException != null)
+                {
+                    errorDetails += $"\nInner Exception: {ex.InnerException.Message}";
+                }
+                
+                System.Diagnostics.Debug.WriteLine(errorDetails);
+                
+                // Don't show message box for recent scans errors (less critical than stats)
+                // Just log it for debugging
+            }
         }
 
         private void BtnStartScan_Click(object sender, EventArgs e)
@@ -1005,11 +1193,17 @@ namespace ITP104_FINAL_PROJECT
         {
             base.OnFormClosing(e);
 
-            // Cleanup
+            // Cleanup timers
             if (statusUpdateTimer != null)
             {
                 statusUpdateTimer.Stop();
                 statusUpdateTimer.Dispose();
+            }
+
+            if (dashboardRefreshTimer != null)
+            {
+                dashboardRefreshTimer.Stop();
+                dashboardRefreshTimer.Dispose();
             }
         }
 
@@ -1021,10 +1215,10 @@ namespace ITP104_FINAL_PROJECT
         }
 
         // Method to refresh dashboard data
-        public void RefreshDashboard()
+        public async void RefreshDashboard()
         {
-            LoadDashboardStats();
-            LoadRecentScans();
+            await LoadDashboardStatsAsync();
+            await LoadRecentScansAsync();
             UpdateSystemStatus();
         }
 

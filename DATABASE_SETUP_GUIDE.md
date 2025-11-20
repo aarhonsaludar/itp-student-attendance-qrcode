@@ -50,6 +50,9 @@ Get-Content "Database\schema.sql" | mysql -u root -padmin
 # Step 2: Apply Time In/Time Out updates
 Get-Content "Database\time_in_out_update.sql" | mysql -u root -padmin -D student_attendance_db
 
+# Step 2.5: Update stored procedure to include time_out
+Get-Content "Database\update_scan_history_sp.sql" | mysql -u root -padmin -D student_attendance_db
+
 # Step 3: Verify database was created
 mysql -u root -padmin -D student_attendance_db -e "SHOW TABLES;"
 ```

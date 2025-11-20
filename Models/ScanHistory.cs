@@ -10,6 +10,7 @@ namespace ITP104_FINAL_PROJECT.Models
         public string ScanType { get; set; }
         public string ScanData { get; set; }
         public DateTime ScanDateTime { get; set; }
+        public DateTime? TimeOut { get; set; }
         public string ScanPurpose { get; set; }
         public string Location { get; set; }
         public string Status { get; set; }

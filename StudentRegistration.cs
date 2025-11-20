@@ -40,7 +40,7 @@ namespace ITP104_FINAL_PROJECT
             btnClearForm.Click += BtnClearForm_Click;
         }
 
-        private void BtnGenerateQR_Click(object sender, EventArgs e)
+        private async void BtnGenerateQR_Click(object sender, EventArgs e)
         {
             // Validate required fields
             if (string.IsNullOrWhiteSpace(txtStudentID.Text))
@@ -83,6 +83,22 @@ namespace ITP104_FINAL_PROJECT
             {
                 MessageBox.Show("Please select a year level.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbYearLevel.Focus();
+                return;
+            }
+
+            // Check if student ID exists
+            try
+            {
+                if (await studentRepository.IsStudentNumberExistsAsync(txtStudentID.Text.Trim()))
+                {
+                    MessageBox.Show($"Student ID {txtStudentID.Text} already exists in the database.", "Duplicate ID", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtStudentID.Focus();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error checking student ID: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -140,6 +156,13 @@ namespace ITP104_FINAL_PROJECT
             if (picQRCode.Tag == null)
             {
                 MessageBox.Show("Please generate QR code first.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Check if student ID exists (double check)
+            if (await studentRepository.IsStudentNumberExistsAsync(txtStudentID.Text.Trim()))
+            {
+                MessageBox.Show($"Student ID {txtStudentID.Text} already exists in the database.", "Duplicate ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

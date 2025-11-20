@@ -316,5 +316,8 @@
   <ItemGroup>
     <None Include="Resources\attendancelogo3.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\beep.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

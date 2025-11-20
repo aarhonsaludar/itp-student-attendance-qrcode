@@ -215,12 +215,14 @@ namespace ITP104_FINAL_PROJECT.Data
                 using (var connection = DatabaseHelper.GetConnection())
                 {
                     await connection.OpenAsync();
-                    string query = activeOnly
-                        ? "SELECT * FROM vw_active_students ORDER BY last_name, first_name"
-                        : @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                           email, phone, year_level, program, section, qr_code_data, photo_path, 
-                           status, enrollment_date, created_at, updated_at
-                           FROM students ORDER BY last_name, first_name";
+                    
+                    // Query students table directly to get all required columns
+                    string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
+                                   email, phone, year_level, program, section, qr_code_data, photo_path, 
+                                   status, enrollment_date, created_at, updated_at
+                                   FROM students " +
+                                   (activeOnly ? "WHERE status = 'Active' " : "") +
+                                   "ORDER BY last_name, first_name";
 
                     using (var command = new MySqlCommand(query, connection))
                     using (var reader = await command.ExecuteReaderAsync())
@@ -361,6 +363,32 @@ namespace ITP104_FINAL_PROJECT.Data
             }
 
             return students;
+        }
+
+        /// <summary>
+        /// Check if a student number already exists
+        /// </summary>
+        public async Task<bool> IsStudentNumberExistsAsync(string studentNumber)
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    await connection.OpenAsync();
+                    // Check if student number exists, regardless of status
+                    string query = "SELECT COUNT(*) FROM students WHERE student_number = @studentNumber";
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@studentNumber", studentNumber);
+                        var result = await command.ExecuteScalarAsync();
+                        return Convert.ToInt64(result) > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error checking student number existence: {ex.Message}", ex);
+            }
         }
 
         private Student MapStudent(MySqlDataReader reader)

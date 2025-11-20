@@ -46,6 +46,7 @@
             this.lblScannerStatus = new System.Windows.Forms.Label();
             this.lblSystemTitle = new System.Windows.Forms.Label();
             this.lblUserName = new System.Windows.Forms.Label();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.pnlLeftNav = new Guna.UI2.WinForms.Guna2Panel();
             this.btnNavDashboard = new Guna.UI2.WinForms.Guna2Button();
             this.btnNavScanQr = new Guna.UI2.WinForms.Guna2Button();
@@ -83,8 +84,8 @@
             this.tabReports = new System.Windows.Forms.TabPage();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.tabLogout = new System.Windows.Forms.TabPage();
-            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.pnlHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.pnlLeftNav.SuspendLayout();
             this.pnlMainContent.SuspendLayout();
             this.tabControlMain.SuspendLayout();
@@ -96,7 +97,6 @@
             this.pnlRecentScans.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentScans)).BeginInit();
             this.pnlQuickActions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // guna2BorderlessForm1
@@ -208,6 +208,15 @@
             this.lblUserName.BackColor = System.Drawing.Color.Transparent;
             this.lblUserName.ForeColor = System.Drawing.Color.LightGray;
             this.lblUserName.Name = "lblUserName";
+            // 
+            // pictureBoxLogo
+            // 
+            this.pictureBoxLogo.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBoxLogo.BackgroundImage = global::ITP104_FINAL_PROJECT.Properties.Resources.attendancelogo2;
+            resources.ApplyResources(this.pictureBoxLogo, "pictureBoxLogo");
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.TabStop = false;
+            this.pictureBoxLogo.Click += new System.EventHandler(this.pictureBoxLogo_Click);
             // 
             // pnlLeftNav
             // 
@@ -661,15 +670,6 @@
             resources.ApplyResources(this.tabLogout, "tabLogout");
             this.tabLogout.Name = "tabLogout";
             // 
-            // pictureBoxLogo
-            // 
-            this.pictureBoxLogo.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxLogo.BackgroundImage = global::ITP104_FINAL_PROJECT.Properties.Resources.attendancelogo2;
-            resources.ApplyResources(this.pictureBoxLogo, "pictureBoxLogo");
-            this.pictureBoxLogo.Name = "pictureBoxLogo";
-            this.pictureBoxLogo.TabStop = false;
-            this.pictureBoxLogo.Click += new System.EventHandler(this.pictureBoxLogo_Click);
-            // 
             // MainDashboard
             // 
             resources.ApplyResources(this, "$this");
@@ -682,6 +682,7 @@
             this.Name = "MainDashboard";
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.pnlLeftNav.ResumeLayout(false);
             this.pnlMainContent.ResumeLayout(false);
             this.tabControlMain.ResumeLayout(false);
@@ -699,7 +700,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentScans)).EndInit();
             this.pnlQuickActions.ResumeLayout(false);
             this.pnlQuickActions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
 
         }

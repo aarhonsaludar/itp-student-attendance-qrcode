@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.Media;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using ZXing;
@@ -300,16 +301,16 @@ namespace ITP104_FINAL_PROJECT
                     location: DEFAULT_LOCATION
                 );
 
-                // Determine result color based on scan type
+                // Determine result color and status text based on scan type
                 Color resultColor;
-                System.Media.SystemSound sound;
                 string statusText;
+                bool playCustomBeep = false;
 
                 if (success)
                 {
                     // Success - Time In or Time Out recorded
                     resultColor = Color.Green;
-                    sound = System.Media.SystemSounds.Beep;
+                    playCustomBeep = true; // Play custom beep for successful scans
 
                     if (scanType == "TIME_IN")
                     {
@@ -328,26 +329,46 @@ namespace ITP104_FINAL_PROJECT
                 {
                     // Already completed attendance for today
                     resultColor = Color.Orange;
-                    sound = System.Media.SystemSounds.Exclamation;
                     statusText = "⚠ Attendance already completed";
                 }
                 else if (scanType == "DUPLICATE")
                 {
                     // Duplicate scan (too soon)
                     resultColor = Color.Orange;
-                    sound = System.Media.SystemSounds.Exclamation;
                     statusText = "⚠ Duplicate scan detected";
                 }
                 else
                 {
                     // Error (student not found, inactive, or other error)
                     resultColor = Color.Red;
-                    sound = System.Media.SystemSounds.Hand;
                     statusText = "✗ Scan failed";
                 }
 
-                // Play sound
-                sound.Play();
+                // Play appropriate sound
+                if (playCustomBeep)
+                {
+                    // Play custom beep.wav from resources for successful Time In/Time Out
+                    try
+                    {
+                        SoundPlayer player = new SoundPlayer(Properties.Resources.beep);
+                        player.Play();
+                    }
+                    catch
+                    {
+                        // Fallback to system beep if resource not found
+                        SystemSounds.Beep.Play();
+                    }
+                }
+                else if (scanType == "COMPLETED" || scanType == "DUPLICATE")
+                {
+                    // Warning sound for already completed or duplicate
+                    SystemSounds.Exclamation.Play();
+                }
+                else
+                {
+                    // Error sound for failures
+                    SystemSounds.Hand.Play();
+                }
 
                 // Update UI with final result
                 UpdateUI(() =>
@@ -373,7 +394,7 @@ namespace ITP104_FINAL_PROJECT
                     lblStatus.ForeColor = Color.Red;
                 });
 
-                System.Media.SystemSounds.Hand.Play();
+                SystemSounds.Hand.Play();
                 isProcessingScan = false;
             }
         }

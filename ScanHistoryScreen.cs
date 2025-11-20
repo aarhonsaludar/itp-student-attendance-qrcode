@@ -17,6 +17,9 @@ namespace ITP104_FINAL_PROJECT
         private int itemsPerPage = 50; // Increased for better display
         private int totalRecords = 0;
         private readonly ScanHistoryRepository scanHistoryRepository;
+        
+        // Optional: Timer for real-time date updates
+        private Timer realTimeDateTimer;
 
         public ScanHistoryScreen()
         {
@@ -32,8 +35,21 @@ namespace ITP104_FINAL_PROJECT
             animationTimer.Interval = 30;
             animationTimer.Tick += AnimationTimer_Tick;
 
+            // Initialize Real-Time Date Timer (Optional)
+            // This timer updates the DateTimePicker to the current time every second.
+            // Use this if you want the filter to always track "Now" when the user hasn't manually selected a past date.
+            realTimeDateTimer = new Timer();
+            realTimeDateTimer.Interval = 1000; // 1 second
+            realTimeDateTimer.Tick += RealTimeDateTimer_Tick;
+            // realTimeDateTimer.Start(); // Uncomment to enable real-time clock updates on the date picker
+
+            // Set default date to Today and Checked
+            dtpDateFrom.Value = DateTime.Now;
+            dtpDateFrom.Checked = true;
+
             // Setup event handlers
             btnSearch.Click += BtnSearch_Click;
+            dtpDateFrom.ValueChanged += DtpDateFrom_ValueChanged;
             btnClearFilter.Click += BtnClearFilter_Click;
             btnExport.Click += BtnExport_Click;
             btnClose.Click += BtnClose_Click;
@@ -51,6 +67,34 @@ namespace ITP104_FINAL_PROJECT
 
             // Start animation
             animationTimer.Start();
+
+            // Hide unused filters
+            dtpDateTo.Visible = false;
+            lblDateTo.Visible = false;
+            cmbScanType.Visible = false;
+            
+            // Add static label for Scan Type
+            Label lblQrCodeStatic = new Label();
+            lblQrCodeStatic.Text = "QR Code";
+            lblQrCodeStatic.Font = new Font("Segoe UI", 10F);
+            lblQrCodeStatic.ForeColor = Color.FromArgb(68, 88, 112);
+            lblQrCodeStatic.Location = cmbScanType.Location;
+            lblQrCodeStatic.Size = cmbScanType.Size;
+            lblQrCodeStatic.TextAlign = ContentAlignment.MiddleLeft;
+            lblQrCodeStatic.BackColor = Color.Transparent; // Or match background
+            // Add to panel
+            pnlFilters.Controls.Add(lblQrCodeStatic);
+        }
+
+        private void RealTimeDateTimer_Tick(object sender, EventArgs e)
+        {
+            // Update the DateTimePicker value to the current time
+            // Note: This might trigger ValueChanged event, so ensure your logic handles that appropriately
+            // to avoid excessive database calls if the Date part hasn't changed.
+            if (dtpDateFrom.Value.Date != DateTime.Now.Date)
+            {
+                 dtpDateFrom.Value = DateTime.Now;
+            }
         }
 
         private void AnimationTimer_Tick(object sender, EventArgs e)
@@ -245,8 +289,13 @@ namespace ITP104_FINAL_PROJECT
             }
         }
 
+        private bool isLoading = false;
+
         private async Task LoadScanHistoryAsync()
         {
+            if (isLoading) return;
+            isLoading = true;
+
             try
             {
                 dgvScanHistory.Rows.Clear();
@@ -256,18 +305,12 @@ namespace ITP104_FINAL_PROJECT
                 DateTime? endDate = null;
 
                 // Only apply date filter if user has explicitly checked the date picker
-                if (dtpDateFrom.Checked && dtpDateTo.Checked)
+                if (dtpDateFrom.Checked)
                 {
                     startDate = dtpDateFrom.Value.Date;
-                    endDate = dtpDateTo.Value.Date.AddDays(1).AddSeconds(-1);
-                }
-                else if (dtpDateFrom.Checked)
-                {
-                    startDate = dtpDateFrom.Value.Date;
-                }
-                else if (dtpDateTo.Checked)
-                {
-                    endDate = dtpDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+                    // Since Date To is hidden, treat Date From as "Specific Date"
+                    // Filter for the entire day (00:00:00 to 23:59:59)
+                    endDate = startDate.Value.AddDays(1).AddSeconds(-1);
                 }
 
                 // Load scan history from database
@@ -288,15 +331,6 @@ namespace ITP104_FINAL_PROJECT
                     ).ToList();
                 }
 
-                // Filter by scan type if selected
-                if (cmbScanType.SelectedIndex > 0) // Index 0 is "All"
-                {
-                    string selectedType = cmbScanType.Text;
-                    scanHistory = scanHistory.Where(s =>
-                        s.ScanType?.Equals(selectedType, StringComparison.OrdinalIgnoreCase) == true
-                    ).ToList();
-                }
-
                 totalRecords = scanHistory.Count;
 
                 // Apply pagination
@@ -311,7 +345,7 @@ namespace ITP104_FINAL_PROJECT
                 {
                     string date = scan.ScanDateTime.ToString("MMM dd, yyyy");
                     string timeIn = scan.ScanDateTime.ToString("hh:mm tt");
-                    string timeOut = "-"; // Not tracked in current schema
+                    string timeOut = scan.TimeOut.HasValue ? scan.TimeOut.Value.ToString("hh:mm tt") : "-";
                     string studentNumber = scan.StudentNumber ?? "N/A";
                     string studentName = scan.StudentName ?? "Unknown";
                     string scanType = scan.ScanType ?? "QR";
@@ -342,16 +376,23 @@ namespace ITP104_FINAL_PROJECT
                 lblTotalRecords.Text = $"Total Records: {totalRecords}";
 
                 // Only show message if user has applied filters
-                if (totalRecords == 0 && (startDate.HasValue || endDate.HasValue || !string.IsNullOrEmpty(searchText) || cmbScanType.SelectedIndex > 0))
+                // Use a non-blocking notification (e.g. update status label) instead of MessageBox
+                // to prevent focus loss and minimizing issues during auto-filtering.
+                if (totalRecords == 0 && (startDate.HasValue || endDate.HasValue || !string.IsNullOrEmpty(searchText)))
                 {
-                    MessageBox.Show("No scan records found matching the criteria.", "No Records",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Optional: Update a status label if you have one, e.g.:
+                    // lblStatus.Text = "No records found.";
+                    // lblStatus.Visible = true;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading scan history: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoading = false;
             }
         }
 
@@ -390,6 +431,12 @@ namespace ITP104_FINAL_PROJECT
             }
         }
 
+        private async void DtpDateFrom_ValueChanged(object sender, EventArgs e)
+        {
+            currentPage = 1;
+            await LoadScanHistoryAsync();
+        }
+
         private async void BtnSearch_Click(object sender, EventArgs e)
         {
             currentPage = 1; // Reset to first page on search
@@ -399,9 +446,10 @@ namespace ITP104_FINAL_PROJECT
         private async void BtnClearFilter_Click(object sender, EventArgs e)
         {
             txtSearch.Clear();
-            dtpDateFrom.Checked = false;
-            dtpDateTo.Checked = false;
-            cmbScanType.SelectedIndex = -1;
+            dtpDateFrom.Value = DateTime.Now;
+            dtpDateFrom.Checked = true;
+            // dtpDateTo.Checked = false; // Removed
+            // cmbScanType.SelectedIndex = -1; // Removed
             currentPage = 1;
             await LoadScanHistoryAsync();
         }
@@ -459,6 +507,12 @@ namespace ITP104_FINAL_PROJECT
             {
                 animationTimer.Stop();
                 animationTimer.Dispose();
+            }
+            
+            if (realTimeDateTimer != null)
+            {
+                realTimeDateTimer.Stop();
+                realTimeDateTimer.Dispose();
             }
         }
 
