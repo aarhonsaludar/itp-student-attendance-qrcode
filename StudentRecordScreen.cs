@@ -39,7 +39,7 @@ namespace ITP104_FINAL_PROJECT
             animationTimer.Tick += AnimationTimer_Tick;
 
             // Setup event handlers
-            btnEdit.Click += BtnEdit_Click;
+            btnEdit.Click += btnEdit_Click_1;
             btnBackToScan.Click += BtnBackToScan_Click;
             btnPrint.Click += BtnPrint_Click;
             btnExport.Click += BtnExport_Click;
@@ -208,7 +208,7 @@ namespace ITP104_FINAL_PROJECT
             dgvScanHistory.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
         }
 
-        private async void LoadStudentDataAsync(string studentId)
+        private async Task LoadStudentDataAsync(string studentId)
         {
             try
             {
@@ -223,21 +223,46 @@ namespace ITP104_FINAL_PROJECT
                 {
                     // Populate student information
                     lblStudentIDValue.Text = student.StudentNumber;
-                    lblFullNameValue.Text = $"{student.FirstName} {(string.IsNullOrEmpty(student.MiddleName) ? "" : student.MiddleName + " ")}{student.LastName}";
+                    
+                    // Full name with proper spacing
+                    string fullName = student.FirstName;
+                    if (!string.IsNullOrWhiteSpace(student.MiddleName))
+                    {
+                        fullName += " " + student.MiddleName;
+                    }
+                    fullName += " " + student.LastName;
+                    lblFullNameValue.Text = fullName.Trim();
+                    
+                    // Course/Program
                     lblCourseValue.Text = student.Program;
 
-                    // Format year level
+                    // Format year level with proper suffix
                     string yearLevel = student.YearLevel;
-                    string suffix = yearLevel == "1" ? "st" : yearLevel == "2" ? "nd" : yearLevel == "3" ? "rd" : "th";
+                    string suffix = yearLevel == "1" ? "st" : 
+                                   yearLevel == "2" ? "nd" : 
+                                   yearLevel == "3" ? "rd" : "th";
                     lblYearLevelValue.Text = $"{yearLevel}{suffix} Year";
 
+                    // Contact information
                     lblEmailValue.Text = student.Email ?? "N/A";
                     lblPhoneValue.Text = student.Phone ?? "N/A";
-                    lblAddressValue.Text = "N/A"; // Address not in current schema
+                    
+                    // Address (not in schema, always N/A)
+                    lblAddressValue.Text = "N/A";
+                    
+                    // Enrollment date
                     lblEnrollmentDateValue.Text = student.EnrollmentDate.ToString("MMMM dd, yyyy");
 
                     // Update status badge
                     UpdateStatusBadge(student.Status);
+                    
+                    // Force all labels to update immediately
+                    lblStudentIDValue.Refresh();
+                    lblFullNameValue.Refresh();
+                    lblCourseValue.Refresh();
+                    lblYearLevelValue.Refresh();
+                    lblEmailValue.Refresh();
+                    lblPhoneValue.Refresh();
 
                     // Load scan history for this student
                     await LoadScanHistoryAsync(studentIdInt);
@@ -261,8 +286,8 @@ namespace ITP104_FINAL_PROJECT
 
         private void LoadStudentData(string studentId)
         {
-            // Redirect to async method
-            LoadStudentDataAsync(studentId);
+            // Redirect to async method - fire and forget pattern
+            _ = LoadStudentDataAsync(studentId);
         }
 
         private void UpdateStatusBadge(string status)
@@ -324,9 +349,7 @@ namespace ITP104_FINAL_PROJECT
         private void UpdateScanStatistics(List<ScanHistory> scanHistory)
         {
             // Calculate statistics from scan history
-            int totalScans = scanHistory.Count;
             int timeIns = scanHistory.Count;  // All scans are time-in for now
-            int timeOuts = 0; // TimeOut not available in current schema
 
             // You can add labels to display these statistics if needed
             // For now, this method is a placeholder for future enhancements
@@ -353,18 +376,6 @@ namespace ITP104_FINAL_PROJECT
                     lblLoadingIndicator.Visible = false;
                 }
             }
-        }
-
-        private void BtnEdit_Click(object sender, EventArgs e)
-        {
-            // Edit functionality disabled in Phase 1 as per requirements
-            MessageBox.Show(
-                "Edit functionality will be available in Phase 2.\n\n" +
-                "This feature is currently under development.",
-                "Feature Not Available",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
         }
 
         private void BtnBackToScan_Click(object sender, EventArgs e)
@@ -472,14 +483,150 @@ namespace ITP104_FINAL_PROJECT
 
         }
 
-        private void btnEdit_Click_1(object sender, EventArgs e)
+        private async void btnEdit_Click_1(object sender, EventArgs e)
         {
+            try
+            {
+                // Get the current student ID
+                int studentIdInt = int.Parse(studentId);
 
+                // Fetch the latest student data from database
+                Student currentStudent = await studentRepository.GetByIdAsync(studentIdInt);
+
+                if (currentStudent == null)
+                {
+                    MessageBox.Show("Student not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Open the Edit Student Dialog
+                using (EditStudentDialog editDialog = new EditStudentDialog(currentStudent))
+                {
+                    if (editDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        // Get the updated student data
+                        Student updatedStudent = editDialog.UpdatedStudent;
+
+                        if (updatedStudent == null)
+                        {
+                            MessageBox.Show("No changes were made.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
+
+                        // Update in database
+                        bool success = await studentRepository.UpdateAsync(updatedStudent);
+
+                        if (success)
+                        {
+                            // Force refresh the student data from database FIRST
+                            await LoadStudentDataAsync(studentId);
+                            
+                            // Force UI update
+                            this.Refresh();
+                            
+                            // Process all pending Windows messages to ensure UI updates
+                            Application.DoEvents();
+                            
+                            // Show success message AFTER refresh completes
+                            MessageBox.Show(
+                                "Student information updated successfully!\n\n" +
+                                "The changes have been saved to the database.",
+                                "Success",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information
+                            );
+                        }
+                        else
+                        {
+                            MessageBox.Show(
+                                "Failed to update student information.\n\n" +
+                                "The database update did not complete successfully.\n" +
+                                "Please try again or contact support if the problem persists.",
+                                "Update Failed",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                            );
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Error editing student:\n\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void btnPrint_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private async void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Confirm deletion
+                DialogResult result = MessageBox.Show(
+                    $"Are you sure you want to delete this student record?\n\n" +
+                    $"Student: {lblFullNameValue.Text}\n" +
+                    $"ID: {lblStudentIDValue.Text}\n\n" +
+                    $"Note: This will set the student status to 'Inactive'. The record will be preserved but the student will no longer appear in active lists.",
+                    "Confirm Delete",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+
+                if (result == DialogResult.Yes)
+                {
+                    if (string.IsNullOrEmpty(studentId))
+                    {
+                        MessageBox.Show("No student data loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    int studentIdInt = int.Parse(studentId);
+
+                    // Perform soft delete (sets status to 'inactive')
+                    bool success = await studentRepository.DeleteAsync(studentIdInt);
+
+                    if (success)
+                    {
+                        MessageBox.Show(
+                            "Student record has been deleted successfully.\n\n" +
+                            "The student status has been set to 'Inactive'.",
+                            "Delete Successful",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+
+                        // Close the form since the student is no longer active
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                            "Failed to delete student record.",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Error deleting student: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
     }
 }

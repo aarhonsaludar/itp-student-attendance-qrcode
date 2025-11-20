@@ -68,6 +68,7 @@
             this.lblStudentInfoTitle = new System.Windows.Forms.Label();
             this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.pnlActions = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnDelete = new Guna.UI2.WinForms.Guna2Button();
             this.btnExport = new Guna.UI2.WinForms.Guna2Button();
             this.btnPrint = new Guna.UI2.WinForms.Guna2Button();
             this.btnBackToScan = new Guna.UI2.WinForms.Guna2Button();
@@ -108,7 +109,7 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
             this.btnClose.IconColor = System.Drawing.Color.White;
-            this.btnClose.Location = new System.Drawing.Point(1347, 12);
+            this.btnClose.Location = new System.Drawing.Point(1354, 1);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(45, 30);
@@ -121,7 +122,7 @@
             this.guna2ControlBox2.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox;
             this.guna2ControlBox2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
             this.guna2ControlBox2.IconColor = System.Drawing.Color.White;
-            this.guna2ControlBox2.Location = new System.Drawing.Point(1296, 12);
+            this.guna2ControlBox2.Location = new System.Drawing.Point(1299, 1);
             this.guna2ControlBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.guna2ControlBox2.Name = "guna2ControlBox2";
             this.guna2ControlBox2.Size = new System.Drawing.Size(45, 30);
@@ -175,7 +176,7 @@
             this.pnlScanHistory.Location = new System.Drawing.Point(51, 615);
             this.pnlScanHistory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlScanHistory.Name = "pnlScanHistory";
-            this.pnlScanHistory.Padding = new System.Windows.Forms.Padding(25, 25, 25, 25);
+            this.pnlScanHistory.Padding = new System.Windows.Forms.Padding(25);
             this.pnlScanHistory.ShadowDecoration.BorderRadius = 15;
             this.pnlScanHistory.ShadowDecoration.Depth = 10;
             this.pnlScanHistory.ShadowDecoration.Enabled = true;
@@ -246,7 +247,7 @@
             this.pnlStudentInfo.Location = new System.Drawing.Point(51, 30);
             this.pnlStudentInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlStudentInfo.Name = "pnlStudentInfo";
-            this.pnlStudentInfo.Padding = new System.Windows.Forms.Padding(25, 25, 25, 25);
+            this.pnlStudentInfo.Padding = new System.Windows.Forms.Padding(25);
             this.pnlStudentInfo.ShadowDecoration.BorderRadius = 15;
             this.pnlStudentInfo.ShadowDecoration.Depth = 10;
             this.pnlStudentInfo.Size = new System.Drawing.Size(1300, 474);
@@ -557,6 +558,7 @@
             // pnlActions
             // 
             this.pnlActions.BackColor = System.Drawing.Color.Transparent;
+            this.pnlActions.Controls.Add(this.btnDelete);
             this.pnlActions.Controls.Add(this.btnExport);
             this.pnlActions.Controls.Add(this.btnPrint);
             this.pnlActions.Controls.Add(this.btnBackToScan);
@@ -566,6 +568,27 @@
             this.pnlActions.Name = "pnlActions";
             this.pnlActions.Size = new System.Drawing.Size(1300, 60);
             this.pnlActions.TabIndex = 0;
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.BorderRadius = 10;
+            this.btnDelete.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnDelete.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnDelete.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnDelete.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnDelete.FillColor = System.Drawing.Color.Red;
+            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnDelete.ForeColor = System.Drawing.Color.White;
+            this.btnDelete.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btnDelete.ImageSize = new System.Drawing.Size(24, 24);
+            this.btnDelete.Location = new System.Drawing.Point(188, 10);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(173, 46);
+            this.btnDelete.TabIndex = 4;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseTransparentBackground = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnExport
             // 
@@ -580,7 +603,7 @@
             this.btnExport.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.download;
             this.btnExport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnExport.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnExport.Location = new System.Drawing.Point(720, 10);
+            this.btnExport.Location = new System.Drawing.Point(887, 10);
             this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(200, 46);
@@ -599,7 +622,7 @@
             this.btnPrint.ForeColor = System.Drawing.Color.White;
             this.btnPrint.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnPrint.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnPrint.Location = new System.Drawing.Point(491, 10);
+            this.btnPrint.Location = new System.Drawing.Point(681, 12);
             this.btnPrint.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(200, 46);
@@ -619,7 +642,7 @@
             this.btnBackToScan.ForeColor = System.Drawing.Color.White;
             this.btnBackToScan.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnBackToScan.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnBackToScan.Location = new System.Drawing.Point(1069, 10);
+            this.btnBackToScan.Location = new System.Drawing.Point(1093, 10);
             this.btnBackToScan.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnBackToScan.Name = "btnBackToScan";
             this.btnBackToScan.Size = new System.Drawing.Size(200, 46);
@@ -633,7 +656,6 @@
             this.btnEdit.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnEdit.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnEdit.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnEdit.Enabled = false;
             this.btnEdit.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(156)))), ((int)(((byte)(18)))));
             this.btnEdit.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnEdit.ForeColor = System.Drawing.Color.White;
@@ -720,5 +742,6 @@
         private System.Windows.Forms.Label lblLoadingIndicator;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private Guna.UI2.WinForms.Guna2Button btnDelete;
     }
 }

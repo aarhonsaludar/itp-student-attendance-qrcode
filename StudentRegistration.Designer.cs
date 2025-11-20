@@ -30,9 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pnlForm = new Guna.UI2.WinForms.Guna2Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.lblNote = new System.Windows.Forms.Label();
             this.guna2HtmlLabel2 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnSaveDownload = new Guna.UI2.WinForms.Guna2Button();
+            this.cmbYearLevel = new Guna.UI2.WinForms.Guna2ComboBox();
             this.btnClearForm = new Guna.UI2.WinForms.Guna2Button();
             this.btnRegisterStudent = new Guna.UI2.WinForms.Guna2Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -42,7 +44,6 @@
             this.lblStudentID = new System.Windows.Forms.Label();
             this.lblPhone = new System.Windows.Forms.Label();
             this.lblSection = new System.Windows.Forms.Label();
-            this.cmbYearLevel = new Guna.UI2.WinForms.Guna2ComboBox();
             this.cmbCourse = new Guna.UI2.WinForms.Guna2ComboBox();
             this.txtEmail = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtName = new Guna.UI2.WinForms.Guna2TextBox();
@@ -61,7 +62,6 @@
             this.guna2HtmlLabel4 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnExit = new Guna.UI2.WinForms.Guna2Button();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.label4 = new System.Windows.Forms.Label();
             this.pnlForm.SuspendLayout();
             this.pnlQRPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
@@ -100,6 +100,17 @@
             this.pnlForm.Size = new System.Drawing.Size(515, 730);
             this.pnlForm.TabIndex = 5;
             this.pnlForm.UseTransparentBackground = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(35, 534);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(123, 26);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "Year Level:";
             // 
             // lblNote
             // 
@@ -141,6 +152,29 @@
             this.btnSaveDownload.TabIndex = 0;
             this.btnSaveDownload.Text = "Download QR";
             this.btnSaveDownload.TextOffset = new System.Drawing.Point(15, 0);
+            // 
+            // cmbYearLevel
+            // 
+            this.cmbYearLevel.BackColor = System.Drawing.Color.Transparent;
+            this.cmbYearLevel.BorderColor = System.Drawing.Color.Black;
+            this.cmbYearLevel.BorderRadius = 10;
+            this.cmbYearLevel.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbYearLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbYearLevel.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbYearLevel.FocusedColor = System.Drawing.Color.Empty;
+            this.cmbYearLevel.Font = new System.Drawing.Font("Century Gothic", 10F);
+            this.cmbYearLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cmbYearLevel.ItemHeight = 30;
+            this.cmbYearLevel.Items.AddRange(new object[] {
+            "First Year",
+            "Second Year",
+            "Third Year",
+            "Fourth Year"});
+            this.cmbYearLevel.Location = new System.Drawing.Point(29, 562);
+            this.cmbYearLevel.Margin = new System.Windows.Forms.Padding(2);
+            this.cmbYearLevel.Name = "cmbYearLevel";
+            this.cmbYearLevel.Size = new System.Drawing.Size(196, 36);
+            this.cmbYearLevel.TabIndex = 10;
             // 
             // btnClearForm
             // 
@@ -254,29 +288,6 @@
             this.lblSection.Size = new System.Drawing.Size(91, 26);
             this.lblSection.TabIndex = 20;
             this.lblSection.Text = "Section:";
-            // 
-            // cmbYearLevel
-            // 
-            this.cmbYearLevel.BackColor = System.Drawing.Color.Transparent;
-            this.cmbYearLevel.BorderColor = System.Drawing.Color.Black;
-            this.cmbYearLevel.BorderRadius = 10;
-            this.cmbYearLevel.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cmbYearLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbYearLevel.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.cmbYearLevel.FocusedColor = System.Drawing.Color.Empty;
-            this.cmbYearLevel.Font = new System.Drawing.Font("Century Gothic", 10F);
-            this.cmbYearLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.cmbYearLevel.ItemHeight = 30;
-            this.cmbYearLevel.Items.AddRange(new object[] {
-            "First Year",
-            "Second Year",
-            "Third Year",
-            "Fourth Year"});
-            this.cmbYearLevel.Location = new System.Drawing.Point(29, 562);
-            this.cmbYearLevel.Margin = new System.Windows.Forms.Padding(2);
-            this.cmbYearLevel.Name = "cmbYearLevel";
-            this.cmbYearLevel.Size = new System.Drawing.Size(196, 36);
-            this.cmbYearLevel.TabIndex = 10;
             // 
             // cmbCourse
             // 
@@ -535,17 +546,6 @@
             this.guna2HtmlLabel1.TabIndex = 15;
             this.guna2HtmlLabel1.Text = "Student Register Screen";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(35, 534);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(123, 26);
-            this.label4.TabIndex = 24;
-            this.label4.Text = "Year Level:";
-            // 
             // StudentRegistration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -560,7 +560,6 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "StudentRegistration";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "StudentRegistration";
             this.pnlForm.ResumeLayout(false);
             this.pnlForm.PerformLayout();
             this.pnlQRPreview.ResumeLayout(false);

@@ -127,11 +127,11 @@
   <data name="attendancelogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\attendancelogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="qr_code" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\qr-code.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="34" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\34.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="beep" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\beep.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="clean" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\clean.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -166,6 +166,9 @@
   <data name="53d0fe54-bea5-47ac-b2a7-b205b44e20ff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\53d0fe54-bea5-47ac-b2a7-b205b44e20ff.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="attendancelogo3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\attendancelogo3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="download" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\download.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -178,16 +181,16 @@
   <data name="scan_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\scan_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="students_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\students_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="user_avatar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\user_avatar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="attendancelogo3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\attendancelogo3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="students_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\students_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="beep" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\beep.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="qr_code" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\qr-code.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
