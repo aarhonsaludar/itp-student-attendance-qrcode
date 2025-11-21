@@ -21,5 +21,6 @@ namespace ITP104_FINAL_PROJECT.Models
         public string StudentNumber { get; set; }
         public string StudentName { get; set; }
         public string DeviceName { get; set; }
+        public string Program { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace ITP104_FINAL_PROJECT
         
         // Optional: Timer for real-time date updates
         private Timer realTimeDateTimer;
+        private List<ScanHistory> currentPagedData;
 
         public ScanHistoryScreen()
         {
@@ -334,14 +335,14 @@ namespace ITP104_FINAL_PROJECT
                 totalRecords = scanHistory.Count;
 
                 // Apply pagination
-                var pagedData = scanHistory
+                currentPagedData = scanHistory
                     .OrderByDescending(s => s.ScanDateTime)
                     .Skip((currentPage - 1) * itemsPerPage)
                     .Take(itemsPerPage)
                     .ToList();
 
                 // Populate DataGridView
-                foreach (var scan in pagedData)
+                foreach (var scan in currentPagedData)
                 {
                     string date = scan.ScanDateTime.ToString("MMM dd, yyyy");
                     string timeIn = scan.ScanDateTime.ToString("hh:mm tt");
@@ -410,24 +411,17 @@ namespace ITP104_FINAL_PROJECT
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == dgvScanHistory.Columns["Action"].Index)
             {
-                var studentID = dgvScanHistory.Rows[e.RowIndex].Cells["StudentID"].Value.ToString();
-                var studentName = dgvScanHistory.Rows[e.RowIndex].Cells["Name"].Value.ToString();
-                var date = dgvScanHistory.Rows[e.RowIndex].Cells["Date"].Value.ToString();
-                var timeIn = dgvScanHistory.Rows[e.RowIndex].Cells["TimeIn"].Value.ToString();
-                var timeOut = dgvScanHistory.Rows[e.RowIndex].Cells["TimeOut"].Value.ToString();
-
-                MessageBox.Show(
-                    $"Scan Details:\n\n" +
-                    $"Student ID: {studentID}\n" +
-                    $"Name: {studentName}\n" +
-                    $"Date: {date}\n" +
-                    $"Time In: {timeIn}\n" +
-                    $"Time Out: {timeOut}\n\n" +
-                    "Full details screen will be available in Phase 2.",
-                    "Scan Details",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
-                );
+                // Get the ScanHistory object for the selected row
+                if (currentPagedData != null && e.RowIndex < currentPagedData.Count)
+                {
+                    var selectedScan = currentPagedData[e.RowIndex];
+                    
+                    // Open details dialog
+                    using (var detailsDialog = new ScanDetailsDialog(selectedScan))
+                    {
+                        detailsDialog.ShowDialog(this);
+                    }
+                }
             }
         }
 
