@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MySqlConnector;
 using ITP104_FINAL_PROJECT.Models;
+using ITP104_FINAL_PROJECT.Services;
 
 namespace ITP104_FINAL_PROJECT.Data
 {
@@ -17,9 +18,8 @@ namespace ITP104_FINAL_PROJECT.Data
 
             try
             {
-                using (var connection = DatabaseHelper.GetConnection())
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
                 {
-                    await connection.OpenAsync();
                     string query = "SELECT * FROM system_settings ORDER BY setting_category, setting_key";
 
                     using (var command = new MySqlCommand(query, connection))
@@ -32,8 +32,20 @@ namespace ITP104_FINAL_PROJECT.Data
                     }
                 }
             }
+            catch (MySqlException ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Get All Settings - Database Error",
+                    ex,
+                    "system_settings");
+                throw new Exception(ErrorLoggingService.GetUserFriendlyMessage(ex), ex);
+            }
             catch (Exception ex)
             {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Get All Settings - Error",
+                    ex,
+                    "system_settings");
                 throw new Exception($"Error retrieving settings: {ex.Message}", ex);
             }
 
@@ -115,9 +127,19 @@ namespace ITP104_FINAL_PROJECT.Data
         {
             try
             {
-                using (var connection = DatabaseHelper.GetConnection())
+                // Validate input
+                if (string.IsNullOrWhiteSpace(settingKey))
                 {
-                    await connection.OpenAsync();
+                    throw new ArgumentException("Setting key cannot be empty", nameof(settingKey));
+                }
+
+                if (newValue == null)
+                {
+                    throw new ArgumentException("Setting value cannot be null", nameof(newValue));
+                }
+
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
+                {
                     string query = @"UPDATE system_settings 
                                     SET setting_value = @value, 
                                         updated_by = @updatedBy, 
@@ -131,12 +153,33 @@ namespace ITP104_FINAL_PROJECT.Data
                         command.Parameters.AddWithValue("@updatedBy", updatedBy ?? (object)DBNull.Value);
 
                         int rowsAffected = await command.ExecuteNonQueryAsync();
+                        
+                        if (rowsAffected > 0)
+                        {
+                            await ErrorLoggingService.LogInfoAsync(
+                                "Update Setting - Success",
+                                $"Updated setting: {settingKey} = {newValue}",
+                                "system_settings");
+                        }
+                        
                         return rowsAffected > 0;
                     }
                 }
             }
+            catch (MySqlException ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Update Setting - Database Error",
+                    ex,
+                    "system_settings");
+                throw new Exception(ErrorLoggingService.GetUserFriendlyMessage(ex), ex);
+            }
             catch (Exception ex)
             {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Update Setting - Error",
+                    ex,
+                    "system_settings");
                 throw new Exception($"Error updating setting: {ex.Message}", ex);
             }
         }

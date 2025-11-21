@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using MySqlConnector;
 using ITP104_FINAL_PROJECT.Models;
+using ITP104_FINAL_PROJECT.Services;
 
 namespace ITP104_FINAL_PROJECT.Data
 {
@@ -19,12 +20,23 @@ namespace ITP104_FINAL_PROJECT.Data
         {
             try
             {
-                using (var connection = DatabaseHelper.GetConnection())
+                // Validate input
+                if (string.IsNullOrWhiteSpace(qrData))
                 {
-                    await connection.OpenAsync();
+                    return (false, "QR code data cannot be empty", "ERROR");
+                }
+
+                if (deviceId <= 0)
+                {
+                    return (false, "Invalid device ID", "ERROR");
+                }
+
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
+                {
                     using (var command = new MySqlCommand("sp_record_attendance_scan", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = 60; // Increase timeout for stored procedure
 
                         // Input parameters
                         command.Parameters.AddWithValue("@p_scan_data", qrData);
@@ -59,13 +71,41 @@ namespace ITP104_FINAL_PROJECT.Data
                             message = $"{studentName} ({studentNumber})\n{result}";
                         }
 
+                        // Log the scan attempt
+                        if (success)
+                        {
+                            await ErrorLoggingService.LogInfoAsync(
+                                $"Attendance Scan - {scanType}",
+                                $"Student: {studentNumber} - {studentName}",
+                                "scan_history");
+                        }
+                        else
+                        {
+                            await ErrorLoggingService.LogInfoAsync(
+                                "Attendance Scan - Failed",
+                                $"QR Data: {qrData.Substring(0, Math.Min(50, qrData.Length))}... Result: {result}",
+                                "scan_history");
+                        }
+
                         return (success, message, scanType);
                     }
                 }
             }
+            catch (MySqlException ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Record Attendance Scan - Database Error",
+                    ex,
+                    "scan_history");
+                return (false, ErrorLoggingService.GetUserFriendlyMessage(ex), "ERROR");
+            }
             catch (Exception ex)
             {
-                return (false, $"Database error: {ex.Message}", "ERROR");
+                await ErrorLoggingService.LogErrorAsync(
+                    "Record Attendance Scan - Error",
+                    ex,
+                    "scan_history");
+                return (false, $"An error occurred while recording scan: {ex.Message}", "ERROR");
             }
         }
 
@@ -142,7 +182,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 using (var connection = DatabaseHelper.GetConnection())
                 {
                     await connection.OpenAsync();
-                    
+
                     // Use direct query instead of stored procedure to ensure correct filtering and avoid duplicates
                     var sqlBuilder = new System.Text.StringBuilder();
                     sqlBuilder.Append(@"SELECT sh.*, s.student_number, 
@@ -155,29 +195,29 @@ namespace ITP104_FINAL_PROJECT.Data
 
                     if (startDate.HasValue)
                         sqlBuilder.Append(" AND sh.scan_datetime >= @startDate");
-                    
+
                     if (endDate.HasValue)
                         sqlBuilder.Append(" AND sh.scan_datetime <= @endDate");
-                        
+
                     if (studentId.HasValue)
                         sqlBuilder.Append(" AND sh.student_id = @studentId");
-                        
+
                     if (!string.IsNullOrEmpty(scanType))
                         sqlBuilder.Append(" AND sh.scan_type = @scanType");
-                        
+
                     sqlBuilder.Append(" ORDER BY sh.scan_datetime DESC LIMIT 1000");
 
                     using (var command = new MySqlCommand(sqlBuilder.ToString(), connection))
                     {
                         if (startDate.HasValue)
                             command.Parameters.AddWithValue("@startDate", startDate.Value);
-                            
+
                         if (endDate.HasValue)
                             command.Parameters.AddWithValue("@endDate", endDate.Value);
-                            
+
                         if (studentId.HasValue)
                             command.Parameters.AddWithValue("@studentId", studentId.Value);
-                            
+
                         if (!string.IsNullOrEmpty(scanType))
                             command.Parameters.AddWithValue("@scanType", scanType);
 
@@ -191,8 +231,20 @@ namespace ITP104_FINAL_PROJECT.Data
                     }
                 }
             }
+            catch (MySqlException ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Get Scan History - Database Error",
+                    ex,
+                    "scan_history");
+                throw new Exception(ErrorLoggingService.GetUserFriendlyMessage(ex), ex);
+            }
             catch (Exception ex)
             {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Get Scan History - Error",
+                    ex,
+                    "scan_history");
                 throw new Exception($"Error retrieving scan history: {ex.Message}", ex);
             }
 

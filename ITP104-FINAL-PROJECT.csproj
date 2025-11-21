@@ -160,6 +160,8 @@
     <Compile Include="ScanHistoryScreen.Designer.cs">
       <DependentUpon>ScanHistoryScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\ErrorLoggingService.cs" />
+    <Compile Include="Services\InputValidator.cs" />
     <Compile Include="SettingsScreen.cs">
       <SubType>Form</SubType>
     </Compile>

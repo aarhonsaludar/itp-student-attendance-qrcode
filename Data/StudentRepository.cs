@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using MySqlConnector;
 using ITP104_FINAL_PROJECT.Models;
+using ITP104_FINAL_PROJECT.Services;
 
 namespace ITP104_FINAL_PROJECT.Data
 {
@@ -43,13 +44,22 @@ namespace ITP104_FINAL_PROJECT.Data
         {
             try
             {
-                using (var connection = DatabaseHelper.GetConnection())
+                // Validate input
+                var validationResult = ValidateStudent(student);
+                if (!validationResult.IsValid)
                 {
-                    await connection.OpenAsync();
-                    
+                    return (false, validationResult.ErrorMessage, 0);
+                }
+
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
+                {
                     // Check if student number exists
                     if (await IsStudentNumberExistsAsync(student.StudentNumber))
                     {
+                        await ErrorLoggingService.LogInfoAsync(
+                            "Student Registration - Duplicate",
+                            $"Attempted to register duplicate student number: {student.StudentNumber}",
+                            "students");
                         return (false, "Student number already exists", 0);
                     }
 
@@ -75,13 +85,31 @@ namespace ITP104_FINAL_PROJECT.Data
                         var result = await command.ExecuteScalarAsync();
                         int studentId = Convert.ToInt32(result);
 
+                        await ErrorLoggingService.LogInfoAsync(
+                            "Student Registration - Success",
+                            $"Registered student: {student.StudentNumber} - {student.FirstName} {student.LastName}",
+                            "students",
+                            studentId);
+
                         return (true, "Student registered successfully", studentId);
                     }
                 }
             }
+            catch (MySqlException ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Student Registration - Database Error",
+                    ex,
+                    "students");
+                return (false, ErrorLoggingService.GetUserFriendlyMessage(ex), 0);
+            }
             catch (Exception ex)
             {
-                return (false, $"Database error: {ex.Message}", 0);
+                await ErrorLoggingService.LogErrorAsync(
+                    "Student Registration - Unexpected Error",
+                    ex,
+                    "students");
+                return (false, $"An unexpected error occurred: {ex.Message}", 0);
             }
         }
 
@@ -92,9 +120,13 @@ namespace ITP104_FINAL_PROJECT.Data
         {
             try
             {
-                using (var connection = DatabaseHelper.GetConnection())
+                if (studentId <= 0)
                 {
-                    await connection.OpenAsync();
+                    throw new ArgumentException("Student ID must be greater than zero", nameof(studentId));
+                }
+
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
+                {
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
                                     email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
@@ -113,8 +145,22 @@ namespace ITP104_FINAL_PROJECT.Data
                     }
                 }
             }
+            catch (MySqlException ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Get Student By ID - Database Error",
+                    ex,
+                    "students",
+                    studentId);
+                throw new Exception(ErrorLoggingService.GetUserFriendlyMessage(ex), ex);
+            }
             catch (Exception ex)
             {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Get Student By ID - Error",
+                    ex,
+                    "students",
+                    studentId);
                 throw new Exception($"Error retrieving student: {ex.Message}", ex);
             }
 
@@ -374,6 +420,89 @@ namespace ITP104_FINAL_PROJECT.Data
                 CreatedAt = Convert.ToDateTime(reader["created_at"]),
                 UpdatedAt = reader["updated_at"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(reader["updated_at"]) : null
             };
+        }
+
+        /// <summary>
+        /// Validate student data before database operations
+        /// </summary>
+        private (bool IsValid, string ErrorMessage) ValidateStudent(Student student)
+        {
+            if (student == null)
+            {
+                return (false, "Student data cannot be null");
+            }
+
+            // Validate student number
+            var studentNumberValidation = InputValidator.ValidateRequired(student.StudentNumber, "Student Number");
+            if (!studentNumberValidation.IsValid)
+                return studentNumberValidation;
+
+            if (!InputValidator.IsValidStudentNumber(student.StudentNumber))
+            {
+                return (false, "Student number must be 5-50 characters and contain only letters, numbers, and hyphens");
+            }
+
+            // Validate first name
+            var firstNameValidation = InputValidator.ValidateRequired(student.FirstName, "First Name");
+            if (!firstNameValidation.IsValid)
+                return firstNameValidation;
+
+            if (!InputValidator.IsValidName(student.FirstName))
+            {
+                return (false, "First name contains invalid characters");
+            }
+
+            // Validate last name
+            var lastNameValidation = InputValidator.ValidateRequired(student.LastName, "Last Name");
+            if (!lastNameValidation.IsValid)
+                return lastNameValidation;
+
+            if (!InputValidator.IsValidName(student.LastName))
+            {
+                return (false, "Last name contains invalid characters");
+            }
+
+            // Validate middle name if provided
+            if (!string.IsNullOrWhiteSpace(student.MiddleName) && !InputValidator.IsValidName(student.MiddleName))
+            {
+                return (false, "Middle name contains invalid characters");
+            }
+
+            // Validate email if provided
+            if (!string.IsNullOrWhiteSpace(student.Email) && !InputValidator.IsValidEmail(student.Email))
+            {
+                return (false, "Invalid email format");
+            }
+
+            // Validate phone if provided
+            if (!string.IsNullOrWhiteSpace(student.Phone) && !InputValidator.IsValidPhoneNumber(student.Phone))
+            {
+                return (false, "Invalid phone number format");
+            }
+
+            // Validate required fields
+            var yearLevelValidation = InputValidator.ValidateRequired(student.YearLevel, "Year Level");
+            if (!yearLevelValidation.IsValid)
+                return yearLevelValidation;
+
+            var programValidation = InputValidator.ValidateRequired(student.Program, "Program");
+            if (!programValidation.IsValid)
+                return programValidation;
+
+            var qrCodeValidation = InputValidator.ValidateRequired(student.QRCodeData, "QR Code Data");
+            if (!qrCodeValidation.IsValid)
+                return qrCodeValidation;
+
+            // Validate enrollment date
+            var enrollmentDateValidation = InputValidator.ValidateDateRange(
+                student.EnrollmentDate,
+                "Enrollment Date",
+                new DateTime(2000, 1, 1),
+                DateTime.Now.AddYears(1));
+            if (!enrollmentDateValidation.IsValid)
+                return enrollmentDateValidation;
+
+            return (true, null);
         }
     }
 }
