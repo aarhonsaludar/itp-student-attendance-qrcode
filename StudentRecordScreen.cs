@@ -39,9 +39,7 @@ namespace ITP104_FINAL_PROJECT
             animationTimer.Tick += AnimationTimer_Tick;
 
             // Setup event handlers
-            btnEdit.Click += btnEdit_Click_1;
             btnBackToScan.Click += BtnBackToScan_Click;
-            btnPrint.Click += BtnPrint_Click;
             btnExport.Click += BtnExport_Click;
 
             // Setup hover effects
@@ -101,16 +99,7 @@ namespace ITP104_FINAL_PROJECT
                 btnBackToScan.FillColor = Color.FromArgb(52, 152, 219);
             };
 
-            // Print button hover
-            btnPrint.MouseEnter += (s, e) =>
-            {
-                btnPrint.FillColor = Color.FromArgb(90, 180, 90);
-                btnPrint.Cursor = Cursors.Hand;
-            };
-            btnPrint.MouseLeave += (s, e) =>
-            {
-                btnPrint.FillColor = Color.FromArgb(46, 204, 113);
-            };
+        
 
             // Export button hover
             btnExport.MouseEnter += (s, e) =>
@@ -422,22 +411,69 @@ namespace ITP104_FINAL_PROJECT
             }
         }
 
-        private void BtnExport_Click(object sender, EventArgs e)
+        private async void BtnExport_Click(object sender, EventArgs e)
         {
             try
             {
                 SaveFileDialog saveDialog = new SaveFileDialog
                 {
-                    Filter = "CSV File|*.csv|Excel File|*.xlsx|PDF File|*.pdf",
+                    Filter = "CSV File (*.csv)|*.csv|Excel File (*.xlsx)|*.xlsx",
                     Title = "Export Student Record",
-                    FileName = $"Student_Record_{lblStudentIDValue.Text}_{DateTime.Now:yyyyMMdd}"
+                    FileName = $"Student_Record_{lblStudentIDValue.Text}_{DateTime.Now:yyyyMMdd_HHmmss}"
                 };
 
                 if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
+                    // Show progress
+                    this.Cursor = Cursors.WaitCursor;
+                    btnExport.Enabled = false;
+                    btnExport.Text = "Exporting...";
+
+                    // Get current student data
+                    int studentIdInt = int.Parse(studentId);
+                    Student student = await studentRepository.GetByIdAsync(studentIdInt);
+                    
+                    if (student == null)
+                    {
+                        MessageBox.Show("Student data not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Get scan history
+                    var scanHistory = await scanHistoryRepository.GetStudentScansAsync(studentIdInt);
+
+                    // Determine file type and export accordingly
+                    string fileExtension = System.IO.Path.GetExtension(saveDialog.FileName).ToLower();
+
+                    if (fileExtension == ".csv")
+                    {
+                        ExportStudentToCsv(saveDialog.FileName, student, scanHistory);
+                    }
+                    else if (fileExtension == ".xlsx")
+                    {
+                        // For Excel export, we need additional libraries
+                        // For now, export as CSV format instead
+                        MessageBox.Show(
+                            "Excel export requires additional libraries.\n" +
+                            "Exporting as CSV format instead.",
+                            "Export Format",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+                        string csvFileName = System.IO.Path.ChangeExtension(saveDialog.FileName, ".csv");
+                        ExportStudentToCsv(csvFileName, student, scanHistory);
+                    }
+
+                    // Reset button state
+                    this.Cursor = Cursors.Default;
+                    btnExport.Enabled = true;
+                    btnExport.Text = "Export";
+
                     MessageBox.Show(
-                        $"Student record exported successfully!\n\n" +
-                        $"File: {saveDialog.FileName}",
+                        $"Successfully exported student record!\n\n" +
+                        $"Student: {lblFullNameValue.Text}\n" +
+                        $"Scan History Records: {scanHistory?.Count ?? 0}\n\n" +
+                        $"File saved to:\n{saveDialog.FileName}",
                         "Export Successful",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information
@@ -446,9 +482,97 @@ namespace ITP104_FINAL_PROJECT
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error exporting: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Cursor = Cursors.Default;
+                btnExport.Enabled = true;
+                btnExport.Text = "Export";
+
+                MessageBox.Show(
+                    $"Error exporting student record:\n{ex.Message}",
+                    "Export Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
+        }
+
+        private void ExportStudentToCsv(string filePath, Student student, List<ScanHistory> scanHistory)
+        {
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
+            {
+                // Write Student Information Section
+                writer.WriteLine("STUDENT INFORMATION");
+                writer.WriteLine("===================");
+                writer.WriteLine();
+                
+                // Format full name
+                string fullName = student.FirstName;
+                if (!string.IsNullOrWhiteSpace(student.MiddleName))
+                {
+                    fullName += " " + student.MiddleName;
+                }
+                fullName += " " + student.LastName;
+
+                writer.WriteLine($"Student ID,{EscapeCsvField(student.StudentNumber)}");
+                writer.WriteLine($"Full Name,{EscapeCsvField(fullName.Trim())}");
+                writer.WriteLine($"First Name,{EscapeCsvField(student.FirstName)}");
+                writer.WriteLine($"Middle Name,{EscapeCsvField(student.MiddleName ?? "")}");
+                writer.WriteLine($"Last Name,{EscapeCsvField(student.LastName)}");
+                writer.WriteLine($"Program/Course,{EscapeCsvField(student.Program)}");
+                writer.WriteLine($"Year Level,{student.YearLevel}");
+                writer.WriteLine($"Email,{EscapeCsvField(student.Email ?? "")}");
+                writer.WriteLine($"Phone,{EscapeCsvField(student.Phone ?? "")}");
+                writer.WriteLine($"Status,{EscapeCsvField(student.Status)}");
+                writer.WriteLine($"Enrollment Date,{student.EnrollmentDate:yyyy-MM-dd}");
+                writer.WriteLine($"Created At,{student.CreatedAt:yyyy-MM-dd HH:mm:ss}");
+                writer.WriteLine();
+                writer.WriteLine();
+
+                // Write Scan History Section
+                writer.WriteLine("SCAN HISTORY");
+                writer.WriteLine("============");
+                writer.WriteLine();
+                writer.WriteLine("Date,Time In,Time Out,Scan Type,Location,Status,Purpose,Notes");
+
+                if (scanHistory != null && scanHistory.Count > 0)
+                {
+                    foreach (var scan in scanHistory)
+                    {
+                        string date = scan.ScanDateTime.ToString("yyyy-MM-dd");
+                        string timeIn = scan.ScanDateTime.ToString("HH:mm:ss");
+                        string timeOut = scan.TimeOut.HasValue ? scan.TimeOut.Value.ToString("HH:mm:ss") : "";
+                        string scanType = EscapeCsvField(scan.ScanType ?? "QR Code");
+                        string location = EscapeCsvField(scan.Location ?? "");
+                        string status = EscapeCsvField(scan.Status ?? "");
+                        string purpose = EscapeCsvField(scan.ScanPurpose ?? "");
+                        string notes = EscapeCsvField(scan.Notes ?? "");
+
+                        writer.WriteLine($"{date},{timeIn},{timeOut},{scanType},{location},{status},{purpose},{notes}");
+                    }
+                }
+                else
+                {
+                    writer.WriteLine("No scan history available");
+                }
+
+                writer.WriteLine();
+                writer.WriteLine();
+                writer.WriteLine($"Export Date,{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                writer.WriteLine($"Total Scan Records,{scanHistory?.Count ?? 0}");
+            }
+        }
+
+        private string EscapeCsvField(string field)
+        {
+            if (string.IsNullOrEmpty(field))
+                return "";
+
+            // If field contains comma, quote, or newline, wrap in quotes and escape quotes
+            if (field.Contains(",") || field.Contains("\"") || field.Contains("\n") || field.Contains("\r"))
+            {
+                return "\"" + field.Replace("\"", "\"\"") + "\"";
+            }
+
+            return field;
         }
 
         private void btnClose_Click(object sender, EventArgs e)

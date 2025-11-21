@@ -190,6 +190,7 @@ namespace ITP104_FINAL_PROJECT
             this.btnExit.Size = new System.Drawing.Size(113, 43);
             this.btnExit.TabIndex = 18;
             this.btnExit.Text = "Exit";
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // QRScannerForm
             // 

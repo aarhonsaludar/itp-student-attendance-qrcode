@@ -454,25 +454,144 @@ namespace ITP104_FINAL_PROJECT
             await LoadScanHistoryAsync();
         }
 
-        private void BtnExport_Click(object sender, EventArgs e)
+        private async void BtnExport_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveDialog = new SaveFileDialog
+            try
             {
-                Filter = "CSV File|*.csv|Excel File|*.xlsx|PDF File|*.pdf",
-                Title = "Export Scan History",
-                FileName = $"Scan_History_{DateTime.Now:yyyyMMdd_HHmmss}"
-            };
+                SaveFileDialog saveDialog = new SaveFileDialog
+                {
+                    Filter = "CSV File (*.csv)|*.csv|Excel File (*.xlsx)|*.xlsx",
+                    Title = "Export Scan History",
+                    FileName = $"Scan_History_{DateTime.Now:yyyyMMdd_HHmmss}"
+                };
 
-            if (saveDialog.ShowDialog() == DialogResult.OK)
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Show progress
+                    this.Cursor = Cursors.WaitCursor;
+                    btnExport.Enabled = false;
+                    btnExport.Text = "Exporting...";
+
+                    // Get all data (not just current page) with current filters
+                    DateTime? startDate = null;
+                    DateTime? endDate = null;
+
+                    if (dtpDateFrom.Checked)
+                    {
+                        startDate = dtpDateFrom.Value.Date;
+                        endDate = startDate.Value.AddDays(1).AddSeconds(-1);
+                    }
+
+                    var allScanHistory = await scanHistoryRepository.GetHistoryAsync(
+                        startDate: startDate,
+                        endDate: endDate,
+                        studentId: null,
+                        scanType: null
+                    );
+
+                    // Apply search filter
+                    string searchText = txtSearch.Text.Trim().ToLower();
+                    if (!string.IsNullOrEmpty(searchText))
+                    {
+                        allScanHistory = allScanHistory.Where(s =>
+                            s.StudentNumber?.ToLower().Contains(searchText) == true ||
+                            s.StudentName?.ToLower().Contains(searchText) == true
+                        ).ToList();
+                    }
+
+                    // Sort by date descending
+                    allScanHistory = allScanHistory.OrderByDescending(s => s.ScanDateTime).ToList();
+
+                    // Determine file type and export accordingly
+                    string fileExtension = System.IO.Path.GetExtension(saveDialog.FileName).ToLower();
+
+                    if (fileExtension == ".csv")
+                    {
+                        ExportToCsv(saveDialog.FileName, allScanHistory);
+                    }
+                    else if (fileExtension == ".xlsx")
+                    {
+                        // For Excel export, we need additional libraries (EPPlus, ClosedXML, etc.)
+                        // For now, we'll export as CSV with .xlsx extension
+                        MessageBox.Show(
+                            "Excel export requires additional libraries.\n" +
+                            "Exporting as CSV format instead.",
+                            "Export Format",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+                        // Change extension to .csv
+                        string csvFileName = System.IO.Path.ChangeExtension(saveDialog.FileName, ".csv");
+                        ExportToCsv(csvFileName, allScanHistory);
+                    }
+
+                    // Reset button state
+                    this.Cursor = Cursors.Default;
+                    btnExport.Enabled = true;
+                    btnExport.Text = "Export";
+
+                    MessageBox.Show(
+                        $"Successfully exported {allScanHistory.Count} records!\n\n" +
+                        $"File saved to:\n{saveDialog.FileName}",
+                        "Export Successful",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+            }
+            catch (Exception ex)
             {
+                this.Cursor = Cursors.Default;
+                btnExport.Enabled = true;
+                btnExport.Text = "Export";
+
                 MessageBox.Show(
-                    $"Scan history will be exported to:\n{saveDialog.FileName}\n\n" +
-                    "Export functionality will be fully implemented in Phase 2.",
-                    "Export",
+                    $"Error exporting scan history:\n{ex.Message}",
+                    "Export Error",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
+                    MessageBoxIcon.Error
                 );
             }
+        }
+
+        private void ExportToCsv(string filePath, List<ScanHistory> data)
+        {
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
+            {
+                // Write header
+                writer.WriteLine("Date,Time In,Time Out,Student ID,Student Name,Scan Type,Status,Location,Purpose,Notes");
+
+                // Write data rows
+                foreach (var scan in data)
+                {
+                    string date = scan.ScanDateTime.ToString("yyyy-MM-dd");
+                    string timeIn = scan.ScanDateTime.ToString("HH:mm:ss");
+                    string timeOut = scan.TimeOut.HasValue ? scan.TimeOut.Value.ToString("HH:mm:ss") : "";
+                    string studentNumber = EscapeCsvField(scan.StudentNumber ?? "");
+                    string studentName = EscapeCsvField(scan.StudentName ?? "");
+                    string scanType = EscapeCsvField(scan.ScanType ?? "QR Code");
+                    string status = EscapeCsvField(scan.Status ?? "");
+                    string location = EscapeCsvField(scan.Location ?? "");
+                    string purpose = EscapeCsvField(scan.ScanPurpose ?? "");
+                    string notes = EscapeCsvField(scan.Notes ?? "");
+
+                    writer.WriteLine($"{date},{timeIn},{timeOut},{studentNumber},{studentName},{scanType},{status},{location},{purpose},{notes}");
+                }
+            }
+        }
+
+        private string EscapeCsvField(string field)
+        {
+            if (string.IsNullOrEmpty(field))
+                return "";
+
+            // If field contains comma, quote, or newline, wrap in quotes and escape quotes
+            if (field.Contains(",") || field.Contains("\"") || field.Contains("\n") || field.Contains("\r"))
+            {
+                return "\"" + field.Replace("\"", "\"\"") + "\"";
+            }
+
+            return field;
         }
 
         private async void BtnPreviousPage_Click(object sender, EventArgs e)

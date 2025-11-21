@@ -450,5 +450,10 @@ namespace ITP104_FINAL_PROJECT
             lblResult.Text = "QR Code: (none)";
             lblResult.ForeColor = Color.Black;
         }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

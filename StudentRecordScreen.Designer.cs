@@ -70,7 +70,6 @@
             this.pnlActions = new Guna.UI2.WinForms.Guna2Panel();
             this.btnDelete = new Guna.UI2.WinForms.Guna2Button();
             this.btnExport = new Guna.UI2.WinForms.Guna2Button();
-            this.btnPrint = new Guna.UI2.WinForms.Guna2Button();
             this.btnBackToScan = new Guna.UI2.WinForms.Guna2Button();
             this.btnEdit = new Guna.UI2.WinForms.Guna2Button();
             this.pnlHeader.SuspendLayout();
@@ -560,7 +559,6 @@
             this.pnlActions.BackColor = System.Drawing.Color.Transparent;
             this.pnlActions.Controls.Add(this.btnDelete);
             this.pnlActions.Controls.Add(this.btnExport);
-            this.pnlActions.Controls.Add(this.btnPrint);
             this.pnlActions.Controls.Add(this.btnBackToScan);
             this.pnlActions.Controls.Add(this.btnEdit);
             this.pnlActions.Location = new System.Drawing.Point(51, 535);
@@ -609,26 +607,6 @@
             this.btnExport.Size = new System.Drawing.Size(200, 46);
             this.btnExport.TabIndex = 3;
             this.btnExport.Text = "   Export";
-            // 
-            // btnPrint
-            // 
-            this.btnPrint.BorderRadius = 10;
-            this.btnPrint.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnPrint.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnPrint.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnPrint.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnPrint.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
-            this.btnPrint.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnPrint.ForeColor = System.Drawing.Color.White;
-            this.btnPrint.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btnPrint.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnPrint.Location = new System.Drawing.Point(681, 12);
-            this.btnPrint.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(200, 46);
-            this.btnPrint.TabIndex = 2;
-            this.btnPrint.Text = "🖨️  Print";
-            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click_1);
             // 
             // btnBackToScan
             // 
@@ -737,7 +715,6 @@
         private Guna.UI2.WinForms.Guna2Panel pnlScanHistory;
         private System.Windows.Forms.Label lblScanHistoryTitle;
         private System.Windows.Forms.DataGridView dgvScanHistory;
-        private Guna.UI2.WinForms.Guna2Button btnPrint;
         private Guna.UI2.WinForms.Guna2Button btnExport;
         private System.Windows.Forms.Label lblLoadingIndicator;
         private System.Windows.Forms.Label label2;
