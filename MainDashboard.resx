@@ -271,7 +271,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblScansTodayValue.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 46</value>
+    <value>21, 44</value>
   </data>
   <data name="lblScansTodayValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>251, 60</value>
@@ -361,7 +361,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblMostUsedScanValue.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 43</value>
+    <value>11, 48</value>
   </data>
   <data name="lblMostUsedScanValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>251, 60</value>
@@ -454,7 +454,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblQRStatus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 60</value>
+    <value>14, 58</value>
   </data>
   <data name="lblQRStatus.Size" type="System.Drawing.Size, System.Drawing">
     <value>258, 33</value>
@@ -484,7 +484,7 @@
     <value>3, 2, 3, 2</value>
   </data>
   <data name="pnlScannerModes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>283, 140</value>
+    <value>298, 140</value>
   </data>
   <data name="pnlScannerModes.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
