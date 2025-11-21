@@ -126,7 +126,7 @@ The application will now show a message box with the actual error. Common issues
    
    -- Add a test scan if needed
    INSERT INTO scan_history (student_id, device_id, scan_type, scan_data, location, status)
-   VALUES (1, 1, 'QR', 'test_data', 'Main Entrance', 'success');
+   VALUES (1, 1, 'QR', 'test_data', 'Pamantasan ng Cabuyao Building', 'success');
    ```
 
 ## 🧪 Testing Steps

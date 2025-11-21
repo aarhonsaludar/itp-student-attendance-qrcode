@@ -23,7 +23,7 @@ namespace ITP104_FINAL_PROJECT
         private readonly StudentRepository studentRepository;
         private readonly ScanHistoryRepository scanHistoryRepository;
         private const int DEFAULT_DEVICE_ID = 1;
-        private const string DEFAULT_LOCATION = "Main Entrance";
+        private const string DEFAULT_LOCATION = "Pamantasan ng Cabuyao Building";
 
         // Scan box dimensions and position
         private Rectangle scanBox;

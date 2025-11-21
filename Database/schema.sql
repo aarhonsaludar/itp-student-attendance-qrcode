@@ -40,6 +40,7 @@ CREATE TABLE students (
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(20),
+    sex ENUM('Male', 'Female') DEFAULT NULL,
     year_level ENUM('1', '2', '3', '4', 'Graduate') NOT NULL,
     program VARCHAR(100) NOT NULL,
     section VARCHAR(50),
@@ -81,6 +82,7 @@ CREATE TABLE scan_history (
     scan_type ENUM('QR', 'MANUAL') DEFAULT 'QR',
     scan_data TEXT NOT NULL,
     scan_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    time_out DATETIME NULL,
     scan_purpose ENUM('attendance', 'identification', 'verification') DEFAULT 'attendance',
     location VARCHAR(100),
     status ENUM('success', 'failed', 'duplicate') DEFAULT 'success',
@@ -161,7 +163,7 @@ INSERT INTO users (username, password_hash, full_name, email, role) VALUES
 
 -- Default QR Scanner Device
 INSERT INTO devices (device_name, device_type, location, status) VALUES
-('QR Scanner 01', 'QR_SCANNER', 'Main Entrance', 'active'),
+('QR Scanner 01', 'QR_SCANNER', 'Pamantasan ng Cabuyao Building', 'active'),
 ('QR Scanner 02', 'QR_SCANNER', 'Library', 'active');
 
 -- Default System Settings
@@ -193,11 +195,11 @@ INSERT INTO students (
 
 -- Sample Scan History
 INSERT INTO scan_history (student_id, device_id, scan_type, scan_data, scan_datetime, location, status) VALUES
-(1, 1, 'QR', 'ID:2024-STU-0001|Name:John M. Smith|Email:john.smith@school.edu|Course:Computer Science|Year:3', NOW(), 'Main Entrance', 'success'),
-(2, 1, 'QR', 'ID:2024-STU-0002|Name:Emily R. Johnson|Email:emily.johnson@school.edu|Course:Information Technology|Year:2', DATE_SUB(NOW(), INTERVAL 5 MINUTE), 'Main Entrance', 'success'),
-(3, 1, 'QR', 'ID:2024-STU-0003|Name:Michael A. Brown|Email:michael.brown@school.edu|Course:Computer Science|Year:4', DATE_SUB(NOW(), INTERVAL 12 MINUTE), 'Main Entrance', 'success'),
+(1, 1, 'QR', 'ID:2024-STU-0001|Name:John M. Smith|Email:john.smith@school.edu|Course:Computer Science|Year:3', NOW(), 'Pamantasan ng Cabuyao Building', 'success'),
+(2, 1, 'QR', 'ID:2024-STU-0002|Name:Emily R. Johnson|Email:emily.johnson@school.edu|Course:Information Technology|Year:2', DATE_SUB(NOW(), INTERVAL 5 MINUTE), 'Pamantasan ng Cabuyao Building', 'success'),
+(3, 1, 'QR', 'ID:2024-STU-0003|Name:Michael A. Brown|Email:michael.brown@school.edu|Course:Computer Science|Year:4', DATE_SUB(NOW(), INTERVAL 12 MINUTE), 'Pamantasan ng Cabuyao Building', 'success'),
 (4, 2, 'QR', 'ID:2024-STU-0004|Name:Sarah L. Davis|Email:sarah.davis@school.edu|Course:Information Technology|Year:1', DATE_SUB(NOW(), INTERVAL 18 MINUTE), 'Library', 'success'),
-(5, 1, 'QR', 'ID:2024-STU-0005|Name:David K. Wilson|Email:david.wilson@school.edu|Course:Computer Engineering|Year:3', DATE_SUB(NOW(), INTERVAL 25 MINUTE), 'Main Entrance', 'success');
+(5, 1, 'QR', 'ID:2024-STU-0005|Name:David K. Wilson|Email:david.wilson@school.edu|Course:Computer Engineering|Year:3', DATE_SUB(NOW(), INTERVAL 25 MINUTE), 'Pamantasan ng Cabuyao Building', 'success');
 
 -- ============================================
 -- Stored Procedures (QR Code Focused)

@@ -176,7 +176,7 @@ INNER JOIN devices d ON sh.device_id = d.device_id
 ORDER BY sh.scan_datetime DESC;
 
 -- Test the new procedure
--- CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @result, @name, @number, @type);
+-- CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Pamantasan ng Cabuyao Building', @result, @name, @number, @type);
 -- SELECT @result as Result, @name as StudentName, @number as StudentNumber, @type as ScanType;
 
 SELECT 'Time In/Time Out system update completed successfully!' as Status;

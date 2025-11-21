@@ -73,9 +73,9 @@
 #### Example Real Data Display:
 ```
 Student Number | Student Name      | Scan Type | Time                    | Location
-2024-STU-0001 | John M. Smith     | QR        | 11/20/2025 06:13:45 PM | Main Entrance
+2024-STU-0001 | John M. Smith     | QR        | 11/20/2025 06:13:45 PM | Pamantasan ng Cabuyao Building
 2024-STU-0002 | Emily R. Johnson  | QR        | 11/20/2025 06:08:22 PM | Library
-2024-STU-0003 | Michael A. Brown  | MANUAL    | 11/20/2025 06:01:15 PM | Main Entrance
+2024-STU-0003 | Michael A. Brown  | MANUAL    | 11/20/2025 06:01:15 PM | Pamantasan ng Cabuyao Building
 ```
 
 ## Auto-Refresh Mechanism

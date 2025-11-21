@@ -196,21 +196,21 @@ INSERT INTO students (
 
 ```powershell
 # First scan (Time In)
-mysql -u root -padmin -D student_attendance_db -e "CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @num, @t); SELECT @r as Result, @n as Name, @num as Number, @t as Type;"
+mysql -u root -padmin -D student_attendance_db -e "CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Pamantasan ng Cabuyao Building', @r, @n, @num, @t); SELECT @r as Result, @n as Name, @num as Number, @t as Type;"
 ```
 
 **Expected:** `SUCCESS: Time In recorded at HH:MM AM/PM`
 
 ```powershell
 # Second scan (Time Out)
-mysql -u root -padmin -D student_attendance_db -e "CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @num, @t); SELECT @r as Result, @n as Name, @num as Number, @t as Type;"
+mysql -u root -padmin -D student_attendance_db -e "CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Pamantasan ng Cabuyao Building', @r, @n, @num, @t); SELECT @r as Result, @n as Name, @num as Number, @t as Type;"
 ```
 
 **Expected:** `SUCCESS: Time Out recorded at HH:MM AM/PM`
 
 ```powershell
 # Third scan (Rejected)
-mysql -u root -padmin -D student_attendance_db -e "CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @num, @t); SELECT @r as Result, @n as Name, @num as Number, @t as Type;"
+mysql -u root -padmin -D student_attendance_db -e "CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Pamantasan ng Cabuyao Building', @r, @n, @num, @t); SELECT @r as Result, @n as Name, @num as Number, @t as Type;"
 ```
 
 **Expected:** `ERROR: Attendance already completed for today (Time In: ..., Time Out: ...)`

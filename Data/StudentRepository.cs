@@ -14,7 +14,7 @@ namespace ITP104_FINAL_PROJECT.Data
         /// </summary>
         public async Task<(bool Success, string Message, int StudentId)> RegisterStudentAsync(
             string studentNumber, string firstName, string middleName, string lastName,
-            string email, string phone, string yearLevel, string program, 
+            string email, string phone, string sex, string yearLevel, string program, 
             string section, string qrCodeData, DateTime enrollmentDate)
         {
             var student = new Student
@@ -25,6 +25,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 LastName = lastName,
                 Email = email,
                 Phone = phone,
+                Sex = sex,
                 YearLevel = yearLevel,
                 Program = program,
                 Section = section,
@@ -52,8 +53,8 @@ namespace ITP104_FINAL_PROJECT.Data
                         return (false, "Student number already exists", 0);
                     }
 
-                    string query = @"INSERT INTO students (student_number, first_name, middle_name, last_name, email, phone, year_level, program, section, qr_code_data, enrollment_date, status, created_at)
-                                   VALUES (@studentNumber, @firstName, @middleName, @lastName, @email, @phone, @yearLevel, @program, @section, @qrCodeData, @enrollmentDate, 'Active', CURRENT_TIMESTAMP);
+                    string query = @"INSERT INTO students (student_number, first_name, middle_name, last_name, email, phone, sex, year_level, program, section, qr_code_data, enrollment_date, status, created_at)
+                                   VALUES (@studentNumber, @firstName, @middleName, @lastName, @email, @phone, @sex, @yearLevel, @program, @section, @qrCodeData, @enrollmentDate, 'Active', CURRENT_TIMESTAMP);
                                    SELECT LAST_INSERT_ID();";
 
                     using (var command = new MySqlCommand(query, connection))
@@ -64,6 +65,7 @@ namespace ITP104_FINAL_PROJECT.Data
                         command.Parameters.AddWithValue("@lastName", student.LastName);
                         command.Parameters.AddWithValue("@email", student.Email ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@phone", student.Phone ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@sex", student.Sex ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@yearLevel", student.YearLevel);
                         command.Parameters.AddWithValue("@program", student.Program);
                         command.Parameters.AddWithValue("@section", student.Section ?? (object)DBNull.Value);
@@ -94,7 +96,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 {
                     await connection.OpenAsync();
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students WHERE student_id = @studentId";
 
@@ -130,7 +132,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 {
                     await connection.OpenAsync();
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students WHERE qr_code_data = @qrCodeData";
 
@@ -168,7 +170,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 {
                     await connection.OpenAsync();
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students";
                     
@@ -216,6 +218,7 @@ namespace ITP104_FINAL_PROJECT.Data
                                     last_name = @lastName,
                                     email = @email,
                                     phone = @phone,
+                                    sex = @sex,
                                     year_level = @yearLevel,
                                     program = @program,
                                     section = @section,
@@ -234,6 +237,7 @@ namespace ITP104_FINAL_PROJECT.Data
                         command.Parameters.AddWithValue("@lastName", student.LastName);
                         command.Parameters.AddWithValue("@email", student.Email ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@phone", student.Phone ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@sex", student.Sex ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@yearLevel", student.YearLevel);
                         command.Parameters.AddWithValue("@program", student.Program);
                         command.Parameters.AddWithValue("@section", student.Section ?? (object)DBNull.Value);
@@ -291,7 +295,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 {
                     await connection.OpenAsync();
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students 
                                     WHERE status = 'active' 
@@ -359,6 +363,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 LastName = reader["last_name"].ToString(),
                 Email = reader["email"] != DBNull.Value ? reader["email"].ToString() : null,
                 Phone = reader["phone"] != DBNull.Value ? reader["phone"].ToString() : null,
+                Sex = reader["sex"] != DBNull.Value ? reader["sex"].ToString() : null,
                 YearLevel = reader["year_level"].ToString(),
                 Program = reader["program"].ToString(),
                 Section = reader["section"] != DBNull.Value ? reader["section"].ToString() : null,

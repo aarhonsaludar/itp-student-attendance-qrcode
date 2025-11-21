@@ -30,11 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pnlForm = new Guna.UI2.WinForms.Guna2Panel();
-            this.label4 = new System.Windows.Forms.Label();
             this.lblNote = new System.Windows.Forms.Label();
             this.guna2HtmlLabel2 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnSaveDownload = new Guna.UI2.WinForms.Guna2Button();
-            this.cmbYearLevel = new Guna.UI2.WinForms.Guna2ComboBox();
             this.btnClearForm = new Guna.UI2.WinForms.Guna2Button();
             this.btnRegisterStudent = new Guna.UI2.WinForms.Guna2Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -62,6 +60,10 @@
             this.guna2HtmlLabel4 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnExit = new Guna.UI2.WinForms.Guna2Button();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.cmbYearLevel = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblSex = new System.Windows.Forms.Label();
+            this.cmbSex = new Guna.UI2.WinForms.Guna2ComboBox();
             this.pnlForm.SuspendLayout();
             this.pnlQRPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
@@ -73,6 +75,8 @@
             // 
             this.pnlForm.BackColor = System.Drawing.Color.Transparent;
             this.pnlForm.BorderRadius = 10;
+            this.pnlForm.Controls.Add(this.lblSex);
+            this.pnlForm.Controls.Add(this.cmbSex);
             this.pnlForm.Controls.Add(this.label4);
             this.pnlForm.Controls.Add(this.lblNote);
             this.pnlForm.Controls.Add(this.guna2HtmlLabel2);
@@ -97,25 +101,14 @@
             this.pnlForm.Location = new System.Drawing.Point(27, 101);
             this.pnlForm.Margin = new System.Windows.Forms.Padding(2);
             this.pnlForm.Name = "pnlForm";
-            this.pnlForm.Size = new System.Drawing.Size(515, 730);
+            this.pnlForm.Size = new System.Drawing.Size(582, 731);
             this.pnlForm.TabIndex = 5;
             this.pnlForm.UseTransparentBackground = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(35, 534);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(123, 26);
-            this.label4.TabIndex = 24;
-            this.label4.Text = "Year Level:";
             // 
             // lblNote
             // 
             this.lblNote.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNote.Location = new System.Drawing.Point(35, 58);
+            this.lblNote.Location = new System.Drawing.Point(52, 58);
             this.lblNote.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNote.Name = "lblNote";
             this.lblNote.Size = new System.Drawing.Size(225, 32);
@@ -129,7 +122,7 @@
             this.guna2HtmlLabel2.BackColor = System.Drawing.Color.Transparent;
             this.guna2HtmlLabel2.Font = new System.Drawing.Font("Century Gothic", 24F, System.Drawing.FontStyle.Bold);
             this.guna2HtmlLabel2.ForeColor = System.Drawing.Color.Black;
-            this.guna2HtmlLabel2.Location = new System.Drawing.Point(28, 15);
+            this.guna2HtmlLabel2.Location = new System.Drawing.Point(45, 15);
             this.guna2HtmlLabel2.Margin = new System.Windows.Forms.Padding(2);
             this.guna2HtmlLabel2.Name = "guna2HtmlLabel2";
             this.guna2HtmlLabel2.Size = new System.Drawing.Size(467, 41);
@@ -145,36 +138,13 @@
             this.btnSaveDownload.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnSaveDownload.ImageOffset = new System.Drawing.Point(-5, 0);
             this.btnSaveDownload.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnSaveDownload.Location = new System.Drawing.Point(187, 678);
+            this.btnSaveDownload.Location = new System.Drawing.Point(301, 618);
             this.btnSaveDownload.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveDownload.Name = "btnSaveDownload";
-            this.btnSaveDownload.Size = new System.Drawing.Size(135, 40);
+            this.btnSaveDownload.Size = new System.Drawing.Size(194, 40);
             this.btnSaveDownload.TabIndex = 0;
             this.btnSaveDownload.Text = "Download QR";
             this.btnSaveDownload.TextOffset = new System.Drawing.Point(15, 0);
-            // 
-            // cmbYearLevel
-            // 
-            this.cmbYearLevel.BackColor = System.Drawing.Color.Transparent;
-            this.cmbYearLevel.BorderColor = System.Drawing.Color.Black;
-            this.cmbYearLevel.BorderRadius = 10;
-            this.cmbYearLevel.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cmbYearLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbYearLevel.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.cmbYearLevel.FocusedColor = System.Drawing.Color.Empty;
-            this.cmbYearLevel.Font = new System.Drawing.Font("Century Gothic", 10F);
-            this.cmbYearLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.cmbYearLevel.ItemHeight = 30;
-            this.cmbYearLevel.Items.AddRange(new object[] {
-            "First Year",
-            "Second Year",
-            "Third Year",
-            "Fourth Year"});
-            this.cmbYearLevel.Location = new System.Drawing.Point(29, 562);
-            this.cmbYearLevel.Margin = new System.Windows.Forms.Padding(2);
-            this.cmbYearLevel.Name = "cmbYearLevel";
-            this.cmbYearLevel.Size = new System.Drawing.Size(196, 36);
-            this.cmbYearLevel.TabIndex = 10;
             // 
             // btnClearForm
             // 
@@ -185,10 +155,10 @@
             this.btnClearForm.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.clean;
             this.btnClearForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnClearForm.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnClearForm.Location = new System.Drawing.Point(343, 678);
+            this.btnClearForm.Location = new System.Drawing.Point(299, 678);
             this.btnClearForm.Margin = new System.Windows.Forms.Padding(2);
             this.btnClearForm.Name = "btnClearForm";
-            this.btnClearForm.Size = new System.Drawing.Size(135, 40);
+            this.btnClearForm.Size = new System.Drawing.Size(185, 40);
             this.btnClearForm.TabIndex = 1;
             this.btnClearForm.Text = "Clear Form";
             this.btnClearForm.TextOffset = new System.Drawing.Point(10, 0);
@@ -198,10 +168,10 @@
             this.btnRegisterStudent.BorderRadius = 10;
             this.btnRegisterStudent.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.btnRegisterStudent.ForeColor = System.Drawing.Color.White;
-            this.btnRegisterStudent.Location = new System.Drawing.Point(187, 618);
+            this.btnRegisterStudent.Location = new System.Drawing.Point(45, 678);
             this.btnRegisterStudent.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegisterStudent.Name = "btnRegisterStudent";
-            this.btnRegisterStudent.Size = new System.Drawing.Size(291, 40);
+            this.btnRegisterStudent.Size = new System.Drawing.Size(195, 40);
             this.btnRegisterStudent.TabIndex = 23;
             this.btnRegisterStudent.Text = "Register to Database";
             // 
@@ -209,7 +179,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(34, 449);
+            this.label3.Location = new System.Drawing.Point(51, 449);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 26);
@@ -226,10 +196,10 @@
             this.btnGenerateQR.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnGenerateQR.ImageOffset = new System.Drawing.Point(-5, 0);
             this.btnGenerateQR.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnGenerateQR.Location = new System.Drawing.Point(29, 618);
+            this.btnGenerateQR.Location = new System.Drawing.Point(46, 618);
             this.btnGenerateQR.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateQR.Name = "btnGenerateQR";
-            this.btnGenerateQR.Size = new System.Drawing.Size(135, 40);
+            this.btnGenerateQR.Size = new System.Drawing.Size(194, 40);
             this.btnGenerateQR.TabIndex = 4;
             this.btnGenerateQR.Text = "Generate QR";
             this.btnGenerateQR.TextOffset = new System.Drawing.Point(17, 0);
@@ -238,7 +208,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(35, 334);
+            this.label2.Location = new System.Drawing.Point(52, 334);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(155, 26);
@@ -249,7 +219,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(35, 215);
+            this.label1.Location = new System.Drawing.Point(52, 215);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(158, 26);
@@ -260,7 +230,7 @@
             // 
             this.lblStudentID.AutoSize = true;
             this.lblStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStudentID.Location = new System.Drawing.Point(35, 102);
+            this.lblStudentID.Location = new System.Drawing.Point(52, 102);
             this.lblStudentID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStudentID.Name = "lblStudentID";
             this.lblStudentID.Size = new System.Drawing.Size(121, 26);
@@ -271,7 +241,7 @@
             // 
             this.lblPhone.AutoSize = true;
             this.lblPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPhone.Location = new System.Drawing.Point(282, 334);
+            this.lblPhone.Location = new System.Drawing.Point(299, 334);
             this.lblPhone.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPhone.Name = "lblPhone";
             this.lblPhone.Size = new System.Drawing.Size(81, 26);
@@ -282,7 +252,7 @@
             // 
             this.lblSection.AutoSize = true;
             this.lblSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSection.Location = new System.Drawing.Point(282, 449);
+            this.lblSection.Location = new System.Drawing.Point(299, 449);
             this.lblSection.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSection.Name = "lblSection";
             this.lblSection.Size = new System.Drawing.Size(91, 26);
@@ -308,7 +278,7 @@
             "Nursing",
             "Educ",
             "Psychology"});
-            this.cmbCourse.Location = new System.Drawing.Point(29, 482);
+            this.cmbCourse.Location = new System.Drawing.Point(46, 482);
             this.cmbCourse.Margin = new System.Windows.Forms.Padding(2);
             this.cmbCourse.Name = "cmbCourse";
             this.cmbCourse.Size = new System.Drawing.Size(194, 36);
@@ -322,7 +292,7 @@
             this.txtEmail.DefaultText = "";
             this.txtEmail.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.Location = new System.Drawing.Point(29, 363);
+            this.txtEmail.Location = new System.Drawing.Point(46, 363);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.PlaceholderText = "Enter Student Email";
@@ -338,7 +308,7 @@
             this.txtName.DefaultText = "";
             this.txtName.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.Location = new System.Drawing.Point(29, 240);
+            this.txtName.Location = new System.Drawing.Point(46, 240);
             this.txtName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtName.Name = "txtName";
             this.txtName.PlaceholderText = "Enter Student Name";
@@ -354,7 +324,7 @@
             this.txtStudentID.DefaultText = "";
             this.txtStudentID.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtStudentID.Location = new System.Drawing.Point(29, 127);
+            this.txtStudentID.Location = new System.Drawing.Point(46, 127);
             this.txtStudentID.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtStudentID.Name = "txtStudentID";
             this.txtStudentID.PlaceholderText = "Enter Student ID";
@@ -370,7 +340,7 @@
             this.txtPhone.DefaultText = "";
             this.txtPhone.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPhone.Location = new System.Drawing.Point(282, 363);
+            this.txtPhone.Location = new System.Drawing.Point(299, 363);
             this.txtPhone.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.PlaceholderText = "Phone (Optional)";
@@ -386,7 +356,7 @@
             this.txtSection.DefaultText = "";
             this.txtSection.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSection.Location = new System.Drawing.Point(282, 482);
+            this.txtSection.Location = new System.Drawing.Point(299, 482);
             this.txtSection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtSection.Name = "txtSection";
             this.txtSection.PlaceholderText = "Section (Optional)";
@@ -400,11 +370,11 @@
             this.pnlQRPreview.Controls.Add(this.lblStudentDetails);
             this.pnlQRPreview.Controls.Add(this.guna2HtmlLabel3);
             this.pnlQRPreview.Controls.Add(this.picQRCode);
-            this.pnlQRPreview.Location = new System.Drawing.Point(630, 100);
+            this.pnlQRPreview.Location = new System.Drawing.Point(747, 101);
             this.pnlQRPreview.Margin = new System.Windows.Forms.Padding(2);
             this.pnlQRPreview.Name = "pnlQRPreview";
             this.pnlQRPreview.ShadowDecoration.Enabled = true;
-            this.pnlQRPreview.Size = new System.Drawing.Size(529, 731);
+            this.pnlQRPreview.Size = new System.Drawing.Size(582, 731);
             this.pnlQRPreview.TabIndex = 4;
             // 
             // lblStudentDetails
@@ -455,7 +425,7 @@
             this.guna2ControlBox3.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox;
             this.guna2ControlBox3.FillColor = System.Drawing.Color.Black;
             this.guna2ControlBox3.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2ControlBox3.Location = new System.Drawing.Point(1085, 0);
+            this.guna2ControlBox3.Location = new System.Drawing.Point(1280, 0);
             this.guna2ControlBox3.Margin = new System.Windows.Forms.Padding(2);
             this.guna2ControlBox3.Name = "guna2ControlBox3";
             this.guna2ControlBox3.Size = new System.Drawing.Size(40, 30);
@@ -466,7 +436,7 @@
             this.guna2ControlBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.guna2ControlBox1.FillColor = System.Drawing.Color.Black;
             this.guna2ControlBox1.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2ControlBox1.Location = new System.Drawing.Point(1135, 0);
+            this.guna2ControlBox1.Location = new System.Drawing.Point(1330, 0);
             this.guna2ControlBox1.Margin = new System.Windows.Forms.Padding(2);
             this.guna2ControlBox1.Name = "guna2ControlBox1";
             this.guna2ControlBox1.Size = new System.Drawing.Size(40, 30);
@@ -484,7 +454,7 @@
             this.guna2Panel1.Location = new System.Drawing.Point(-2, -1);
             this.guna2Panel1.Margin = new System.Windows.Forms.Padding(2);
             this.guna2Panel1.Name = "guna2Panel1";
-            this.guna2Panel1.Size = new System.Drawing.Size(1182, 85);
+            this.guna2Panel1.Size = new System.Drawing.Size(1404, 85);
             this.guna2Panel1.TabIndex = 6;
             // 
             // guna2PictureBox1
@@ -525,7 +495,7 @@
             this.btnExit.FillColor = System.Drawing.Color.Red;
             this.btnExit.Font = new System.Drawing.Font("Century Gothic", 12F);
             this.btnExit.ForeColor = System.Drawing.Color.White;
-            this.btnExit.Location = new System.Drawing.Point(1096, 42);
+            this.btnExit.Location = new System.Drawing.Point(1269, 41);
             this.btnExit.Margin = new System.Windows.Forms.Padding(2);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(62, 33);
@@ -546,12 +516,78 @@
             this.guna2HtmlLabel1.TabIndex = 15;
             this.guna2HtmlLabel1.Text = "Student Register Screen";
             // 
+            // cmbYearLevel
+            // 
+            this.cmbYearLevel.BackColor = System.Drawing.Color.Transparent;
+            this.cmbYearLevel.BorderColor = System.Drawing.Color.Black;
+            this.cmbYearLevel.BorderRadius = 10;
+            this.cmbYearLevel.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbYearLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbYearLevel.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbYearLevel.FocusedColor = System.Drawing.Color.Empty;
+            this.cmbYearLevel.Font = new System.Drawing.Font("Century Gothic", 10F);
+            this.cmbYearLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cmbYearLevel.ItemHeight = 30;
+            this.cmbYearLevel.Items.AddRange(new object[] {
+            "First Year",
+            "Second Year",
+            "Third Year",
+            "Fourth Year"});
+            this.cmbYearLevel.Location = new System.Drawing.Point(46, 562);
+            this.cmbYearLevel.Margin = new System.Windows.Forms.Padding(2);
+            this.cmbYearLevel.Name = "cmbYearLevel";
+            this.cmbYearLevel.Size = new System.Drawing.Size(196, 36);
+            this.cmbYearLevel.TabIndex = 10;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(52, 534);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(123, 26);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "Year Level:";
+            // 
+            // lblSex
+            // 
+            this.lblSex.AutoSize = true;
+            this.lblSex.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSex.Location = new System.Drawing.Point(305, 534);
+            this.lblSex.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblSex.Name = "lblSex";
+            this.lblSex.Size = new System.Drawing.Size(56, 26);
+            this.lblSex.TabIndex = 26;
+            this.lblSex.Text = "Sex:";
+            // 
+            // cmbSex
+            // 
+            this.cmbSex.BackColor = System.Drawing.Color.Transparent;
+            this.cmbSex.BorderColor = System.Drawing.Color.Black;
+            this.cmbSex.BorderRadius = 10;
+            this.cmbSex.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSex.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbSex.FocusedColor = System.Drawing.Color.Empty;
+            this.cmbSex.Font = new System.Drawing.Font("Century Gothic", 10F);
+            this.cmbSex.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cmbSex.ItemHeight = 30;
+            this.cmbSex.Items.AddRange(new object[] {
+            "Male",
+            "Female"});
+            this.cmbSex.Location = new System.Drawing.Point(299, 562);
+            this.cmbSex.Margin = new System.Windows.Forms.Padding(2);
+            this.cmbSex.Name = "cmbSex";
+            this.cmbSex.Size = new System.Drawing.Size(196, 36);
+            this.cmbSex.TabIndex = 25;
+            // 
             // StudentRegistration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1178, 868);
+            this.ClientSize = new System.Drawing.Size(1366, 868);
             this.Controls.Add(this.guna2Panel1);
             this.Controls.Add(this.pnlQRPreview);
             this.Controls.Add(this.pnlForm);
@@ -575,7 +611,6 @@
         private System.Windows.Forms.PictureBox picQRCode;
         private Guna.UI2.WinForms.Guna2Panel pnlForm;
         private Guna.UI2.WinForms.Guna2Panel pnlQRPreview;
-        private Guna.UI2.WinForms.Guna2ComboBox cmbYearLevel;
         private Guna.UI2.WinForms.Guna2ComboBox cmbCourse;
         private Guna.UI2.WinForms.Guna2TextBox txtEmail;
         private Guna.UI2.WinForms.Guna2TextBox txtName;
@@ -605,6 +640,9 @@
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel4;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel2;
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox1;
+        private System.Windows.Forms.Label lblSex;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbSex;
         private System.Windows.Forms.Label label4;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbYearLevel;
     }
 }

@@ -160,7 +160,7 @@ created_at
 ### **Test 1: First Scan (Time In)**
 
 ```sql
-CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @num, @t);
+CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Pamantasan ng Cabuyao Building', @r, @n, @num, @t);
 -- Expected: SUCCESS: Time In recorded
 -- @t = TIME_IN
 ```
@@ -168,7 +168,7 @@ CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @n
 ### **Test 2: Second Scan (Time Out)**
 
 ```sql
-CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @num, @t);
+CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Pamantasan ng Cabuyao Building', @r, @n, @num, @t);
 -- Expected: SUCCESS: Time Out recorded
 -- @t = TIME_OUT
 ```
@@ -176,7 +176,7 @@ CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @n
 ### **Test 3: Third Scan (Rejected)**
 
 ```sql
-CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Main Entrance', @r, @n, @num, @t);
+CALL sp_record_attendance_scan('STUDENT-2300401', 1, 'Pamantasan ng Cabuyao Building', @r, @n, @num, @t);
 -- Expected: ERROR: Attendance already completed
 -- @t = COMPLETED
 ```

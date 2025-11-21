@@ -256,6 +256,12 @@ namespace ITP104_FINAL_PROJECT
                     // Update status badge
                     UpdateStatusBadge(student.Status);
                     
+                    // Update Sex/Gender label dynamically
+                    if (label2 != null)
+                    {
+                        label2.Text = student.Sex ?? "Not Specified";
+                    }
+                    
                     // Force all labels to update immediately
                     lblStudentIDValue.Refresh();
                     lblFullNameValue.Refresh();
@@ -323,7 +329,7 @@ namespace ITP104_FINAL_PROJECT
                     {
                         string date = scan.ScanDateTime.ToString("MM/dd/yyyy");
                         string timeIn = scan.ScanDateTime.ToString("hh:mm tt");
-                        string timeOut = "-"; // TimeOut not available in current schema
+                        string timeOut = scan.TimeOut.HasValue ? scan.TimeOut.Value.ToString("hh:mm tt") : "-";
                         string scanType = scan.ScanType;
                         string location = scan.Location ?? "Main Building";
 

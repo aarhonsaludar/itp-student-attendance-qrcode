@@ -24,6 +24,11 @@ namespace ITP104_FINAL_PROJECT
                 "1st Year", "2nd Year", "3rd Year", "4th Year"
             });
 
+            cmbSex.Items.Clear();
+            cmbSex.Items.AddRange(new string[] {
+                "Male", "Female"
+            });
+
             picQRCode.SizeMode = PictureBoxSizeMode.Zoom;
             picQRCode.BorderStyle = BorderStyle.FixedSingle;
             picQRCode.BackColor = Color.FromArgb(250, 250, 250);
@@ -86,6 +91,13 @@ namespace ITP104_FINAL_PROJECT
                 return;
             }
 
+            if (cmbSex.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select sex/gender.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbSex.Focus();
+                return;
+            }
+
             // Check if student ID exists
             try
             {
@@ -123,6 +135,7 @@ namespace ITP104_FINAL_PROJECT
                     $"Email Address:   {txtEmail.Text}\n\n" +
                     $"Course:          {cmbCourse.Text}\n\n" +
                     $"Year Level:      {cmbYearLevel.Text}\n\n" +
+                    $"Sex:             {cmbSex.Text}\n\n" +
                     "═══════════════════════════════════════\n" +
                     $"Generated: {DateTime.Now:MMMM dd, yyyy - hh:mm tt}";
 
@@ -194,6 +207,7 @@ namespace ITP104_FINAL_PROJECT
                     lastName: lastName,
                     email: txtEmail.Text.Trim(),
                     phone: txtPhone.Text.Trim(), // Optional
+                    sex: cmbSex.Text, // Sex field
                     yearLevel: yearLevel,
                     program: cmbCourse.Text,
                     section: txtSection.Text.Trim(), // Optional
@@ -270,6 +284,7 @@ namespace ITP104_FINAL_PROJECT
             txtSection.Clear();
             cmbCourse.SelectedIndex = -1;
             cmbYearLevel.SelectedIndex = -1;
+            cmbSex.SelectedIndex = -1;
 
             picQRCode.Image = null;
             picQRCode.Tag = null;

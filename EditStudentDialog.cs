@@ -48,6 +48,13 @@ namespace ITP104_FINAL_PROJECT
                 "Educ",
                 "Psychology"
             });
+
+            // Populate Sex dropdown
+            cmbFinalSex.Items.Clear();
+            cmbFinalSex.Items.AddRange(new string[] {
+                "Male",
+                "Female"
+            });
         }
 
         /// <summary>
@@ -73,6 +80,12 @@ namespace ITP104_FINAL_PROJECT
             // Year Level dropdown - Convert from number to display format
             string yearLevelDisplay = ConvertYearLevelToDisplay(originalStudent.YearLevel);
             cmbYearLevel.SelectedItem = yearLevelDisplay;
+
+            // Sex dropdown
+            if (!string.IsNullOrWhiteSpace(originalStudent.Sex))
+            {
+                cmbFinalSex.SelectedItem = originalStudent.Sex;
+            }
         }
 
         /// <summary>
@@ -163,6 +176,13 @@ namespace ITP104_FINAL_PROJECT
                     return;
                 }
 
+                if (cmbFinalSex.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Please select sex/gender.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cmbFinalSex.Focus();
+                    return;
+                }
+
                 // Parse name (split into first, middle, last) - matches StudentRegistration logic
                 string[] nameParts = txtName.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 string firstName = nameParts.Length > 0 ? nameParts[0] : "";
@@ -182,6 +202,7 @@ namespace ITP104_FINAL_PROJECT
                     LastName = lastName,
                     Email = txtEmail.Text.Trim(),
                     Phone = string.IsNullOrWhiteSpace(txtPhone.Text) ? null : txtPhone.Text.Trim(),
+                    Sex = cmbFinalSex.SelectedItem?.ToString(), // Sex field
                     YearLevel = yearLevel,
                     Program = cmbCourse.Text,
                     Section = string.IsNullOrWhiteSpace(txtSection.Text) ? null : txtSection.Text.Trim(),

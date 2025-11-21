@@ -29,6 +29,7 @@ namespace ITP104_FINAL_PROJECT
         private void InitializeComponent()
         {
             this.pnlMain = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.btnCancel = new Guna.UI2.WinForms.Guna2Button();
             this.btnSave = new Guna.UI2.WinForms.Guna2Button();
             this.lblSection = new System.Windows.Forms.Label();
@@ -47,7 +48,8 @@ namespace ITP104_FINAL_PROJECT
             this.txtStudentID = new Guna.UI2.WinForms.Guna2TextBox();
             this.lblNote = new System.Windows.Forms.Label();
             this.lblTitle = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmbFinalSex = new Guna.UI2.WinForms.Guna2ComboBox();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -56,6 +58,8 @@ namespace ITP104_FINAL_PROJECT
             // 
             this.pnlMain.BackColor = System.Drawing.Color.Transparent;
             this.pnlMain.BorderRadius = 10;
+            this.pnlMain.Controls.Add(this.label1);
+            this.pnlMain.Controls.Add(this.cmbFinalSex);
             this.pnlMain.Controls.Add(this.guna2PictureBox1);
             this.pnlMain.Controls.Add(this.btnCancel);
             this.pnlMain.Controls.Add(this.btnSave);
@@ -80,6 +84,18 @@ namespace ITP104_FINAL_PROJECT
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(560, 748);
             this.pnlMain.TabIndex = 0;
+            // 
+            // guna2PictureBox1
+            // 
+            this.guna2PictureBox1.BackgroundImage = global::ITP104_FINAL_PROJECT.Properties.Resources.edit;
+            this.guna2PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.guna2PictureBox1.FillColor = System.Drawing.Color.Transparent;
+            this.guna2PictureBox1.ImageRotate = 0F;
+            this.guna2PictureBox1.Location = new System.Drawing.Point(3, 1);
+            this.guna2PictureBox1.Name = "guna2PictureBox1";
+            this.guna2PictureBox1.Size = new System.Drawing.Size(91, 88);
+            this.guna2PictureBox1.TabIndex = 17;
+            this.guna2PictureBox1.TabStop = false;
             // 
             // btnCancel
             // 
@@ -355,17 +371,33 @@ namespace ITP104_FINAL_PROJECT
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Edit Student";
             // 
-            // guna2PictureBox1
+            // label1
             // 
-            this.guna2PictureBox1.BackgroundImage = global::ITP104_FINAL_PROJECT.Properties.Resources.edit;
-            this.guna2PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.guna2PictureBox1.FillColor = System.Drawing.Color.Transparent;
-            this.guna2PictureBox1.ImageRotate = 0F;
-            this.guna2PictureBox1.Location = new System.Drawing.Point(3, 1);
-            this.guna2PictureBox1.Name = "guna2PictureBox1";
-            this.guna2PictureBox1.Size = new System.Drawing.Size(91, 88);
-            this.guna2PictureBox1.TabIndex = 17;
-            this.guna2PictureBox1.TabStop = false;
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(305, 578);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 26);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "Sex:";
+            // 
+            // cmbFinalSex
+            // 
+            this.cmbFinalSex.BackColor = System.Drawing.Color.Transparent;
+            this.cmbFinalSex.BorderColor = System.Drawing.Color.Black;
+            this.cmbFinalSex.BorderRadius = 10;
+            this.cmbFinalSex.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbFinalSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFinalSex.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbFinalSex.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbFinalSex.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbFinalSex.Font = new System.Drawing.Font("Century Gothic", 10F);
+            this.cmbFinalSex.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cmbFinalSex.ItemHeight = 30;
+            this.cmbFinalSex.Location = new System.Drawing.Point(310, 608);
+            this.cmbFinalSex.Name = "cmbFinalSex";
+            this.cmbFinalSex.Size = new System.Drawing.Size(240, 36);
+            this.cmbFinalSex.TabIndex = 18;
             // 
             // EditStudentDialog
             // 
@@ -409,5 +441,7 @@ namespace ITP104_FINAL_PROJECT
         private Guna.UI2.WinForms.Guna2Button btnSave;
         private Guna.UI2.WinForms.Guna2Button btnCancel;
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox1;
+        private System.Windows.Forms.Label label1;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbFinalSex;
     }
 }
