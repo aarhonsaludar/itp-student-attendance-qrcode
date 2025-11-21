@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MySqlConnector;
+using BCrypt.Net;
 using ITP104_FINAL_PROJECT.Models;
 using ITP104_FINAL_PROJECT.Services;
 
@@ -36,12 +37,12 @@ namespace ITP104_FINAL_PROJECT.Data
 
                 using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
                 {
-                    string query = "SELECT * FROM users WHERE username = @username AND password_hash = @password AND is_active = 1";
+                    // First, get user by username only (don't check password in SQL)
+                    string query = "SELECT * FROM users WHERE username = @username AND is_active = 1";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@username", username);
-                        command.Parameters.AddWithValue("@password", password);
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -50,21 +51,64 @@ namespace ITP104_FINAL_PROJECT.Data
                                 var user = MapUser(reader);
                                 reader.Close();
 
-                                await UpdateLastLoginAsync(connection, user.UserId);
-                                
+                                // Trim password hash just in case
+                                string hashToVerify = user.PasswordHash.Trim();
+
+                                // Check if it's a BCrypt hash or plaintext
+                                bool passwordValid = false;
+
+                                if (hashToVerify.StartsWith("$2a$") || hashToVerify.StartsWith("$2b$") || hashToVerify.StartsWith("$2x$"))
+                                {
+                                    // It's a BCrypt hash - verify using BCrypt
+                                    try
+                                    {
+                                        passwordValid = BCrypt.Net.BCrypt.Verify(password, hashToVerify);
+                                    }
+                                    catch (Exception bcryptEx)
+                                    {
+                                        await ErrorLoggingService.LogErrorAsync(
+                                            "Authentication - BCrypt Error",
+                                            bcryptEx,
+                                            "users");
+                                        passwordValid = false;
+                                    }
+                                }
+                                else
+                                {
+                                    // Fallback: plaintext comparison (for testing/recovery)
+                                    passwordValid = (password == hashToVerify);
+                                }
+
                                 await ErrorLoggingService.LogInfoAsync(
-                                    "Authentication - Success",
-                                    $"User logged in: {username}",
-                                    "users",
-                                    user.UserId);
-                                
-                                return user;
+                                    "Authentication - Verification Attempt",
+                                    $"User: {username}, Hash type: {(hashToVerify.StartsWith("$") ? "BCrypt" : "Plaintext")}, Hash length: {hashToVerify.Length}, Match: {passwordValid}",
+                                    "users");
+
+                                if (passwordValid)
+                                {
+                                    await UpdateLastLoginAsync(connection, user.UserId);
+
+                                    await ErrorLoggingService.LogInfoAsync(
+                                        "Authentication - Success",
+                                        $"User logged in: {username}",
+                                        "users",
+                                        user.UserId);
+
+                                    return user;
+                                }
+                                else
+                                {
+                                    await ErrorLoggingService.LogInfoAsync(
+                                        "Authentication - Failed",
+                                        $"Failed login attempt for username: {username} - Invalid password",
+                                        "users");
+                                }
                             }
                             else
                             {
                                 await ErrorLoggingService.LogInfoAsync(
                                     "Authentication - Failed",
-                                    $"Failed login attempt for username: {username}",
+                                    $"Failed login attempt for username: {username} - User not found",
                                     "users");
                             }
                         }
@@ -138,13 +182,13 @@ namespace ITP104_FINAL_PROJECT.Data
                         command.Parameters.AddWithValue("@isActive", user.IsActive);
 
                         var userId = Convert.ToInt32(await command.ExecuteScalarAsync());
-                        
+
                         await ErrorLoggingService.LogInfoAsync(
                             "Create User - Success",
                             $"Created user: {user.Username} ({user.FullName})",
                             "users",
                             userId);
-                        
+
                         return (true, "User created successfully", userId);
                     }
                 }
@@ -257,7 +301,7 @@ namespace ITP104_FINAL_PROJECT.Data
             {
                 UserId = reader.GetInt32("user_id"),
                 Username = reader.GetString("username"),
-                PasswordHash = reader.GetString("password_hash"),
+                PasswordHash = reader.GetString("password_hash").Trim(),  // Trim any whitespace
                 FullName = reader.GetString("full_name"),
                 Email = reader.IsDBNull(reader.GetOrdinal("email")) ? null : reader.GetString("email"),
                 Role = reader.GetString("role"),

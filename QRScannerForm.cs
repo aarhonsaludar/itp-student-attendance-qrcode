@@ -22,6 +22,9 @@ namespace ITP104_FINAL_PROJECT
         // Database repositories
         private readonly StudentRepository studentRepository;
         private readonly ScanHistoryRepository scanHistoryRepository;
+
+        // Static property to track scanner state globally
+        public static bool IsScannerRunning { get; private set; } = false;
         private const int DEFAULT_DEVICE_ID = 1;
         private const string DEFAULT_LOCATION = "Pamantasan ng Cabuyao Building";
 
@@ -101,6 +104,7 @@ namespace ITP104_FINAL_PROJECT
                 videoSource = new VideoCaptureDevice(videoDevices[cmbCameras.SelectedIndex].MonikerString);
                 videoSource.NewFrame += VideoSource_NewFrame;
                 videoSource.Start();
+                IsScannerRunning = true;  // Update global scanner state
 
                 btnStartCamera.Enabled = false;
                 btnStopCamera.Enabled = true;
@@ -126,6 +130,7 @@ namespace ITP104_FINAL_PROJECT
                 videoSource.WaitForStop();
                 videoSource.NewFrame -= VideoSource_NewFrame;
                 videoSource = null;
+                IsScannerRunning = false;  // Update global scanner state
             }
 
             btnStartCamera.Enabled = true;

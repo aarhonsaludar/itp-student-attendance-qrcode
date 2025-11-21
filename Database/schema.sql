@@ -496,13 +496,21 @@ GROUP BY s.student_id;
 CREATE VIEW vw_recent_scans AS
 SELECT 
     sh.scan_id,
+    sh.student_id,
+    sh.device_id,
     s.student_number,
     CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+    s.program,
     sh.scan_type,
+    sh.scan_data,
+    sh.scan_datetime,
     sh.scan_datetime AS time_in,
     sh.time_out,
+    sh.scan_purpose,
     sh.location,
     sh.status,
+    sh.notes,
+    sh.created_at,
     d.device_name,
     CASE 
         WHEN sh.time_out IS NOT NULL THEN 'completed'

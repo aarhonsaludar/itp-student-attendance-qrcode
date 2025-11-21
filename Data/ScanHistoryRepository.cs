@@ -187,6 +187,7 @@ namespace ITP104_FINAL_PROJECT.Data
                     var sqlBuilder = new System.Text.StringBuilder();
                     sqlBuilder.Append(@"SELECT sh.*, s.student_number, 
                                     CONCAT(s.first_name, ' ', s.last_name) as student_name,
+                                    s.program,
                                     d.device_name
                                     FROM scan_history sh
                                     LEFT JOIN students s ON sh.student_id = s.student_id
@@ -353,6 +354,7 @@ namespace ITP104_FINAL_PROJECT.Data
                     await connection.OpenAsync();
                     string query = @"SELECT sh.*, s.student_number, 
                                     CONCAT(s.first_name, ' ', s.last_name) as student_name,
+                                    s.program,
                                     d.device_name
                                     FROM scan_history sh
                                     INNER JOIN students s ON sh.student_id = s.student_id
@@ -394,6 +396,7 @@ namespace ITP104_FINAL_PROJECT.Data
                     await connection.OpenAsync();
                     string query = @"SELECT sh.*, s.student_number, 
                                     CONCAT(s.first_name, ' ', s.last_name) as student_name,
+                                    s.program,
                                     d.device_name
                                     FROM scan_history sh
                                     INNER JOIN students s ON sh.student_id = s.student_id
@@ -426,56 +429,95 @@ namespace ITP104_FINAL_PROJECT.Data
 
         private ScanHistory MapScanHistory(MySqlDataReader reader)
         {
-            // Check if time_out column exists in the result set
-            DateTime? timeOut = null;
-            try
-            {
-                int timeOutOrdinal = reader.GetOrdinal("time_out");
-                if (!reader.IsDBNull(timeOutOrdinal))
-                {
-                    timeOut = reader.GetDateTime(timeOutOrdinal);
-                }
-            }
-            catch
-            {
-                // Column doesn't exist, leave as null
-            }
-
-            // Handle scan_datetime vs time_in (view uses time_in, stored procedure uses scan_datetime)
-            DateTime scanDateTime;
-            try
-            {
-                scanDateTime = reader.GetDateTime("scan_datetime");
-            }
-            catch
+            // Helper method to safely get column ordinal
+            int TryGetOrdinal(string columnName)
             {
                 try
                 {
-                    scanDateTime = reader.GetDateTime("time_in");
+                    return reader.GetOrdinal(columnName);
                 }
                 catch
                 {
-                    scanDateTime = DateTime.MinValue;
+                    return -1;
                 }
+            }
+
+            // Helper method to safely get string value
+            string GetStringValue(int ordinal)
+            {
+                if (ordinal < 0 || reader.IsDBNull(ordinal))
+                    return null;
+                return reader.GetString(ordinal);
+            }
+
+            // Helper method to safely get int value
+            int GetIntValue(int ordinal)
+            {
+                if (ordinal < 0 || reader.IsDBNull(ordinal))
+                    return 0;
+                return reader.GetInt32(ordinal);
+            }
+
+            // Helper method to safely get DateTime value
+            DateTime GetDateTimeValue(int ordinal)
+            {
+                if (ordinal < 0 || reader.IsDBNull(ordinal))
+                    return DateTime.MinValue;
+                return reader.GetDateTime(ordinal);
+            }
+
+            // Get ordinals for all columns we might need
+            int scanIdOrdinal = TryGetOrdinal("scan_id");
+            int studentIdOrdinal = TryGetOrdinal("student_id");
+            int deviceIdOrdinal = TryGetOrdinal("device_id");
+            int scanTypeOrdinal = TryGetOrdinal("scan_type");
+            int scanDataOrdinal = TryGetOrdinal("scan_data");
+            int scanDatetimeOrdinal = TryGetOrdinal("scan_datetime");
+            int timeInOrdinal = TryGetOrdinal("time_in");
+            int timeOutOrdinal = TryGetOrdinal("time_out");
+            int scanPurposeOrdinal = TryGetOrdinal("scan_purpose");
+            int locationOrdinal = TryGetOrdinal("location");
+            int statusOrdinal = TryGetOrdinal("status");
+            int notesOrdinal = TryGetOrdinal("notes");
+            int createdAtOrdinal = TryGetOrdinal("created_at");
+            int studentNumberOrdinal = TryGetOrdinal("student_number");
+            int studentNameOrdinal = TryGetOrdinal("student_name");
+            int programOrdinal = TryGetOrdinal("program");
+            int deviceNameOrdinal = TryGetOrdinal("device_name");
+
+            // Determine scan datetime - try scan_datetime first, then time_in
+            DateTime scanDateTime;
+            if (scanDatetimeOrdinal >= 0 && !reader.IsDBNull(scanDatetimeOrdinal))
+            {
+                scanDateTime = reader.GetDateTime(scanDatetimeOrdinal);
+            }
+            else if (timeInOrdinal >= 0 && !reader.IsDBNull(timeInOrdinal))
+            {
+                scanDateTime = reader.GetDateTime(timeInOrdinal);
+            }
+            else
+            {
+                scanDateTime = DateTime.MinValue;
             }
 
             return new ScanHistory
             {
-                ScanId = reader.GetInt32("scan_id"),
-                StudentId = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("student_id")) ? reader.GetInt32("student_id") : 0,
-                DeviceId = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("device_id")) ? reader.GetInt32("device_id") : 0,
-                ScanType = reader.GetString("scan_type"),
-                ScanData = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("scan_data")) ? reader.GetString("scan_data") : null,
+                ScanId = GetIntValue(scanIdOrdinal),
+                StudentId = GetIntValue(studentIdOrdinal),
+                DeviceId = deviceIdOrdinal >= 0 ? (int?)GetIntValue(deviceIdOrdinal) : null,
+                ScanType = GetStringValue(scanTypeOrdinal) ?? "UNKNOWN",
+                ScanData = GetStringValue(scanDataOrdinal),
                 ScanDateTime = scanDateTime,
-                TimeOut = timeOut,
-                ScanPurpose = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("scan_purpose")) ? reader.GetString("scan_purpose") : null,
-                Location = reader.IsDBNull(reader.GetOrdinal("location")) ? null : reader.GetString("location"),
-                Status = reader.GetString("status"),
-                Notes = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("notes")) ? reader.GetString("notes") : null,
-                CreatedAt = reader.FieldCount > 9 && !reader.IsDBNull(reader.GetOrdinal("created_at")) ? reader.GetDateTime("created_at") : DateTime.MinValue,
-                StudentNumber = reader.IsDBNull(reader.GetOrdinal("student_number")) ? null : reader.GetString("student_number"),
-                StudentName = reader.IsDBNull(reader.GetOrdinal("student_name")) ? null : reader.GetString("student_name"),
-                DeviceName = reader.IsDBNull(reader.GetOrdinal("device_name")) ? null : reader.GetString("device_name")
+                TimeOut = timeOutOrdinal >= 0 ? (reader.IsDBNull(timeOutOrdinal) ? (DateTime?)null : reader.GetDateTime(timeOutOrdinal)) : null,
+                ScanPurpose = GetStringValue(scanPurposeOrdinal),
+                Location = GetStringValue(locationOrdinal),
+                Status = GetStringValue(statusOrdinal) ?? "unknown",
+                Notes = GetStringValue(notesOrdinal),
+                CreatedAt = GetDateTimeValue(createdAtOrdinal),
+                StudentNumber = GetStringValue(studentNumberOrdinal),
+                StudentName = GetStringValue(studentNameOrdinal),
+                Program = GetStringValue(programOrdinal),
+                DeviceName = GetStringValue(deviceNameOrdinal)
             };
         }
     }

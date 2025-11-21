@@ -904,8 +904,8 @@ namespace ITP104_FINAL_PROJECT
         {
             try
             {
-                // Scanner status
-                bool scannerActive = random.Next(0, 10) > 2; // 80% chance active
+                // Scanner status - Check actual device state from QRScannerForm
+                bool scannerActive = QRScannerForm.IsScannerRunning;
                 lblScannerStatus.Text = scannerActive ? "● Scanner: Ready" : "● Scanner: Idle";
                 lblScannerStatus.ForeColor = scannerActive ? Color.Lime : Color.Gray;
 
@@ -931,11 +931,11 @@ namespace ITP104_FINAL_PROJECT
 
                 // Get daily summary from stored procedure
                 var summaryTable = await scanHistoryRepository.GetDailySummaryAsync(DateTime.Today);
-                
+
                 int scansToday = 0;
                 int qrScans = 0;
                 int manualScans = 0;
-                
+
                 if (summaryTable != null && summaryTable.Rows.Count > 0)
                 {
                     var row = summaryTable.Rows[0];
@@ -946,7 +946,7 @@ namespace ITP104_FINAL_PROJECT
                 // Calculate most used scan type from actual data
                 manualScans = scansToday - qrScans;
                 string mostUsedScanType = "N/A";
-                
+
                 if (scansToday > 0)
                 {
                     if (qrScans >= manualScans)
@@ -987,14 +987,14 @@ namespace ITP104_FINAL_PROJECT
                                     $"Message: {ex.Message}\n" +
                                     $"Type: {ex.GetType().Name}\n" +
                                     $"Stack: {ex.StackTrace}";
-                
+
                 if (ex.InnerException != null)
                 {
                     errorDetails += $"\nInner Exception: {ex.InnerException.Message}";
                 }
-                
+
                 System.Diagnostics.Debug.WriteLine(errorDetails);
-                
+
                 // Show error to user (only once, not on every refresh)
                 if (lblTotalStudentsValue.Text != "Error")
                 {
@@ -1010,7 +1010,7 @@ namespace ITP104_FINAL_PROJECT
                         MessageBoxIcon.Warning
                     );
                 }
-                
+
                 // Update UI with error state on main thread
                 if (lblTotalStudentsValue.InvokeRequired)
                 {
@@ -1035,99 +1035,20 @@ namespace ITP104_FINAL_PROJECT
             try
             {
                 System.Diagnostics.Debug.WriteLine("LoadRecentScansAsync: Starting to fetch recent scans...");
-                
+
                 // Get recent scans from view
                 var recentScans = await scanHistoryRepository.GetRecentScansAsync(limit: 10);
-                
+
                 System.Diagnostics.Debug.WriteLine($"LoadRecentScansAsync: Retrieved {recentScans?.Count ?? 0} scans from database");
 
                 // Update UI on main thread
                 if (dgvRecentScans.InvokeRequired)
                 {
-                    dgvRecentScans.Invoke(new Action(() =>
-                    {
-                        // Initialize columns if not already done
-                        if (dgvRecentScans.Columns.Count == 0)
-                        {
-                            dgvRecentScans.Columns.Add("StudentNumber", "Student ID");
-                            dgvRecentScans.Columns.Add("StudentName", "Name");
-                            dgvRecentScans.Columns.Add("Program", "Course");
-                            dgvRecentScans.Columns.Add("ScanType", "Scan Type");
-                            dgvRecentScans.Columns.Add("ScanDateTime", "Time");
-
-                            // Set column widths
-                            dgvRecentScans.Columns["StudentNumber"].Width = 150;
-                            dgvRecentScans.Columns["StudentName"].Width = 200;
-                            dgvRecentScans.Columns["Program"].Width = 180;
-                            dgvRecentScans.Columns["ScanType"].Width = 100;
-                            dgvRecentScans.Columns["ScanDateTime"].Width = 180;
-                        }
-
-                        // Clear existing rows
-                        dgvRecentScans.Rows.Clear();
-
-                        // Add recent scans
-                        if (recentScans != null && recentScans.Count > 0)
-                        {
-                            foreach (var scan in recentScans)
-                            {
-                                dgvRecentScans.Rows.Add(
-                                    scan.StudentNumber ?? "N/A",
-                                    scan.StudentName ?? "Unknown",
-                                    scan.Program ?? "N/A",
-                                    scan.ScanType ?? "QR",
-                                    scan.ScanDateTime.ToString("MM/dd/yyyy hh:mm:ss tt")
-                                );
-                            }
-                            System.Diagnostics.Debug.WriteLine($"LoadRecentScansAsync: Added {recentScans.Count} rows to DataGridView");
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("LoadRecentScansAsync: No scans found in database");
-                        }
-                    }));
+                    dgvRecentScans.Invoke(new Action(() => UpdateRecentScansUI(recentScans)));
                 }
                 else
                 {
-                    // Initialize columns if not already done
-                    if (dgvRecentScans.Columns.Count == 0)
-                    {
-                        dgvRecentScans.Columns.Add("StudentNumber", "Student ID");
-                        dgvRecentScans.Columns.Add("StudentName", "Name");
-                        dgvRecentScans.Columns.Add("Program", "Course");
-                        dgvRecentScans.Columns.Add("ScanType", "Scan Type");
-                        dgvRecentScans.Columns.Add("ScanDateTime", "Time");
-
-                        // Set column widths
-                        dgvRecentScans.Columns["StudentNumber"].Width = 150;
-                        dgvRecentScans.Columns["StudentName"].Width = 200;
-                        dgvRecentScans.Columns["Program"].Width = 180;
-                        dgvRecentScans.Columns["ScanType"].Width = 100;
-                        dgvRecentScans.Columns["ScanDateTime"].Width = 180;
-                    }
-
-                    // Clear existing rows
-                    dgvRecentScans.Rows.Clear();
-
-                    // Add recent scans
-                    if (recentScans != null && recentScans.Count > 0)
-                    {
-                        foreach (var scan in recentScans)
-                        {
-                            dgvRecentScans.Rows.Add(
-                                scan.StudentNumber ?? "N/A",
-                                scan.StudentName ?? "Unknown",
-                                scan.Program ?? "N/A",
-                                scan.ScanType ?? "QR",
-                                scan.ScanDateTime.ToString("MM/dd/yyyy hh:mm:ss tt")
-                            );
-                        }
-                        System.Diagnostics.Debug.WriteLine($"LoadRecentScansAsync: Added {recentScans.Count} rows to DataGridView");
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("LoadRecentScansAsync: No scans found in database");
-                    }
+                    UpdateRecentScansUI(recentScans);
                 }
             }
             catch (Exception ex)
@@ -1137,14 +1058,14 @@ namespace ITP104_FINAL_PROJECT
                                     $"Message: {ex.Message}\n" +
                                     $"Type: {ex.GetType().Name}\n" +
                                     $"StackTrace: {ex.StackTrace}";
-                
+
                 if (ex.InnerException != null)
                 {
                     errorDetails += $"\nInner Exception: {ex.InnerException.Message}";
                 }
-                
+
                 System.Diagnostics.Debug.WriteLine(errorDetails);
-                
+
                 // Show error message to user for debugging
                 MessageBox.Show(
                     $"Failed to load recent scans.\n\n" +
@@ -1157,6 +1078,49 @@ namespace ITP104_FINAL_PROJECT
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
+            }
+        }
+
+        private void UpdateRecentScansUI(List<ScanHistory> recentScans)
+        {
+            // Initialize columns if not already done
+            if (dgvRecentScans.Columns.Count == 0)
+            {
+                dgvRecentScans.Columns.Add("StudentNumber", "Student ID");
+                dgvRecentScans.Columns.Add("StudentName", "Name");
+                dgvRecentScans.Columns.Add("Program", "Course");
+                dgvRecentScans.Columns.Add("ScanType", "Scan Type");
+                dgvRecentScans.Columns.Add("ScanDateTime", "Time");
+
+                // Set column widths
+                dgvRecentScans.Columns["StudentNumber"].Width = 150;
+                dgvRecentScans.Columns["StudentName"].Width = 200;
+                dgvRecentScans.Columns["Program"].Width = 180;
+                dgvRecentScans.Columns["ScanType"].Width = 100;
+                dgvRecentScans.Columns["ScanDateTime"].Width = 180;
+            }
+
+            // Clear existing rows
+            dgvRecentScans.Rows.Clear();
+
+            // Add recent scans
+            if (recentScans != null && recentScans.Count > 0)
+            {
+                foreach (var scan in recentScans)
+                {
+                    dgvRecentScans.Rows.Add(
+                        scan.StudentNumber ?? "N/A",
+                        scan.StudentName ?? "Unknown",
+                        scan.Program ?? "N/A",
+                        scan.ScanType ?? "QR",
+                        scan.ScanDateTime.ToString("MM/dd/yyyy hh:mm:ss tt")
+                    );
+                }
+                System.Diagnostics.Debug.WriteLine($"LoadRecentScansAsync: Added {recentScans.Count} rows to DataGridView");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("LoadRecentScansAsync: No scans found in database");
             }
         }
 

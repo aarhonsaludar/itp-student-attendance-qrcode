@@ -28,7 +28,7 @@ namespace ITP104_FINAL_PROJECT
         public StudentRecordScreen(string studentId) : this()
         {
             this.studentId = studentId;
-            LoadStudentDataAsync(studentId);
+            _ = LoadStudentDataAsync(studentId);
         }
 
         private void InitializeForm()
@@ -99,7 +99,7 @@ namespace ITP104_FINAL_PROJECT
                 btnBackToScan.FillColor = Color.FromArgb(52, 152, 219);
             };
 
-        
+
 
             // Export button hover
             btnExport.MouseEnter += (s, e) =>
@@ -212,7 +212,7 @@ namespace ITP104_FINAL_PROJECT
                 {
                     // Populate student information
                     lblStudentIDValue.Text = student.StudentNumber;
-                    
+
                     // Full name with proper spacing
                     string fullName = student.FirstName;
                     if (!string.IsNullOrWhiteSpace(student.MiddleName))
@@ -221,36 +221,36 @@ namespace ITP104_FINAL_PROJECT
                     }
                     fullName += " " + student.LastName;
                     lblFullNameValue.Text = fullName.Trim();
-                    
+
                     // Course/Program
                     lblCourseValue.Text = student.Program;
 
                     // Format year level with proper suffix
                     string yearLevel = student.YearLevel;
-                    string suffix = yearLevel == "1" ? "st" : 
-                                   yearLevel == "2" ? "nd" : 
+                    string suffix = yearLevel == "1" ? "st" :
+                                   yearLevel == "2" ? "nd" :
                                    yearLevel == "3" ? "rd" : "th";
                     lblYearLevelValue.Text = $"{yearLevel}{suffix} Year";
 
                     // Contact information
                     lblEmailValue.Text = student.Email ?? "N/A";
                     lblPhoneValue.Text = student.Phone ?? "N/A";
-                    
+
                     // Address (not in schema, always N/A)
                     lblAddressValue.Text = "N/A";
-                    
+
                     // Enrollment date
                     lblEnrollmentDateValue.Text = student.EnrollmentDate.ToString("MMMM dd, yyyy");
 
                     // Update status badge
                     UpdateStatusBadge(student.Status);
-                    
+
                     // Update Sex/Gender label dynamically
                     if (label2 != null)
                     {
                         label2.Text = student.Sex ?? "Not Specified";
                     }
-                    
+
                     // Force all labels to update immediately
                     lblStudentIDValue.Refresh();
                     lblFullNameValue.Refresh();
@@ -432,7 +432,7 @@ namespace ITP104_FINAL_PROJECT
                     // Get current student data
                     int studentIdInt = int.Parse(studentId);
                     Student student = await studentRepository.GetByIdAsync(studentIdInt);
-                    
+
                     if (student == null)
                     {
                         MessageBox.Show("Student data not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -503,7 +503,7 @@ namespace ITP104_FINAL_PROJECT
                 writer.WriteLine("STUDENT INFORMATION");
                 writer.WriteLine("===================");
                 writer.WriteLine();
-                
+
                 // Format full name
                 string fullName = student.FirstName;
                 if (!string.IsNullOrWhiteSpace(student.MiddleName))
@@ -650,13 +650,13 @@ namespace ITP104_FINAL_PROJECT
                         {
                             // Force refresh the student data from database FIRST
                             await LoadStudentDataAsync(studentId);
-                            
+
                             // Force UI update
                             this.Refresh();
-                            
+
                             // Process all pending Windows messages to ensure UI updates
                             Application.DoEvents();
-                            
+
                             // Show success message AFTER refresh completes
                             MessageBox.Show(
                                 "Student information updated successfully!\n\n" +
