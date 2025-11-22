@@ -94,7 +94,7 @@ namespace ITP104_FINAL_PROJECT
                     pbStudentPhoto.Image = Properties.Resources.user_avatar;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // student photo file could not be loaded from disk
                 // fallback to default image

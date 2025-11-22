@@ -756,7 +756,7 @@ namespace ITP104_FINAL_PROJECT
 
                 // navigation completed successfully to specified page
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // navigation attempt failed, target panel may be null or invalid
             }
@@ -1384,7 +1384,7 @@ namespace ITP104_FINAL_PROJECT
                     dgvStudentsGrid.DataSource = displayList;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // student records refresh encountered an error, grid may be out of sync
             }

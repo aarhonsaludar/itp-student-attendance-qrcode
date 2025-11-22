@@ -243,7 +243,7 @@ namespace ITP104_FINAL_PROJECT
                 // Scan for QR codes within the scan box only
                 ScanQRCodeInBox();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // frame processing encountered an error but continues to next frame
             }
@@ -281,7 +281,7 @@ namespace ITP104_FINAL_PROJECT
                     _ = ProcessQRScanAsync(result.Text);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // qr code detection failed for current frame, will retry on next scan
             }
