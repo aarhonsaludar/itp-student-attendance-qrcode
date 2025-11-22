@@ -15,8 +15,8 @@ namespace ITP104_FINAL_PROJECT.Data
         /// </summary>
         public async Task<(bool Success, string Message, int StudentId)> RegisterStudentAsync(
             string studentNumber, string firstName, string middleName, string lastName,
-            string email, string phone, string sex, string yearLevel, string program, 
-            string section, string qrCodeData, DateTime enrollmentDate)
+            string email, string phone, string sex, string yearLevel, string program,
+            string section, string address, string qrCodeData, DateTime enrollmentDate)
         {
             var student = new Student
             {
@@ -30,6 +30,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 YearLevel = yearLevel,
                 Program = program,
                 Section = section,
+                Address = address,
                 QRCodeData = qrCodeData,
                 EnrollmentDate = enrollmentDate
             };
@@ -63,8 +64,8 @@ namespace ITP104_FINAL_PROJECT.Data
                         return (false, "Student number already exists", 0);
                     }
 
-                    string query = @"INSERT INTO students (student_number, first_name, middle_name, last_name, email, phone, sex, year_level, program, section, qr_code_data, enrollment_date, status, created_at)
-                                   VALUES (@studentNumber, @firstName, @middleName, @lastName, @email, @phone, @sex, @yearLevel, @program, @section, @qrCodeData, @enrollmentDate, 'Active', CURRENT_TIMESTAMP);
+                    string query = @"INSERT INTO students (student_number, first_name, middle_name, last_name, email, phone, sex, year_level, program, section, home_address, qr_code_data, enrollment_date, status, created_at)
+                                   VALUES (@studentNumber, @firstName, @middleName, @lastName, @email, @phone, @sex, @yearLevel, @program, @section, @homeAddress, @qrCodeData, @enrollmentDate, 'Active', CURRENT_TIMESTAMP);
                                    SELECT LAST_INSERT_ID();";
 
                     using (var command = new MySqlCommand(query, connection))
@@ -79,6 +80,7 @@ namespace ITP104_FINAL_PROJECT.Data
                         command.Parameters.AddWithValue("@yearLevel", student.YearLevel);
                         command.Parameters.AddWithValue("@program", student.Program);
                         command.Parameters.AddWithValue("@section", student.Section ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@homeAddress", student.Address ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@qrCodeData", student.QRCodeData);
                         command.Parameters.AddWithValue("@enrollmentDate", student.EnrollmentDate);
 
@@ -128,7 +130,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
                 {
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, home_address, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students WHERE student_id = @studentId";
 
@@ -178,7 +180,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 {
                     await connection.OpenAsync();
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, home_address, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students WHERE qr_code_data = @qrCodeData";
 
@@ -216,15 +218,15 @@ namespace ITP104_FINAL_PROJECT.Data
                 {
                     await connection.OpenAsync();
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, home_address, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students";
-                    
+
                     if (activeOnly)
                     {
                         query += " WHERE status = 'Active'";
                     }
-                    
+
                     query += " ORDER BY last_name, first_name";
 
                     using (var command = new MySqlCommand(query, connection))
@@ -268,6 +270,7 @@ namespace ITP104_FINAL_PROJECT.Data
                                     year_level = @yearLevel,
                                     program = @program,
                                     section = @section,
+                                    home_address = @homeAddress,
                                     qr_code_data = @qrCodeData,
                                     photo_path = @photoPath,
                                     status = @status,
@@ -287,6 +290,7 @@ namespace ITP104_FINAL_PROJECT.Data
                         command.Parameters.AddWithValue("@yearLevel", student.YearLevel);
                         command.Parameters.AddWithValue("@program", student.Program);
                         command.Parameters.AddWithValue("@section", student.Section ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@homeAddress", student.Address ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@qrCodeData", student.QRCodeData);
                         command.Parameters.AddWithValue("@photoPath", student.PhotoPath ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@status", student.Status);
@@ -341,7 +345,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 {
                     await connection.OpenAsync();
                     string query = @"SELECT student_id, student_number, first_name, middle_name, last_name, 
-                                    email, phone, sex, year_level, program, section, qr_code_data, photo_path, 
+                                    email, phone, sex, year_level, program, section, home_address, qr_code_data, photo_path, 
                                     status, enrollment_date, created_at, updated_at
                                     FROM students 
                                     WHERE status = 'active' 
@@ -413,6 +417,7 @@ namespace ITP104_FINAL_PROJECT.Data
                 YearLevel = reader["year_level"].ToString(),
                 Program = reader["program"].ToString(),
                 Section = reader["section"] != DBNull.Value ? reader["section"].ToString() : null,
+                Address = reader["home_address"] != DBNull.Value ? reader["home_address"].ToString() : null,
                 QRCodeData = reader["qr_code_data"].ToString(),
                 PhotoPath = reader["photo_path"] != DBNull.Value ? reader["photo_path"].ToString() : null,
                 Status = reader["status"].ToString(),

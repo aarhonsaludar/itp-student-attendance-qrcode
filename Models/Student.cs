@@ -15,6 +15,7 @@ namespace ITP104_FINAL_PROJECT.Models
         public string YearLevel { get; set; }
         public string Program { get; set; }
         public string Section { get; set; }
+        public string Address { get; set; }
         public string QRCodeData { get; set; }
         public string PhotoPath { get; set; }
         public string Status { get; set; }

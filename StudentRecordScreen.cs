@@ -236,8 +236,8 @@ namespace ITP104_FINAL_PROJECT
                     lblEmailValue.Text = student.Email ?? "N/A";
                     lblPhoneValue.Text = student.Phone ?? "N/A";
 
-                    // Address (not in schema, always N/A)
-                    lblAddressValue.Text = "N/A";
+                    // Home Address
+                    lblAddressValue.Text = student.Address ?? "N/A";
 
                     // Enrollment date
                     lblEnrollmentDateValue.Text = student.EnrollmentDate.ToString("MMMM dd, yyyy");
@@ -521,6 +521,7 @@ namespace ITP104_FINAL_PROJECT
                 writer.WriteLine($"Year Level,{student.YearLevel}");
                 writer.WriteLine($"Email,{EscapeCsvField(student.Email ?? "")}");
                 writer.WriteLine($"Phone,{EscapeCsvField(student.Phone ?? "")}");
+                writer.WriteLine($"Home Address,{EscapeCsvField(student.Address ?? "")}");
                 writer.WriteLine($"Status,{EscapeCsvField(student.Status)}");
                 writer.WriteLine($"Enrollment Date,{student.EnrollmentDate:yyyy-MM-dd}");
                 writer.WriteLine($"Created At,{student.CreatedAt:yyyy-MM-dd HH:mm:ss}");

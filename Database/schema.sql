@@ -44,6 +44,7 @@ CREATE TABLE students (
     year_level ENUM('1', '2', '3', '4', 'Graduate') NOT NULL,
     program VARCHAR(100) NOT NULL,
     section VARCHAR(50),
+    home_address VARCHAR(255),
     qr_code_data TEXT NOT NULL,
     photo_path VARCHAR(255),
     status ENUM('Active', 'Inactive', 'Suspended') DEFAULT 'Active',
@@ -54,7 +55,8 @@ CREATE TABLE students (
     INDEX idx_qr_code (qr_code_data(255)),
     INDEX idx_name (last_name, first_name),
     INDEX idx_email (email),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_home_address (home_address)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
@@ -218,6 +220,7 @@ CREATE PROCEDURE sp_register_student(
     IN p_year_level VARCHAR(10),
     IN p_program VARCHAR(100),
     IN p_section VARCHAR(50),
+    IN p_home_address VARCHAR(255),
     IN p_qr_code_data TEXT,
     IN p_enrollment_date DATE,
     OUT p_student_id INT,
@@ -243,11 +246,11 @@ BEGIN
         
         INSERT INTO students (
             student_number, first_name, middle_name, last_name, 
-            email, phone, year_level, program, section,
+            email, phone, year_level, program, section, home_address,
             qr_code_data, enrollment_date
         ) VALUES (
             p_student_number, p_first_name, p_middle_name, p_last_name,
-            p_email, p_phone, p_year_level, p_program, p_section,
+            p_email, p_phone, p_year_level, p_program, p_section, p_home_address,
             p_qr_code_data, p_enrollment_date
         );
         

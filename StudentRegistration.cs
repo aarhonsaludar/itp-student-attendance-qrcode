@@ -133,6 +133,7 @@ namespace ITP104_FINAL_PROJECT
                     $"Student ID:      {txtStudentID.Text}\n\n" +
                     $"Full Name:       {txtName.Text}\n\n" +
                     $"Email Address:   {txtEmail.Text}\n\n" +
+                    $"Home Address:    {txtAddress.Text}\n\n" +
                     $"Course:          {cmbCourse.Text}\n\n" +
                     $"Year Level:      {cmbYearLevel.Text}\n\n" +
                     $"Sex:             {cmbSex.Text}\n\n" +
@@ -211,6 +212,7 @@ namespace ITP104_FINAL_PROJECT
                     yearLevel: yearLevel,
                     program: cmbCourse.Text,
                     section: txtSection.Text.Trim(), // Optional
+                    address: txtAddress.Text.Trim(), // Home Address
                     qrCodeData: qrCodeData,
                     enrollmentDate: DateTime.Today
                 );

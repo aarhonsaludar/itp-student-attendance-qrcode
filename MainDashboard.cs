@@ -28,6 +28,8 @@ namespace ITP104_FINAL_PROJECT
         private Panel pnlRegisterStudentContent;
         private Panel pnlScanContent;
         private Panel pnlStudentRecordsContent;
+        private DataGridView dgvStudentsGrid; // Store reference to the student grid for auto-refresh
+        private Button btnStudentRecordsRefresh; // Store reference to the refresh button
         private Panel pnlScanHistoryContent;
         private Panel pnlSettingsContent;
 
@@ -328,7 +330,7 @@ namespace ITP104_FINAL_PROJECT
             };
             btnSearch.FlatAppearance.BorderSize = 0;
 
-            Button btnRefresh = new Button
+            btnStudentRecordsRefresh = new Button
             {
                 Text = "🔄 Refresh",
                 Location = new Point(420, 15),
@@ -340,12 +342,12 @@ namespace ITP104_FINAL_PROJECT
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
-            btnRefresh.FlatAppearance.BorderSize = 0;
+            btnStudentRecordsRefresh.FlatAppearance.BorderSize = 0;
 
-            searchPanel.Controls.AddRange(new Control[] { txtSearch, btnSearch, btnRefresh });
+            searchPanel.Controls.AddRange(new Control[] { txtSearch, btnSearch, btnStudentRecordsRefresh });
 
             // DataGridView for students
-            DataGridView dgvStudents = new DataGridView
+            dgvStudentsGrid = new DataGridView
             {
                 Dock = DockStyle.Fill,
                 BackgroundColor = Color.White,
@@ -363,23 +365,23 @@ namespace ITP104_FINAL_PROJECT
             };
 
             // Column styling
-            dgvStudents.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94);
-            dgvStudents.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvStudents.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            dgvStudents.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
-            dgvStudents.ColumnHeadersHeight = 45;
+            dgvStudentsGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(52, 73, 94);
+            dgvStudentsGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvStudentsGrid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dgvStudentsGrid.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
+            dgvStudentsGrid.ColumnHeadersHeight = 45;
 
-            dgvStudents.DefaultCellStyle.BackColor = Color.White;
-            dgvStudents.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
-            dgvStudents.DefaultCellStyle.SelectionBackColor = Color.FromArgb(189, 195, 199);
-            dgvStudents.DefaultCellStyle.SelectionForeColor = Color.FromArgb(44, 62, 80);
-            dgvStudents.DefaultCellStyle.Font = new Font("Segoe UI", 9.5F);
-            dgvStudents.DefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
-            dgvStudents.RowTemplate.Height = 45;
-            dgvStudents.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
+            dgvStudentsGrid.DefaultCellStyle.BackColor = Color.White;
+            dgvStudentsGrid.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
+            dgvStudentsGrid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(189, 195, 199);
+            dgvStudentsGrid.DefaultCellStyle.SelectionForeColor = Color.FromArgb(44, 62, 80);
+            dgvStudentsGrid.DefaultCellStyle.Font = new Font("Segoe UI", 9.5F);
+            dgvStudentsGrid.DefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
+            dgvStudentsGrid.RowTemplate.Height = 45;
+            dgvStudentsGrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
 
             // Define columns
-            dgvStudents.Columns.AddRange(new DataGridViewColumn[]
+            dgvStudentsGrid.Columns.AddRange(new DataGridViewColumn[]
             {
                 new DataGridViewTextBoxColumn { Name = "StudentId", HeaderText = "ID", Width = 60, DataPropertyName = "StudentId", Visible = false },
                 new DataGridViewTextBoxColumn { Name = "StudentNumber", HeaderText = "Student Number", Width = 130, DataPropertyName = "StudentNumber" },
@@ -401,7 +403,7 @@ namespace ITP104_FINAL_PROJECT
                 Width = 100,
                 FlatStyle = FlatStyle.Flat
             };
-            dgvStudents.Columns.Add(btnViewDetails);
+            dgvStudentsGrid.Columns.Add(btnViewDetails);
 
             // Container for DataGridView
             Panel dgvContainer = new Panel
@@ -410,7 +412,7 @@ namespace ITP104_FINAL_PROJECT
                 BackColor = Color.White,
                 Padding = new Padding(0, 10, 0, 0)
             };
-            dgvContainer.Controls.Add(dgvStudents);
+            dgvContainer.Controls.Add(dgvStudentsGrid);
 
             // Add all controls to main panel
             panel.Controls.Add(dgvContainer);
@@ -438,16 +440,16 @@ namespace ITP104_FINAL_PROJECT
                     }).ToList();
 
                     // Update UI on main thread
-                    if (dgvStudents.InvokeRequired)
+                    if (dgvStudentsGrid.InvokeRequired)
                     {
-                        dgvStudents.Invoke(new Action(() =>
+                        dgvStudentsGrid.Invoke(new Action(() =>
                         {
-                            dgvStudents.DataSource = displayList;
+                            dgvStudentsGrid.DataSource = displayList;
                         }));
                     }
                     else
                     {
-                        dgvStudents.DataSource = displayList;
+                        dgvStudentsGrid.DataSource = displayList;
                     }
                 }
                 catch (Exception ex)
@@ -463,7 +465,7 @@ namespace ITP104_FINAL_PROJECT
                 string searchTerm = txtSearch.Text.Trim();
                 if (string.IsNullOrEmpty(searchTerm) || searchTerm == "Search by name or student number...")
                 {
-                    btnRefresh.PerformClick();
+                    btnStudentRecordsRefresh.PerformClick();
                     return;
                 }
 
@@ -482,7 +484,7 @@ namespace ITP104_FINAL_PROJECT
                         st.Status
                     }).ToList();
 
-                    dgvStudents.DataSource = displayList;
+                    dgvStudentsGrid.DataSource = displayList;
                 }
                 catch (Exception ex)
                 {
@@ -492,7 +494,7 @@ namespace ITP104_FINAL_PROJECT
             };
 
             // Refresh button click event
-            btnRefresh.Click += async (s, e) =>
+            btnStudentRecordsRefresh.Click += async (s, e) =>
             {
                 try
                 {
@@ -512,7 +514,7 @@ namespace ITP104_FINAL_PROJECT
                         st.Status
                     }).ToList();
 
-                    dgvStudents.DataSource = displayList;
+                    dgvStudentsGrid.DataSource = displayList;
                 }
                 catch (Exception ex)
                 {
@@ -522,13 +524,13 @@ namespace ITP104_FINAL_PROJECT
             };
 
             // Handle View Details button click
-            dgvStudents.CellContentClick += (s, e) =>
+            dgvStudentsGrid.CellContentClick += (s, e) =>
             {
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                 {
-                    if (dgvStudents.Columns[e.ColumnIndex].Name == "btnViewDetails")
+                    if (dgvStudentsGrid.Columns[e.ColumnIndex].Name == "btnViewDetails")
                     {
-                        var studentId = dgvStudents.Rows[e.RowIndex].Cells["StudentId"].Value?.ToString();
+                        var studentId = dgvStudentsGrid.Rows[e.RowIndex].Cells["StudentId"].Value?.ToString();
                         if (!string.IsNullOrEmpty(studentId))
                         {
                             StudentRecordScreen recordScreen = new StudentRecordScreen(studentId);
@@ -539,11 +541,11 @@ namespace ITP104_FINAL_PROJECT
             };
 
             // Double-click also opens student details for convenience
-            dgvStudents.CellDoubleClick += (s, e) =>
+            dgvStudentsGrid.CellDoubleClick += (s, e) =>
             {
                 if (e.RowIndex >= 0)
                 {
-                    var studentId = dgvStudents.Rows[e.RowIndex].Cells["StudentId"].Value?.ToString();
+                    var studentId = dgvStudentsGrid.Rows[e.RowIndex].Cells["StudentId"].Value?.ToString();
                     if (!string.IsNullOrEmpty(studentId))
                     {
                         StudentRecordScreen recordScreen = new StudentRecordScreen(studentId);
@@ -1326,7 +1328,15 @@ namespace ITP104_FINAL_PROJECT
             StudentRegistration registrationForm = new StudentRegistration();
 
             // When the registration form closes, show the MainDashboard again
-            registrationForm.FormClosed += (s, args) => this.Show();
+            registrationForm.FormClosed += (s, args) =>
+            {
+                this.Show();
+                // Auto-refresh student records when registration form closes
+                if (btnStudentRecordsRefresh != null)
+                {
+                    btnStudentRecordsRefresh.PerformClick();
+                }
+            };
 
             registrationForm.Show();
         }
