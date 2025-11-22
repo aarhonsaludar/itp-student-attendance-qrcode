@@ -320,10 +320,30 @@ namespace ITP104_FINAL_PROJECT
                     if (scanType == "TIME_IN")
                     {
                         statusText = $"✓ Time In recorded at {DateTime.Now:HH:mm:ss}";
+                        // Show success message dialog for Time In
+                        UpdateUI(() =>
+                        {
+                            MessageBox.Show(
+                                $"Time In Successfully Recorded\n\nTime: {DateTime.Now:HH:mm:ss}\n\nStudent ID: {qrData}",
+                                "✓ Time In Success",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information
+                            );
+                        });
                     }
                     else if (scanType == "TIME_OUT")
                     {
                         statusText = $"✓ Time Out recorded at {DateTime.Now:HH:mm:ss}";
+                        // Show success message dialog for Time Out
+                        UpdateUI(() =>
+                        {
+                            MessageBox.Show(
+                                $"Time Out Successfully Recorded\n\nTime: {DateTime.Now:HH:mm:ss}\n\nStudent ID: {qrData}",
+                                "✓ Time Out Success",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information
+                            );
+                        });
                     }
                     else
                     {
@@ -458,7 +478,7 @@ namespace ITP104_FINAL_PROJECT
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Close();
         }
     }
 }

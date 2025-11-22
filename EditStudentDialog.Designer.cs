@@ -28,7 +28,10 @@ namespace ITP104_FINAL_PROJECT
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pnlMain = new Guna.UI2.WinForms.Guna2Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmbFinalSex = new Guna.UI2.WinForms.Guna2ComboBox();
             this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.btnCancel = new Guna.UI2.WinForms.Guna2Button();
             this.btnSave = new Guna.UI2.WinForms.Guna2Button();
@@ -48,8 +51,7 @@ namespace ITP104_FINAL_PROJECT
             this.txtStudentID = new Guna.UI2.WinForms.Guna2TextBox();
             this.lblNote = new System.Windows.Forms.Label();
             this.lblTitle = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbFinalSex = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -84,6 +86,34 @@ namespace ITP104_FINAL_PROJECT
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(560, 748);
             this.pnlMain.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(305, 578);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 26);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "Sex:";
+            // 
+            // cmbFinalSex
+            // 
+            this.cmbFinalSex.BackColor = System.Drawing.Color.Transparent;
+            this.cmbFinalSex.BorderColor = System.Drawing.Color.Black;
+            this.cmbFinalSex.BorderRadius = 10;
+            this.cmbFinalSex.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbFinalSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFinalSex.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbFinalSex.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbFinalSex.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbFinalSex.Font = new System.Drawing.Font("Century Gothic", 10F);
+            this.cmbFinalSex.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cmbFinalSex.ItemHeight = 30;
+            this.cmbFinalSex.Location = new System.Drawing.Point(310, 608);
+            this.cmbFinalSex.Name = "cmbFinalSex";
+            this.cmbFinalSex.Size = new System.Drawing.Size(240, 36);
+            this.cmbFinalSex.TabIndex = 18;
             // 
             // guna2PictureBox1
             // 
@@ -371,33 +401,11 @@ namespace ITP104_FINAL_PROJECT
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Edit Student";
             // 
-            // label1
+            // guna2BorderlessForm1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(305, 578);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 26);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "Sex:";
-            // 
-            // cmbFinalSex
-            // 
-            this.cmbFinalSex.BackColor = System.Drawing.Color.Transparent;
-            this.cmbFinalSex.BorderColor = System.Drawing.Color.Black;
-            this.cmbFinalSex.BorderRadius = 10;
-            this.cmbFinalSex.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cmbFinalSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFinalSex.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.cmbFinalSex.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.cmbFinalSex.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.cmbFinalSex.Font = new System.Drawing.Font("Century Gothic", 10F);
-            this.cmbFinalSex.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.cmbFinalSex.ItemHeight = 30;
-            this.cmbFinalSex.Location = new System.Drawing.Point(310, 608);
-            this.cmbFinalSex.Name = "cmbFinalSex";
-            this.cmbFinalSex.Size = new System.Drawing.Size(240, 36);
-            this.cmbFinalSex.TabIndex = 18;
+            this.guna2BorderlessForm1.ContainerControl = this;
+            this.guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
+            this.guna2BorderlessForm1.TransparentWhileDrag = true;
             // 
             // EditStudentDialog
             // 
@@ -406,7 +414,7 @@ namespace ITP104_FINAL_PROJECT
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.ClientSize = new System.Drawing.Size(600, 780);
             this.Controls.Add(this.pnlMain);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EditStudentDialog";
@@ -443,5 +451,6 @@ namespace ITP104_FINAL_PROJECT
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox1;
         private System.Windows.Forms.Label label1;
         private Guna.UI2.WinForms.Guna2ComboBox cmbFinalSex;
+        private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
     }
 }

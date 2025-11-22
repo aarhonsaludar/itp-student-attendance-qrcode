@@ -53,7 +53,6 @@ namespace ITP104_FINAL_PROJECT
             dtpDateFrom.ValueChanged += DtpDateFrom_ValueChanged;
             btnClearFilter.Click += BtnClearFilter_Click;
             btnExport.Click += BtnExport_Click;
-            btnClose.Click += BtnClose_Click;
             btnPreviousPage.Click += BtnPreviousPage_Click;
             btnNextPage.Click += BtnNextPage_Click;
 

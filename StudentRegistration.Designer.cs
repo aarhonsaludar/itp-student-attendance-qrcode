@@ -64,6 +64,8 @@
             this.guna2HtmlLabel4 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnExit = new Guna.UI2.WinForms.Guna2Button();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.lblAddress = new System.Windows.Forms.Label();
+            this.txtAddress = new Guna.UI2.WinForms.Guna2TextBox();
             this.pnlForm.SuspendLayout();
             this.pnlQRPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
@@ -75,6 +77,8 @@
             // 
             this.pnlForm.BackColor = System.Drawing.Color.Transparent;
             this.pnlForm.BorderRadius = 10;
+            this.pnlForm.Controls.Add(this.txtAddress);
+            this.pnlForm.Controls.Add(this.lblAddress);
             this.pnlForm.Controls.Add(this.lblSex);
             this.pnlForm.Controls.Add(this.cmbSex);
             this.pnlForm.Controls.Add(this.label4);
@@ -109,7 +113,7 @@
             // 
             this.lblSex.AutoSize = true;
             this.lblSex.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSex.Location = new System.Drawing.Point(305, 534);
+            this.lblSex.Location = new System.Drawing.Point(296, 513);
             this.lblSex.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSex.Name = "lblSex";
             this.lblSex.Size = new System.Drawing.Size(56, 26);
@@ -131,7 +135,7 @@
             this.cmbSex.Items.AddRange(new object[] {
             "Male",
             "Female"});
-            this.cmbSex.Location = new System.Drawing.Point(299, 562);
+            this.cmbSex.Location = new System.Drawing.Point(301, 539);
             this.cmbSex.Margin = new System.Windows.Forms.Padding(2);
             this.cmbSex.Name = "cmbSex";
             this.cmbSex.Size = new System.Drawing.Size(196, 36);
@@ -141,7 +145,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(52, 534);
+            this.label4.Location = new System.Drawing.Point(51, 511);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(123, 26);
@@ -181,7 +185,7 @@
             this.btnSaveDownload.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnSaveDownload.ImageOffset = new System.Drawing.Point(-5, 0);
             this.btnSaveDownload.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnSaveDownload.Location = new System.Drawing.Point(301, 618);
+            this.btnSaveDownload.Location = new System.Drawing.Point(301, 595);
             this.btnSaveDownload.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveDownload.Name = "btnSaveDownload";
             this.btnSaveDownload.Size = new System.Drawing.Size(194, 40);
@@ -206,7 +210,7 @@
             "Second Year",
             "Third Year",
             "Fourth Year"});
-            this.cmbYearLevel.Location = new System.Drawing.Point(46, 562);
+            this.cmbYearLevel.Location = new System.Drawing.Point(45, 539);
             this.cmbYearLevel.Margin = new System.Windows.Forms.Padding(2);
             this.cmbYearLevel.Name = "cmbYearLevel";
             this.cmbYearLevel.Size = new System.Drawing.Size(196, 36);
@@ -221,10 +225,10 @@
             this.btnClearForm.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.clean;
             this.btnClearForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnClearForm.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnClearForm.Location = new System.Drawing.Point(299, 678);
+            this.btnClearForm.Location = new System.Drawing.Point(301, 652);
             this.btnClearForm.Margin = new System.Windows.Forms.Padding(2);
             this.btnClearForm.Name = "btnClearForm";
-            this.btnClearForm.Size = new System.Drawing.Size(185, 40);
+            this.btnClearForm.Size = new System.Drawing.Size(194, 40);
             this.btnClearForm.TabIndex = 1;
             this.btnClearForm.Text = "Clear Form";
             this.btnClearForm.TextOffset = new System.Drawing.Point(10, 0);
@@ -234,10 +238,10 @@
             this.btnRegisterStudent.BorderRadius = 10;
             this.btnRegisterStudent.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.btnRegisterStudent.ForeColor = System.Drawing.Color.White;
-            this.btnRegisterStudent.Location = new System.Drawing.Point(45, 678);
+            this.btnRegisterStudent.Location = new System.Drawing.Point(47, 652);
             this.btnRegisterStudent.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegisterStudent.Name = "btnRegisterStudent";
-            this.btnRegisterStudent.Size = new System.Drawing.Size(195, 40);
+            this.btnRegisterStudent.Size = new System.Drawing.Size(194, 40);
             this.btnRegisterStudent.TabIndex = 23;
             this.btnRegisterStudent.Text = "Register to Database";
             // 
@@ -245,7 +249,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(51, 449);
+            this.label3.Location = new System.Drawing.Point(51, 444);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 26);
@@ -262,7 +266,7 @@
             this.btnGenerateQR.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnGenerateQR.ImageOffset = new System.Drawing.Point(-5, 0);
             this.btnGenerateQR.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnGenerateQR.Location = new System.Drawing.Point(46, 618);
+            this.btnGenerateQR.Location = new System.Drawing.Point(46, 595);
             this.btnGenerateQR.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateQR.Name = "btnGenerateQR";
             this.btnGenerateQR.Size = new System.Drawing.Size(194, 40);
@@ -274,7 +278,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(52, 334);
+            this.label2.Location = new System.Drawing.Point(50, 268);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(155, 26);
@@ -285,7 +289,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(52, 215);
+            this.label1.Location = new System.Drawing.Point(49, 178);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(158, 26);
@@ -296,7 +300,7 @@
             // 
             this.lblStudentID.AutoSize = true;
             this.lblStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStudentID.Location = new System.Drawing.Point(52, 102);
+            this.lblStudentID.Location = new System.Drawing.Point(50, 91);
             this.lblStudentID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStudentID.Name = "lblStudentID";
             this.lblStudentID.Size = new System.Drawing.Size(121, 26);
@@ -307,7 +311,7 @@
             // 
             this.lblPhone.AutoSize = true;
             this.lblPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPhone.Location = new System.Drawing.Point(299, 334);
+            this.lblPhone.Location = new System.Drawing.Point(294, 268);
             this.lblPhone.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPhone.Name = "lblPhone";
             this.lblPhone.Size = new System.Drawing.Size(81, 26);
@@ -318,7 +322,7 @@
             // 
             this.lblSection.AutoSize = true;
             this.lblSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSection.Location = new System.Drawing.Point(299, 449);
+            this.lblSection.Location = new System.Drawing.Point(296, 444);
             this.lblSection.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSection.Name = "lblSection";
             this.lblSection.Size = new System.Drawing.Size(91, 26);
@@ -344,7 +348,7 @@
             "Nursing",
             "Educ",
             "Psychology"});
-            this.cmbCourse.Location = new System.Drawing.Point(46, 482);
+            this.cmbCourse.Location = new System.Drawing.Point(46, 473);
             this.cmbCourse.Margin = new System.Windows.Forms.Padding(2);
             this.cmbCourse.Name = "cmbCourse";
             this.cmbCourse.Size = new System.Drawing.Size(194, 36);
@@ -358,12 +362,12 @@
             this.txtEmail.DefaultText = "";
             this.txtEmail.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.Location = new System.Drawing.Point(46, 363);
+            this.txtEmail.Location = new System.Drawing.Point(46, 294);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.PlaceholderText = "Enter Student Email";
             this.txtEmail.SelectedText = "";
-            this.txtEmail.Size = new System.Drawing.Size(235, 53);
+            this.txtEmail.Size = new System.Drawing.Size(231, 53);
             this.txtEmail.TabIndex = 12;
             // 
             // txtName
@@ -374,12 +378,12 @@
             this.txtName.DefaultText = "";
             this.txtName.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.Location = new System.Drawing.Point(46, 240);
+            this.txtName.Location = new System.Drawing.Point(46, 204);
             this.txtName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtName.Name = "txtName";
             this.txtName.PlaceholderText = "Enter Student Name";
             this.txtName.SelectedText = "";
-            this.txtName.Size = new System.Drawing.Size(449, 60);
+            this.txtName.Size = new System.Drawing.Size(482, 53);
             this.txtName.TabIndex = 13;
             // 
             // txtStudentID
@@ -390,12 +394,12 @@
             this.txtStudentID.DefaultText = "";
             this.txtStudentID.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtStudentID.Location = new System.Drawing.Point(46, 127);
+            this.txtStudentID.Location = new System.Drawing.Point(46, 117);
             this.txtStudentID.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtStudentID.Name = "txtStudentID";
             this.txtStudentID.PlaceholderText = "Enter Student ID";
             this.txtStudentID.SelectedText = "";
-            this.txtStudentID.Size = new System.Drawing.Size(449, 58);
+            this.txtStudentID.Size = new System.Drawing.Size(482, 53);
             this.txtStudentID.TabIndex = 14;
             // 
             // txtPhone
@@ -406,12 +410,12 @@
             this.txtPhone.DefaultText = "";
             this.txtPhone.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPhone.Location = new System.Drawing.Point(299, 363);
+            this.txtPhone.Location = new System.Drawing.Point(292, 294);
             this.txtPhone.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.PlaceholderText = "Phone (Optional)";
             this.txtPhone.SelectedText = "";
-            this.txtPhone.Size = new System.Drawing.Size(196, 53);
+            this.txtPhone.Size = new System.Drawing.Size(236, 53);
             this.txtPhone.TabIndex = 21;
             // 
             // txtSection
@@ -422,7 +426,7 @@
             this.txtSection.DefaultText = "";
             this.txtSection.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSection.Location = new System.Drawing.Point(299, 482);
+            this.txtSection.Location = new System.Drawing.Point(299, 470);
             this.txtSection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtSection.Name = "txtSection";
             this.txtSection.PlaceholderText = "Section (Optional)";
@@ -582,6 +586,33 @@
             this.guna2HtmlLabel1.TabIndex = 15;
             this.guna2HtmlLabel1.Text = "Student Register Screen";
             // 
+            // lblAddress
+            // 
+            this.lblAddress.AutoSize = true;
+            this.lblAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAddress.Location = new System.Drawing.Point(51, 359);
+            this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAddress.Name = "lblAddress";
+            this.lblAddress.Size = new System.Drawing.Size(163, 26);
+            this.lblAddress.TabIndex = 27;
+            this.lblAddress.Text = "Home Address:";
+            // 
+            // txtAddress
+            // 
+            this.txtAddress.BorderColor = System.Drawing.Color.Black;
+            this.txtAddress.BorderRadius = 10;
+            this.txtAddress.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtAddress.DefaultText = "";
+            this.txtAddress.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.txtAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAddress.Location = new System.Drawing.Point(46, 388);
+            this.txtAddress.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.txtAddress.Name = "txtAddress";
+            this.txtAddress.PlaceholderText = "Enter Student Address";
+            this.txtAddress.SelectedText = "";
+            this.txtAddress.Size = new System.Drawing.Size(482, 53);
+            this.txtAddress.TabIndex = 28;
+            // 
             // StudentRegistration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -644,5 +675,7 @@
         private Guna.UI2.WinForms.Guna2ComboBox cmbSex;
         private System.Windows.Forms.Label label4;
         private Guna.UI2.WinForms.Guna2ComboBox cmbYearLevel;
+        private Guna.UI2.WinForms.Guna2TextBox txtAddress;
+        private System.Windows.Forms.Label lblAddress;
     }
 }
