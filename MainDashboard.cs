@@ -33,6 +33,8 @@ namespace ITP104_FINAL_PROJECT
         private Panel pnlScanHistoryContent;
         private Panel pnlSettingsContent;
 
+
+
         // Current active panel
         private Panel currentPanel;
 
@@ -742,22 +744,21 @@ namespace ITP104_FINAL_PROJECT
                         break;
                 }
 
-                // Show the panel
+                // show the panel
                 if (targetPanel != null)
                 {
                     ShowPanel(targetPanel);
                     UpdateNavIndicator(pageIndex);
                 }
 
-                // Update breadcrumb information
+                // update breadcrumb information
                 UpdateBreadcrumb(pageIndex);
 
-                // Log navigation
-                System.Diagnostics.Debug.WriteLine($"Navigated to: {pageTitles[pageIndex]}");
+                // navigation completed successfully to specified page
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Navigation error: {ex.Message}");
+                // navigation attempt failed, target panel may be null or invalid
             }
         }
 
@@ -771,7 +772,7 @@ namespace ITP104_FINAL_PROJECT
                 string pageTitle = pageTitles.ContainsKey(pageIndex) ? pageTitles[pageIndex] : "Unknown";
                 string pageDescription = pageDescriptions.ContainsKey(pageIndex) ? pageDescriptions[pageIndex] : "";
 
-                System.Diagnostics.Debug.WriteLine($"Page: {pageTitle} - {pageDescription}");
+                // breadcrumb information retrieved and ready for display
             }
             catch { /* Prevent errors during breadcrumb updates */ }
         }
@@ -997,7 +998,7 @@ namespace ITP104_FINAL_PROJECT
 
                 System.Diagnostics.Debug.WriteLine(errorDetails);
 
-                // Show error to user (only once, not on every refresh)
+                // show error to user only once, not on every refresh cycle
                 if (lblTotalStudentsValue.Text != "Error")
                 {
                     MessageBox.Show(
@@ -1036,12 +1037,12 @@ namespace ITP104_FINAL_PROJECT
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("LoadRecentScansAsync: Starting to fetch recent scans...");
+                // fetching recent scans from database view
 
-                // Get recent scans from view
+                // get recent scans from view
                 var recentScans = await scanHistoryRepository.GetRecentScansAsync(limit: 10);
 
-                System.Diagnostics.Debug.WriteLine($"LoadRecentScansAsync: Retrieved {recentScans?.Count ?? 0} scans from database");
+                // scans successfully retrieved from database query
 
                 // Update UI on main thread
                 if (dgvRecentScans.InvokeRequired)
@@ -1068,7 +1069,7 @@ namespace ITP104_FINAL_PROJECT
 
                 System.Diagnostics.Debug.WriteLine(errorDetails);
 
-                // Show error message to user for debugging
+                // show error message to user for debugging
                 MessageBox.Show(
                     $"Failed to load recent scans.\n\n" +
                     $"Error: {ex.Message}\n\n" +
@@ -1118,11 +1119,11 @@ namespace ITP104_FINAL_PROJECT
                         scan.ScanDateTime.ToString("MM/dd/yyyy hh:mm:ss tt")
                     );
                 }
-                System.Diagnostics.Debug.WriteLine($"LoadRecentScansAsync: Added {recentScans.Count} rows to DataGridView");
+                // recent scans successfully added to grid display
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("LoadRecentScansAsync: No scans found in database");
+                // no scan records currently exist in database
             }
         }
 
@@ -1140,8 +1141,9 @@ namespace ITP104_FINAL_PROJECT
 
         private void BtnReports_Click(object sender, EventArgs e)
         {
-            // Navigate to Scan History panel
-            NavigateToPage(4); // Index 4 = Scan History
+            // Open ScanHistoryScreen
+            ScanHistoryScreen historyScreen = new ScanHistoryScreen();
+            historyScreen.ShowDialog();
         }
 
         private void BtnLogout_Click(object sender, EventArgs e)
@@ -1328,17 +1330,64 @@ namespace ITP104_FINAL_PROJECT
             StudentRegistration registrationForm = new StudentRegistration();
 
             // When the registration form closes, show the MainDashboard again
-            registrationForm.FormClosed += (s, args) =>
+            registrationForm.FormClosed += async (s, args) =>
             {
                 this.Show();
                 // Auto-refresh student records when registration form closes
-                if (btnStudentRecordsRefresh != null)
-                {
-                    btnStudentRecordsRefresh.PerformClick();
-                }
+                await RefreshStudentRecordsAsync();
+                // Show the Student Records panel so user can see the newly registered student
+                ShowPanel(pnlStudentRecordsContent);
+                UpdateNavIndicator(3); // Index 3 is Student Records
             };
 
             registrationForm.Show();
+        }
+
+        /// <summary>
+        /// Refresh the Student Records panel data asynchronously
+        /// </summary>
+        private async Task RefreshStudentRecordsAsync()
+        {
+            try
+            {
+                if (dgvStudentsGrid == null)
+                {
+                    return; // Grid not initialized yet
+                }
+
+                // Load students from database
+                var students = await studentRepository.GetAllAsync(activeOnly: false);
+
+                // Create display list with formatted data
+                var displayList = students.Select(st => new
+                {
+                    st.StudentId,
+                    st.StudentNumber,
+                    FullName = $"{st.FirstName} {(string.IsNullOrEmpty(st.MiddleName) ? "" : st.MiddleName + " ")}{st.LastName}",
+                    st.Email,
+                    st.Program,
+                    YearLevel = st.YearLevel + (st.YearLevel == "1" ? "st" : st.YearLevel == "2" ? "nd" : st.YearLevel == "3" ? "rd" : "th"),
+                    st.Section,
+                    st.Status
+                }).ToList();
+
+                // Update UI on main thread
+                if (dgvStudentsGrid.InvokeRequired)
+                {
+                    dgvStudentsGrid.Invoke(new Action(() =>
+                    {
+                        dgvStudentsGrid.DataSource = displayList;
+                    }));
+                }
+                else
+                {
+                    dgvStudentsGrid.DataSource = displayList;
+                }
+            }
+            catch (Exception ex)
+            {
+                // student records refresh encountered an error, grid may be out of sync
+            }
         }
 
         private void btnNavStudentRecords_Click(object sender, EventArgs e)
@@ -1369,6 +1418,12 @@ namespace ITP104_FINAL_PROJECT
         private void lblRecentScansTitle_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnReports_Click_1(object sender, EventArgs e)
+
+        {
+            ScanHistory scan = new ScanHistory();
         }
     }
 }

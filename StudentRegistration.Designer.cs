@@ -185,7 +185,7 @@
             this.btnSaveDownload.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnSaveDownload.ImageOffset = new System.Drawing.Point(-5, 0);
             this.btnSaveDownload.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnSaveDownload.Location = new System.Drawing.Point(301, 595);
+            this.btnSaveDownload.Location = new System.Drawing.Point(46, 661);
             this.btnSaveDownload.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveDownload.Name = "btnSaveDownload";
             this.btnSaveDownload.Size = new System.Drawing.Size(194, 40);
@@ -238,7 +238,7 @@
             this.btnRegisterStudent.BorderRadius = 10;
             this.btnRegisterStudent.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.btnRegisterStudent.ForeColor = System.Drawing.Color.White;
-            this.btnRegisterStudent.Location = new System.Drawing.Point(47, 652);
+            this.btnRegisterStudent.Location = new System.Drawing.Point(303, 595);
             this.btnRegisterStudent.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegisterStudent.Name = "btnRegisterStudent";
             this.btnRegisterStudent.Size = new System.Drawing.Size(194, 40);

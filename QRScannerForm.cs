@@ -245,8 +245,7 @@ namespace ITP104_FINAL_PROJECT
             }
             catch (Exception ex)
             {
-                // Handle any errors silently to prevent frame processing from stopping
-                System.Diagnostics.Debug.WriteLine($"Frame processing error: {ex.Message}");
+                // frame processing encountered an error but continues to next frame
             }
         }
 
@@ -284,7 +283,7 @@ namespace ITP104_FINAL_PROJECT
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"QR scan error: {ex.Message}");
+                // qr code detection failed for current frame, will retry on next scan
             }
         }
 

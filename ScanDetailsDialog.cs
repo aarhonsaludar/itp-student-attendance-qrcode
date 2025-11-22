@@ -23,14 +23,14 @@ namespace ITP104_FINAL_PROJECT
             InitializeComponent();
             _scanHistory = scanHistory;
             _studentRepository = new StudentRepository();
-            
+
             // Set dialog properties
             this.Text = "Scan Details";
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            
+
             LoadScanDetails();
         }
 
@@ -50,7 +50,7 @@ namespace ITP104_FINAL_PROJECT
             lblDeviceValue.Text = _scanHistory.DeviceName ?? "N/A";
             lblStatusValue.Text = _scanHistory.Status ?? "N/A";
             lblScanTypeValue.Text = _scanHistory.ScanType ?? "QR";
-            
+
             lblScanPurposeValue.Text = _scanHistory.ScanPurpose ?? "Attendance";
             lblNotesValue.Text = _scanHistory.Notes ?? "-";
             lblScanDataValue.Text = _scanHistory.ScanData ?? "N/A";
@@ -80,7 +80,7 @@ namespace ITP104_FINAL_PROJECT
             {
                 // Get student details to find photo path
                 var student = await _studentRepository.GetByIdAsync(_scanHistory.StudentId);
-                
+
                 if (student != null && !string.IsNullOrEmpty(student.PhotoPath) && File.Exists(student.PhotoPath))
                 {
                     using (var stream = new FileStream(student.PhotoPath, FileMode.Open, FileAccess.Read))
@@ -96,9 +96,8 @@ namespace ITP104_FINAL_PROJECT
             }
             catch (Exception ex)
             {
-                // Log error but don't show message box to avoid disrupting user experience
-                System.Diagnostics.Debug.WriteLine($"Error loading student photo: {ex.Message}");
-                // Fallback to default image
+                // student photo file could not be loaded from disk
+                // fallback to default image
                 try { pbStudentPhoto.Image = Properties.Resources.user_avatar; } catch { }
             }
         }

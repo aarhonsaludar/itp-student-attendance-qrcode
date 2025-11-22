@@ -41,6 +41,7 @@ namespace ITP104_FINAL_PROJECT
             // Setup event handlers
             btnBackToScan.Click += BtnBackToScan_Click;
             btnExport.Click += BtnExport_Click;
+            picProfilePhoto.Click += PicProfilePhoto_Click; // Add click handler for photo upload
 
             // Setup hover effects
             SetupHoverEffects();
@@ -53,6 +54,11 @@ namespace ITP104_FINAL_PROJECT
             {
                 picProfilePhoto.Image = Properties.Resources.default_avatar;
             }
+
+            // Make picture box interactive
+            picProfilePhoto.Cursor = Cursors.Hand;
+            var tooltip = new ToolTip();
+            tooltip.SetToolTip(picProfilePhoto, "Click to upload/change profile photo");
 
             // Start animation
             animationTimer.Start();
@@ -251,6 +257,25 @@ namespace ITP104_FINAL_PROJECT
                         label2.Text = student.Sex ?? "Not Specified";
                     }
 
+                    // Load student profile photo
+                    if (!string.IsNullOrEmpty(student.PhotoPath) && System.IO.File.Exists(student.PhotoPath))
+                    {
+                        try
+                        {
+                            picProfilePhoto.Image = Image.FromFile(student.PhotoPath);
+                        }
+                        catch
+                        {
+                            // If photo can't be loaded, use default avatar
+                            picProfilePhoto.Image = Properties.Resources.default_avatar;
+                        }
+                    }
+                    else
+                    {
+                        // No photo in database, use default avatar
+                        picProfilePhoto.Image = Properties.Resources.default_avatar;
+                    }
+
                     // Force all labels to update immediately
                     lblStudentIDValue.Refresh();
                     lblFullNameValue.Refresh();
@@ -359,17 +384,14 @@ namespace ITP104_FINAL_PROJECT
 
         private void ShowLoadingIndicator(bool show)
         {
-            if (lblLoadingIndicator != null)
+            // Loading indicator functionality - can be extended with progress UI if needed
+            if (show)
             {
-                if (show)
-                {
-                    lblLoadingIndicator.Visible = true;
-                    lblLoadingIndicator.Text = "⏳ Loading student information...";
-                }
-                else
-                {
-                    lblLoadingIndicator.Visible = false;
-                }
+                this.Cursor = Cursors.WaitCursor;
+            }
+            else
+            {
+                this.Cursor = Cursors.Default;
             }
         }
 
@@ -695,6 +717,85 @@ namespace ITP104_FINAL_PROJECT
         private void btnPrint_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void PicProfilePhoto_Click(object sender, EventArgs e)
+        {
+            // Open file dialog to select a photo
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Select Student Profile Photo";
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif|All Files|*.*";
+                ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string selectedFilePath = ofd.FileName;
+
+                        // Create Images folder if it doesn't exist
+                        string imagesFolder = System.IO.Path.Combine(
+                            System.IO.Path.GetDirectoryName(Application.ExecutablePath),
+                            "Images", "Students");
+
+                        if (!System.IO.Directory.Exists(imagesFolder))
+                        {
+                            System.IO.Directory.CreateDirectory(imagesFolder);
+                        }
+
+                        // Copy the image to the Images/Students folder
+                        string fileName = $"{studentId}_{DateTime.Now:yyyyMMdd_HHmmss}" + System.IO.Path.GetExtension(selectedFilePath);
+                        string destinationPath = System.IO.Path.Combine(imagesFolder, fileName);
+
+                        System.IO.File.Copy(selectedFilePath, destinationPath, true);
+
+                        // Update the picture box
+                        picProfilePhoto.Image = Image.FromFile(destinationPath);
+
+                        // Update database with the photo path
+                        _ = UpdateStudentPhotoAsync(destinationPath);
+
+                        MessageBox.Show("Profile photo updated successfully!",
+                            "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error uploading photo: {ex.Message}",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private async Task UpdateStudentPhotoAsync(string photoPath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(studentId))
+                    return;
+
+                int studentIdInt = int.Parse(studentId);
+                Student student = await studentRepository.GetByIdAsync(studentIdInt);
+
+                if (student != null)
+                {
+                    // Update the photo path
+                    student.PhotoPath = photoPath;
+
+                    // Save to database
+                    bool success = await studentRepository.UpdateAsync(student);
+
+                    if (success)
+                    {
+                        // photo has been successfully saved to the database with path reference
+                    }
+                }
+            }
+            catch
+            {
+                // photo path update failed, but image still displays locally
+            }
         }
 
         private async void btnDelete_Click(object sender, EventArgs e)
