@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pnlForm = new Guna.UI2.WinForms.Guna2Panel();
+            this.txtAddress = new Guna.UI2.WinForms.Guna2TextBox();
+            this.lblAddress = new System.Windows.Forms.Label();
             this.lblSex = new System.Windows.Forms.Label();
             this.cmbSex = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -64,8 +66,6 @@
             this.guna2HtmlLabel4 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnExit = new Guna.UI2.WinForms.Guna2Button();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.lblAddress = new System.Windows.Forms.Label();
-            this.txtAddress = new Guna.UI2.WinForms.Guna2TextBox();
             this.pnlForm.SuspendLayout();
             this.pnlQRPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
@@ -108,6 +108,33 @@
             this.pnlForm.Size = new System.Drawing.Size(582, 731);
             this.pnlForm.TabIndex = 5;
             this.pnlForm.UseTransparentBackground = true;
+            // 
+            // txtAddress
+            // 
+            this.txtAddress.BorderColor = System.Drawing.Color.Black;
+            this.txtAddress.BorderRadius = 10;
+            this.txtAddress.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtAddress.DefaultText = "";
+            this.txtAddress.FillColor = System.Drawing.Color.WhiteSmoke;
+            this.txtAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAddress.Location = new System.Drawing.Point(46, 388);
+            this.txtAddress.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.txtAddress.Name = "txtAddress";
+            this.txtAddress.PlaceholderText = "Enter Student Address";
+            this.txtAddress.SelectedText = "";
+            this.txtAddress.Size = new System.Drawing.Size(482, 53);
+            this.txtAddress.TabIndex = 28;
+            // 
+            // lblAddress
+            // 
+            this.lblAddress.AutoSize = true;
+            this.lblAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAddress.Location = new System.Drawing.Point(51, 359);
+            this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAddress.Name = "lblAddress";
+            this.lblAddress.Size = new System.Drawing.Size(163, 26);
+            this.lblAddress.TabIndex = 27;
+            this.lblAddress.Text = "Home Address:";
             // 
             // lblSex
             // 
@@ -454,11 +481,11 @@
             this.lblStudentDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblStudentDetails.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStudentDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblStudentDetails.Location = new System.Drawing.Point(25, 335);
+            this.lblStudentDetails.Location = new System.Drawing.Point(47, 335);
             this.lblStudentDetails.Margin = new System.Windows.Forms.Padding(2);
             this.lblStudentDetails.Name = "lblStudentDetails";
             this.lblStudentDetails.Padding = new System.Windows.Forms.Padding(11, 13, 11, 13);
-            this.lblStudentDetails.Size = new System.Drawing.Size(489, 284);
+            this.lblStudentDetails.Size = new System.Drawing.Size(489, 375);
             this.lblStudentDetails.TabIndex = 2;
             this.lblStudentDetails.Text = null;
             // 
@@ -476,7 +503,7 @@
             // 
             // picQRCode
             // 
-            this.picQRCode.Location = new System.Drawing.Point(146, 81);
+            this.picQRCode.Location = new System.Drawing.Point(165, 91);
             this.picQRCode.Margin = new System.Windows.Forms.Padding(2);
             this.picQRCode.Name = "picQRCode";
             this.picQRCode.Size = new System.Drawing.Size(262, 237);
@@ -585,33 +612,6 @@
             this.guna2HtmlLabel1.Size = new System.Drawing.Size(494, 36);
             this.guna2HtmlLabel1.TabIndex = 15;
             this.guna2HtmlLabel1.Text = "Student Register Screen";
-            // 
-            // lblAddress
-            // 
-            this.lblAddress.AutoSize = true;
-            this.lblAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAddress.Location = new System.Drawing.Point(51, 359);
-            this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblAddress.Name = "lblAddress";
-            this.lblAddress.Size = new System.Drawing.Size(163, 26);
-            this.lblAddress.TabIndex = 27;
-            this.lblAddress.Text = "Home Address:";
-            // 
-            // txtAddress
-            // 
-            this.txtAddress.BorderColor = System.Drawing.Color.Black;
-            this.txtAddress.BorderRadius = 10;
-            this.txtAddress.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtAddress.DefaultText = "";
-            this.txtAddress.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.txtAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAddress.Location = new System.Drawing.Point(46, 388);
-            this.txtAddress.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.txtAddress.Name = "txtAddress";
-            this.txtAddress.PlaceholderText = "Enter Student Address";
-            this.txtAddress.SelectedText = "";
-            this.txtAddress.Size = new System.Drawing.Size(482, 53);
-            this.txtAddress.TabIndex = 28;
             // 
             // StudentRegistration
             // 

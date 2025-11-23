@@ -3,12 +3,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using QRCoder;
 using ITP104_FINAL_PROJECT.Data;
+using Guna.UI2.WinForms;
 
 namespace ITP104_FINAL_PROJECT
 {
     public partial class StudentRegistration : Form
     {
         private readonly StudentRepository studentRepository;
+        private Guna2Panel pnlDetailsCard;
 
         public StudentRegistration()
         {
@@ -128,17 +130,8 @@ namespace ITP104_FINAL_PROJECT
                 picQRCode.Tag = qrData; // Store QR data for database registration
 
                 // Format student details
-                lblStudentDetails.Text = "STUDENT DETAILS\n" +
-                    "═══════════════════════════════════════\n\n" +
-                    $"Student ID:      {txtStudentID.Text}\n\n" +
-                    $"Full Name:       {txtName.Text}\n\n" +
-                    $"Email Address:   {txtEmail.Text}\n\n" +
-                    $"Home Address:    {txtAddress.Text}\n\n" +
-                    $"Course:          {cmbCourse.Text}\n\n" +
-                    $"Year Level:      {cmbYearLevel.Text}\n\n" +
-                    $"Sex:             {cmbSex.Text}\n\n" +
-                    "═══════════════════════════════════════\n" +
-                    $"Generated: {DateTime.Now:MMMM dd, yyyy - hh:mm tt}";
+                // Format student details
+                DisplayStudentDetails();
 
                 btnSaveDownload.Enabled = true;
                 btnRegisterStudent.Enabled = true;
@@ -284,6 +277,7 @@ namespace ITP104_FINAL_PROJECT
             txtEmail.Clear();
             txtPhone.Clear();
             txtSection.Clear();
+            txtAddress.Clear();
             cmbCourse.SelectedIndex = -1;
             cmbYearLevel.SelectedIndex = -1;
             cmbSex.SelectedIndex = -1;
@@ -291,6 +285,7 @@ namespace ITP104_FINAL_PROJECT
             picQRCode.Image = null;
             picQRCode.Tag = null;
             lblStudentDetails.Text = "";
+            if (pnlDetailsCard != null) pnlDetailsCard.Visible = false;
 
             btnSaveDownload.Enabled = false;
             btnRegisterStudent.Enabled = false;
@@ -312,6 +307,110 @@ namespace ITP104_FINAL_PROJECT
         private void lblNote_Click(object sender, EventArgs e)
         {
 
+        }
+    
+
+        private void DisplayStudentDetails()
+        {
+            if (pnlDetailsCard == null)
+            {
+                pnlDetailsCard = new Guna2Panel
+                {
+                    Location = lblStudentDetails.Location,
+                    Size = lblStudentDetails.Size,
+                    BorderColor = Color.LightGray,
+                    BorderThickness = 1,
+                    BorderRadius = 10,
+                    BackColor = Color.White,
+                    Parent = lblStudentDetails.Parent // pnlQRPreview
+                };
+            }
+
+            pnlDetailsCard.Controls.Clear();
+            pnlDetailsCard.Visible = true;
+            lblStudentDetails.Visible = false;
+            pnlDetailsCard.BringToFront();
+
+            // Add Header
+            Label lblHeader = new Label
+            {
+                Text = "STUDENT DETAILS",
+                Font = new Font("Century Gothic", 20, FontStyle.Bold),
+                ForeColor = Color.FromArgb(33, 42, 57),
+                AutoSize = true,
+                Location = new Point(20, 20)
+            };
+            pnlDetailsCard.Controls.Add(lblHeader);
+
+            // Add Separator
+            Panel pnlLine = new Panel
+            {
+                Size = new Size(pnlDetailsCard.Width - 40, 2),
+                Location = new Point(20, 55),
+                BackColor = Color.FromArgb(230, 230, 230)
+            };
+            pnlDetailsCard.Controls.Add(pnlLine);
+
+            // Add Details Grid
+            TableLayoutPanel table = new TableLayoutPanel
+            {
+                Location = new Point(20, 70),
+                Size = new Size(pnlDetailsCard.Width - 40, pnlDetailsCard.Height - 100),
+                ColumnCount = 2,
+                RowCount = 7,
+                AutoSize = true
+            };
+
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F)); // Fixed width for labels
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+            AddDetailRow(table, "Student ID:", txtStudentID.Text, 0);
+            AddDetailRow(table, "Full Name:", txtName.Text, 1);
+            AddDetailRow(table, "Email:", txtEmail.Text, 2);
+            AddDetailRow(table, "Address:", txtAddress.Text, 3);
+            AddDetailRow(table, "Course:", cmbCourse.Text, 4);
+            AddDetailRow(table, "Year & Sec:", $"{cmbYearLevel.Text} - {txtSection.Text}", 5);
+            AddDetailRow(table, "Sex:", cmbSex.Text, 6);
+
+            pnlDetailsCard.Controls.Add(table);
+
+            // Add Generated Date at bottom
+            Label lblDate = new Label
+            {
+                Text = $"Generated: {DateTime.Now:MMM dd, yyyy hh:mm tt}",
+                Font = new Font("Segoe UI", 8, FontStyle.Italic),
+                ForeColor = Color.Gray,
+                AutoSize = true,
+                Location = new Point(20, pnlDetailsCard.Height - 30)
+            };
+            pnlDetailsCard.Controls.Add(lblDate);
+        }
+
+        private void AddDetailRow(TableLayoutPanel panel, string label, string value, int row)
+        {
+            Label lblTitle = new Label
+            {
+                Text = label,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                ForeColor = Color.DimGray,
+                AutoSize = true,
+                Anchor = AnchorStyles.Left | AnchorStyles.Top,
+                Margin = new Padding(0, 0, 0, 12)
+            };
+
+            Label lblValue = new Label
+            {
+                Text = value,
+                Font = new Font("Segoe UI", 13, FontStyle.Regular),
+                ForeColor = Color.Black,
+                AutoSize = true,
+                MaximumSize = new Size(panel.Width - 130, 0), // Wrap text
+                Anchor = AnchorStyles.Left | AnchorStyles.Top,
+                Margin = new Padding(0, 0, 0, 12)
+            };
+
+            panel.Controls.Add(lblTitle, 0, row);
+            panel.Controls.Add(lblValue, 1, row);
         }
     }
 }
