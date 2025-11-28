@@ -38,7 +38,7 @@ namespace ITP104_FINAL_PROJECT.Services
                         command.Parameters.AddWithValue("@tableName", tableName ?? (object)DBNull.Value);
                         command.Parameters.AddWithValue("@recordId", recordId.HasValue ? (object)recordId.Value : DBNull.Value);
                         command.Parameters.AddWithValue("@errorType", exception.GetType().Name);
-                        command.Parameters.AddWithValue("@errorMessage", 
+                        command.Parameters.AddWithValue("@errorMessage",
                             $"{exception.Message}\n\nStack Trace:\n{exception.StackTrace}");
 
                         await command.ExecuteNonQueryAsync();
@@ -106,6 +106,44 @@ namespace ITP104_FINAL_PROJECT.Services
             catch
             {
                 // Silent fail for info logging
+            }
+        }
+
+        /// <summary>
+        /// Log a warning message to system_logs
+        /// </summary>
+        public static async Task LogWarningAsync(
+            string action,
+            string message,
+            string tableName = null,
+            int? recordId = null,
+            int? userId = null)
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    await connection.OpenAsync();
+
+                    string query = @"INSERT INTO system_logs 
+                                    (user_id, action, table_name, record_id, new_value, timestamp)
+                                    VALUES (@userId, @action, @tableName, @recordId, @message, CURRENT_TIMESTAMP)";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@userId", userId.HasValue ? (object)userId.Value : DBNull.Value);
+                        command.Parameters.AddWithValue("@action", $"WARNING: {action}");
+                        command.Parameters.AddWithValue("@tableName", tableName ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@recordId", recordId.HasValue ? (object)recordId.Value : DBNull.Value);
+                        command.Parameters.AddWithValue("@message", message);
+
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch
+            {
+                // Silent fail for warning logging
             }
         }
 

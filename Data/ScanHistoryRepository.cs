@@ -11,55 +11,103 @@ namespace ITP104_FINAL_PROJECT.Data
     public class ScanHistoryRepository
     {
         /// <summary>
-        /// Record a QR scan with Time In/Time Out logic using new stored procedure
+        /// Record a QR scan with Time In/Time Out logic using secure stored procedure
+        /// CRITICAL: Client time is validated against INTERNET time sources (Google.com, TimeAPI.io)
+        /// Database timestamps use NOW() for recording, but validation uses internet APIs
+        /// This prevents time manipulation by changing device clock
         /// </summary>
-        public async Task<(bool success, string message, string scanType)> RecordAttendanceScanAsync(
+        public async Task<(bool success, string message, string scanType, DateTime? timestamp, DateTime? timeIn, DateTime? timeOut)> RecordAttendanceScanAsync(
             string qrData,
             int deviceId,
             string location = null)
         {
             try
             {
+                // ===================================================
+                // STEP 1: Validate client time against server time
+                // BLOCK recording if time tampering is detected
+                // ===================================================
+                var timeValidation = await TimeValidationService.ValidateClientTimeAsync();
+
+                if (!timeValidation.IsValid)
+                {
+                    // Time tampering detected - BLOCK attendance recording
+                    await ErrorLoggingService.LogWarningAsync(
+                        "Time Tampering Detected - Attendance BLOCKED",
+                        $"Client Time: {timeValidation.ClientTime:yyyy-MM-dd HH:mm:ss}\n" +
+                        $"Server Time: {timeValidation.ServerTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A"}\n" +
+                        $"Time Drift: {timeValidation.TimeDrift.TotalMinutes:F2} minutes\n" +
+                        $"QR Data: {qrData}\n" +
+                        $"Status: {timeValidation.ValidationStatus}",
+                        "time_tampering");
+
+                    return (false,
+                        $"⚠️ TIME TAMPERING DETECTED\n\n{timeValidation.ErrorMessage}\n\nAttendance recording is BLOCKED for security.",
+                        "TIME_TAMPERED",
+                        null, null, null);
+                }
+
                 // Validate input
                 if (string.IsNullOrWhiteSpace(qrData))
                 {
-                    return (false, "QR code data cannot be empty", "ERROR");
+                    return (false, "QR code data cannot be empty", "ERROR", null, null, null);
                 }
 
                 if (deviceId <= 0)
                 {
-                    return (false, "Invalid device ID", "ERROR");
+                    return (false, "Invalid device ID", "ERROR", null, null, null);
                 }
 
                 using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
                 {
-                    using (var command = new MySqlCommand("sp_record_attendance_scan", connection))
+                    using (var command = new MySqlCommand("sp_record_attendance_scan_secure", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.CommandTimeout = 60; // Increase timeout for stored procedure
 
-                        // Input parameters
+                        // ===================================================
+                        // INPUT PARAMETERS
+                        // Note: NO timestamp parameter - client cannot influence time
+                        // ===================================================
                         command.Parameters.AddWithValue("@p_scan_data", qrData);
                         command.Parameters.AddWithValue("@p_device_id", deviceId);
                         command.Parameters.AddWithValue("@p_location", location ?? (object)DBNull.Value);
 
-                        // Output parameters
+                        // ===================================================
+                        // OUTPUT PARAMETERS
+                        // Database returns the timestamps it generated
+                        // ===================================================
                         var resultParam = new MySqlParameter("@p_result", MySqlDbType.VarChar, 200) { Direction = ParameterDirection.Output };
                         var studentNameParam = new MySqlParameter("@p_student_name", MySqlDbType.VarChar, 200) { Direction = ParameterDirection.Output };
                         var studentNumberParam = new MySqlParameter("@p_student_number", MySqlDbType.VarChar, 50) { Direction = ParameterDirection.Output };
                         var scanTypeParam = new MySqlParameter("@p_scan_type", MySqlDbType.VarChar, 20) { Direction = ParameterDirection.Output };
+                        var timestampParam = new MySqlParameter("@p_timestamp", MySqlDbType.DateTime) { Direction = ParameterDirection.Output };
+                        var timeInParam = new MySqlParameter("@p_time_in", MySqlDbType.DateTime) { Direction = ParameterDirection.Output };
+                        var timeOutParam = new MySqlParameter("@p_time_out", MySqlDbType.DateTime) { Direction = ParameterDirection.Output };
 
                         command.Parameters.Add(resultParam);
                         command.Parameters.Add(studentNameParam);
                         command.Parameters.Add(studentNumberParam);
                         command.Parameters.Add(scanTypeParam);
+                        command.Parameters.Add(timestampParam);
+                        command.Parameters.Add(timeInParam);
+                        command.Parameters.Add(timeOutParam);
 
                         await command.ExecuteNonQueryAsync();
 
+                        // Extract output values
                         string result = resultParam.Value?.ToString() ?? "Unknown error";
                         string studentName = studentNameParam.Value?.ToString();
                         string studentNumber = studentNumberParam.Value?.ToString();
                         string scanType = scanTypeParam.Value?.ToString() ?? "ERROR";
+
+                        // ===================================================
+                        // CRITICAL: Extract database-generated timestamps
+                        // These are the ONLY trusted timestamps in the system
+                        // ===================================================
+                        DateTime? timestamp = timestampParam.Value != DBNull.Value ? (DateTime?)timestampParam.Value : null;
+                        DateTime? timeIn = timeInParam.Value != DBNull.Value ? (DateTime?)timeInParam.Value : null;
+                        DateTime? timeOut = timeOutParam.Value != DBNull.Value ? (DateTime?)timeOutParam.Value : null;
 
                         // Determine success based on result message
                         bool success = result.StartsWith("SUCCESS");
@@ -71,12 +119,12 @@ namespace ITP104_FINAL_PROJECT.Data
                             message = $"{studentName} ({studentNumber})\n{result}";
                         }
 
-                        // Log the scan attempt
+                        // Log the scan attempt with database timestamp
                         if (success)
                         {
                             await ErrorLoggingService.LogInfoAsync(
                                 $"Attendance Scan - {scanType}",
-                                $"Student: {studentNumber} - {studentName}",
+                                $"Student: {studentNumber} - {studentName} | DB Time: {timestamp:yyyy-MM-dd HH:mm:ss}",
                                 "scan_history");
                         }
                         else
@@ -87,7 +135,7 @@ namespace ITP104_FINAL_PROJECT.Data
                                 "scan_history");
                         }
 
-                        return (success, message, scanType);
+                        return (success, message, scanType, timestamp, timeIn, timeOut);
                     }
                 }
             }
@@ -97,7 +145,7 @@ namespace ITP104_FINAL_PROJECT.Data
                     "Record Attendance Scan - Database Error",
                     ex,
                     "scan_history");
-                return (false, ErrorLoggingService.GetUserFriendlyMessage(ex), "ERROR");
+                return (false, ErrorLoggingService.GetUserFriendlyMessage(ex), "ERROR", null, null, null);
             }
             catch (Exception ex)
             {
@@ -105,7 +153,7 @@ namespace ITP104_FINAL_PROJECT.Data
                     "Record Attendance Scan - Error",
                     ex,
                     "scan_history");
-                return (false, $"An error occurred while recording scan: {ex.Message}", "ERROR");
+                return (false, $"An error occurred while recording scan: {ex.Message}", "ERROR", null, null, null);
             }
         }
 

@@ -173,6 +173,7 @@
     </Compile>
     <Compile Include="Services\ErrorLoggingService.cs" />
     <Compile Include="Services\InputValidator.cs" />
+    <Compile Include="Services\TimeValidationService.cs" />
     <Compile Include="SettingsScreen.cs">
       <SubType>Form</SubType>
     </Compile>
