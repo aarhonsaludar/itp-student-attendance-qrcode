@@ -39,10 +39,8 @@ namespace ITP104_FINAL_PROJECT
             lblStudentDetails.Text = "";
 
             btnSaveDownload.Enabled = false;
-            btnRegisterStudent.Enabled = false;
 
             btnGenerateQR.Click += BtnGenerateQR_Click;
-            btnRegisterStudent.Click += BtnRegisterStudent_Click;
             btnSaveDownload.Click += BtnSaveDownload_Click;
             btnClearForm.Click += BtnClearForm_Click;
         }
@@ -130,54 +128,7 @@ namespace ITP104_FINAL_PROJECT
                 picQRCode.Tag = qrData; // Store QR data for database registration
 
                 // Format student details
-                // Format student details
                 DisplayStudentDetails();
-
-                btnSaveDownload.Enabled = true;
-                btnRegisterStudent.Enabled = true;
-
-                MessageBox.Show("QR Code generated successfully!\nClick 'Register to Database' to save student record.",
-                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error generating QR code: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private async void BtnRegisterStudent_Click(object sender, EventArgs e)
-        {
-            if (picQRCode.Tag == null)
-            {
-                MessageBox.Show("Please generate QR code first.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Check if student ID exists (double check)
-            if (await studentRepository.IsStudentNumberExistsAsync(txtStudentID.Text.Trim()))
-            {
-                MessageBox.Show($"Student ID {txtStudentID.Text} already exists in the database.", "Duplicate ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            try
-            {
-                // Disable button to prevent double submission
-                btnRegisterStudent.Enabled = false;
-                btnRegisterStudent.Text = "Registering...";
 
                 // Parse name (split into first, middle, last)
                 string[] nameParts = txtName.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -190,8 +141,6 @@ namespace ITP104_FINAL_PROJECT
                                   cmbYearLevel.Text.Contains("2nd") ? "2" :
                                   cmbYearLevel.Text.Contains("3rd") ? "3" :
                                   cmbYearLevel.Text.Contains("4th") ? "4" : "1";
-
-                string qrCodeData = picQRCode.Tag.ToString();
 
                 // Register student to database
                 var result = await studentRepository.RegisterStudentAsync(
@@ -206,35 +155,44 @@ namespace ITP104_FINAL_PROJECT
                     program: cmbCourse.Text,
                     section: txtSection.Text.Trim(), // Optional
                     address: txtAddress.Text.Trim(), // Home Address
-                    qrCodeData: qrCodeData,
+                    qrCodeData: qrData,
                     enrollmentDate: DateTime.Today
                 );
 
                 if (result.Success)
                 {
-                    MessageBox.Show($"Student registered successfully!\nStudent ID: {result.StudentId}\n\n" +
-                        "You can now download the QR code.",
-                        "Registration Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    btnSaveDownload.Enabled = true;
 
-                    btnRegisterStudent.Enabled = false; // Keep disabled after successful registration
-                    btnRegisterStudent.Text = "✓ Registered";
+                    MessageBox.Show($"QR Code generated and student registered successfully!\nStudent ID: {result.StudentId}\n\n" +
+                        "You can now download the QR code.",
+                        "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"Registration failed: {result.Message}",
-                        "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // QR was generated but database registration failed
+                    btnSaveDownload.Enabled = true;
 
-                    btnRegisterStudent.Enabled = true;
-                    btnRegisterStudent.Text = "Register to Database";
+                    MessageBox.Show($"QR Code generated, but registration failed: {result.Message}\n\n" +
+                        "You can still download the QR code, but please register the student manually.",
+                        "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error during registration: {ex.Message}",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error during QR generation and registration: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-                btnRegisterStudent.Enabled = true;
-                btnRegisterStudent.Text = "Register to Database";
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -288,8 +246,6 @@ namespace ITP104_FINAL_PROJECT
             if (pnlDetailsCard != null) pnlDetailsCard.Visible = false;
 
             btnSaveDownload.Enabled = false;
-            btnRegisterStudent.Enabled = false;
-            btnRegisterStudent.Text = "Register to Database";
 
             txtStudentID.Focus();
         }
@@ -308,7 +264,7 @@ namespace ITP104_FINAL_PROJECT
         {
 
         }
-    
+
 
         private void DisplayStudentDetails()
         {

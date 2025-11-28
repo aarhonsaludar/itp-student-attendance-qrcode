@@ -40,7 +40,6 @@
             this.btnSaveDownload = new Guna.UI2.WinForms.Guna2Button();
             this.cmbYearLevel = new Guna.UI2.WinForms.Guna2ComboBox();
             this.btnClearForm = new Guna.UI2.WinForms.Guna2Button();
-            this.btnRegisterStudent = new Guna.UI2.WinForms.Guna2Button();
             this.label3 = new System.Windows.Forms.Label();
             this.btnGenerateQR = new Guna.UI2.WinForms.Guna2Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -87,7 +86,6 @@
             this.pnlForm.Controls.Add(this.btnSaveDownload);
             this.pnlForm.Controls.Add(this.cmbYearLevel);
             this.pnlForm.Controls.Add(this.btnClearForm);
-            this.pnlForm.Controls.Add(this.btnRegisterStudent);
             this.pnlForm.Controls.Add(this.label3);
             this.pnlForm.Controls.Add(this.btnGenerateQR);
             this.pnlForm.Controls.Add(this.label2);
@@ -252,25 +250,13 @@
             this.btnClearForm.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.clean;
             this.btnClearForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnClearForm.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnClearForm.Location = new System.Drawing.Point(301, 652);
+            this.btnClearForm.Location = new System.Drawing.Point(301, 661);
             this.btnClearForm.Margin = new System.Windows.Forms.Padding(2);
             this.btnClearForm.Name = "btnClearForm";
             this.btnClearForm.Size = new System.Drawing.Size(194, 40);
             this.btnClearForm.TabIndex = 1;
             this.btnClearForm.Text = "Clear Form";
             this.btnClearForm.TextOffset = new System.Drawing.Point(10, 0);
-            // 
-            // btnRegisterStudent
-            // 
-            this.btnRegisterStudent.BorderRadius = 10;
-            this.btnRegisterStudent.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
-            this.btnRegisterStudent.ForeColor = System.Drawing.Color.White;
-            this.btnRegisterStudent.Location = new System.Drawing.Point(303, 595);
-            this.btnRegisterStudent.Margin = new System.Windows.Forms.Padding(2);
-            this.btnRegisterStudent.Name = "btnRegisterStudent";
-            this.btnRegisterStudent.Size = new System.Drawing.Size(194, 40);
-            this.btnRegisterStudent.TabIndex = 23;
-            this.btnRegisterStudent.Text = "Register to Database";
             // 
             // label3
             // 
@@ -287,18 +273,18 @@
             // 
             this.btnGenerateQR.BorderRadius = 10;
             this.btnGenerateQR.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(255)))), ((int)(((byte)(80)))));
-            this.btnGenerateQR.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
+            this.btnGenerateQR.Font = new System.Drawing.Font("Century Gothic", 8F, System.Drawing.FontStyle.Bold);
             this.btnGenerateQR.ForeColor = System.Drawing.Color.White;
             this.btnGenerateQR.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.scan_icon;
             this.btnGenerateQR.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnGenerateQR.ImageOffset = new System.Drawing.Point(-5, 0);
             this.btnGenerateQR.ImageSize = new System.Drawing.Size(30, 30);
-            this.btnGenerateQR.Location = new System.Drawing.Point(46, 595);
+            this.btnGenerateQR.Location = new System.Drawing.Point(157, 588);
             this.btnGenerateQR.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateQR.Name = "btnGenerateQR";
-            this.btnGenerateQR.Size = new System.Drawing.Size(194, 40);
+            this.btnGenerateQR.Size = new System.Drawing.Size(218, 51);
             this.btnGenerateQR.TabIndex = 4;
-            this.btnGenerateQR.Text = "Generate QR";
+            this.btnGenerateQR.Text = "Generate QR && Register";
             this.btnGenerateQR.TextOffset = new System.Drawing.Point(17, 0);
             // 
             // label2
@@ -651,7 +637,6 @@
         private Guna.UI2.WinForms.Guna2Button btnClearForm;
         private Guna.UI2.WinForms.Guna2Button btnSaveDownload;
         private Guna.UI2.WinForms.Guna2Button btnGenerateQR;
-        private Guna.UI2.WinForms.Guna2Button btnRegisterStudent;
 
         private System.Windows.Forms.Label lblStudentID;
         private System.Windows.Forms.Label lblNote;
