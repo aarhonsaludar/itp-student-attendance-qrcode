@@ -40,6 +40,7 @@
             this.dgvScanHistory = new System.Windows.Forms.DataGridView();
             this.lblScanHistoryTitle = new System.Windows.Forms.Label();
             this.pnlStudentInfo = new Guna.UI2.WinForms.Guna2Panel();
+            this.picQRCode = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblEnrollmentDateValue = new System.Windows.Forms.Label();
@@ -77,6 +78,7 @@
             this.pnlScanHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvScanHistory)).BeginInit();
             this.pnlStudentInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).BeginInit();
             this.pnlActions.SuspendLayout();
             this.SuspendLayout();
@@ -185,8 +187,8 @@
             // 
             this.dgvScanHistory.AllowUserToAddRows = false;
             this.dgvScanHistory.AllowUserToDeleteRows = false;
-            this.dgvScanHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvScanHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvScanHistory.BackgroundColor = System.Drawing.Color.White;
             this.dgvScanHistory.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -215,6 +217,7 @@
             // 
             this.pnlStudentInfo.BackColor = System.Drawing.Color.SlateGray;
             this.pnlStudentInfo.BorderRadius = 15;
+            this.pnlStudentInfo.Controls.Add(this.picQRCode);
             this.pnlStudentInfo.Controls.Add(this.label2);
             this.pnlStudentInfo.Controls.Add(this.label1);
             this.pnlStudentInfo.Controls.Add(this.lblEnrollmentDateValue);
@@ -249,6 +252,17 @@
             this.pnlStudentInfo.ShadowDecoration.Depth = 10;
             this.pnlStudentInfo.Size = new System.Drawing.Size(1300, 474);
             this.pnlStudentInfo.TabIndex = 1;
+            // 
+            // picQRCode
+            // 
+            this.picQRCode.BackColor = System.Drawing.Color.White;
+            this.picQRCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picQRCode.Location = new System.Drawing.Point(1113, 3);
+            this.picQRCode.Name = "picQRCode";
+            this.picQRCode.Size = new System.Drawing.Size(180, 180);
+            this.picQRCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picQRCode.TabIndex = 27;
+            this.picQRCode.TabStop = false;
             // 
             // label2
             // 
@@ -660,6 +674,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvScanHistory)).EndInit();
             this.pnlStudentInfo.ResumeLayout(false);
             this.pnlStudentInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();
             this.pnlActions.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -710,5 +725,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private Guna.UI2.WinForms.Guna2Button btnDelete;
+        private System.Windows.Forms.PictureBox picQRCode;
     }
 }

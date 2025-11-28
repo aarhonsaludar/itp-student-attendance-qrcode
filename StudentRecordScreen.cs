@@ -6,6 +6,7 @@ using System.Data;
 using System.Threading.Tasks;
 using ITP104_FINAL_PROJECT.Data;
 using ITP104_FINAL_PROJECT.Models;
+using QRCoder;
 
 namespace ITP104_FINAL_PROJECT
 {
@@ -42,6 +43,8 @@ namespace ITP104_FINAL_PROJECT
             btnBackToScan.Click += BtnBackToScan_Click;
             btnExport.Click += BtnExport_Click;
             picProfilePhoto.Click += PicProfilePhoto_Click; // Add click handler for photo upload
+            picQRCode.Click += PicQRCode_Click; // Add click handler for QR code download
+            picQRCode.Cursor = Cursors.Hand; // Change cursor to hand when hovering over QR code
 
             // Setup hover effects
             SetupHoverEffects();
@@ -274,6 +277,29 @@ namespace ITP104_FINAL_PROJECT
                     {
                         // No photo in database, use default avatar
                         picProfilePhoto.Image = Properties.Resources.default_avatar;
+                    }
+
+                    // Generate and display QR code
+                    if (!string.IsNullOrEmpty(student.QRCodeData))
+                    {
+                        try
+                        {
+                            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(student.QRCodeData, QRCodeGenerator.ECCLevel.Q);
+                            QRCode qrCode = new QRCode(qrCodeData);
+                            Bitmap qrCodeImage = qrCode.GetGraphic(10);
+                            picQRCode.Image = qrCodeImage;
+                        }
+                        catch
+                        {
+                            // If QR code generation fails, clear the picture box
+                            picQRCode.Image = null;
+                        }
+                    }
+                    else
+                    {
+                        // No QR code data available
+                        picQRCode.Image = null;
                     }
 
                     // Force all labels to update immediately
@@ -858,6 +884,41 @@ namespace ITP104_FINAL_PROJECT
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
+            }
+        }
+
+        private void PicQRCode_Click(object sender, EventArgs e)
+        {
+            // Check if QR code image exists
+            if (picQRCode.Image == null)
+            {
+                MessageBox.Show("No QR code available to download.", "No QR Code", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Create SaveFileDialog
+                SaveFileDialog saveDialog = new SaveFileDialog
+                {
+                    Filter = "PNG Image|*.png|JPEG Image|*.jpg|Bitmap Image|*.bmp",
+                    Title = "Save QR Code",
+                    FileName = $"QRCode_{lblStudentIDValue.Text}_{DateTime.Now:yyyyMMdd_HHmmss}"
+                };
+
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Save the QR code image
+                    Bitmap qrImage = (Bitmap)picQRCode.Image;
+                    qrImage.Save(saveDialog.FileName);
+
+                    MessageBox.Show($"QR Code saved successfully:\n{saveDialog.FileName}",
+                        "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving QR code: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

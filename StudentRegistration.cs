@@ -116,8 +116,8 @@ namespace ITP104_FINAL_PROJECT
 
             try
             {
-                // Generate QR code data with student number
-                string qrData = $"STUDENT-{txtStudentID.Text}";
+                // Generate QR code data with student number and name
+                string qrData = $"STUDENT-{txtStudentID.Text.Trim()}|NAME-{txtName.Text.Trim()}";
 
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);
@@ -162,6 +162,7 @@ namespace ITP104_FINAL_PROJECT
                 if (result.Success)
                 {
                     btnSaveDownload.Enabled = true;
+                    btnGenerateQR.Enabled = false;
 
                     MessageBox.Show($"QR Code generated and student registered successfully!\nStudent ID: {result.StudentId}\n\n" +
                         "You can now download the QR code.",
@@ -171,6 +172,7 @@ namespace ITP104_FINAL_PROJECT
                 {
                     // QR was generated but database registration failed
                     btnSaveDownload.Enabled = true;
+                    btnGenerateQR.Enabled = false;
 
                     MessageBox.Show($"QR Code generated, but registration failed: {result.Message}\n\n" +
                         "You can still download the QR code, but please register the student manually.",
@@ -218,6 +220,8 @@ namespace ITP104_FINAL_PROJECT
                     Bitmap qrImage = (Bitmap)picQRCode.Image;
                     qrImage.Save(saveDialog.FileName);
 
+                    btnSaveDownload.Enabled = false;
+
                     MessageBox.Show($"QR Code saved successfully:\n{saveDialog.FileName}",
                         "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -246,6 +250,7 @@ namespace ITP104_FINAL_PROJECT
             if (pnlDetailsCard != null) pnlDetailsCard.Visible = false;
 
             btnSaveDownload.Enabled = false;
+            btnGenerateQR.Enabled = true;
 
             txtStudentID.Focus();
         }
