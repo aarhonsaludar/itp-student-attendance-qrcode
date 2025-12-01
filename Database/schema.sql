@@ -100,25 +100,6 @@ CREATE TABLE scan_history (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
--- Table: tokens (QR Code Token Management)
--- ============================================
-CREATE TABLE tokens (
-    token_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
-    token_type ENUM('QR') DEFAULT 'QR',
-    token_value TEXT NOT NULL,
-    issue_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expiry_date DATE NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    revocation_reason TEXT NULL,
-    revoked_at TIMESTAMP NULL,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
-    INDEX idx_token_value (token_value(255)),
-    INDEX idx_student_token (student_id),
-    INDEX idx_active_tokens (is_active, expiry_date)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ============================================
 -- Table: system_settings (Configuration)
 -- ============================================
 CREATE TABLE system_settings (
@@ -204,219 +185,12 @@ INSERT INTO scan_history (student_id, device_id, scan_type, scan_data, scan_date
 (5, 1, 'QR', 'ID:2024-STU-0005|Name:David K. Wilson|Email:david.wilson@school.edu|Course:Computer Engineering|Year:3', DATE_SUB(NOW(), INTERVAL 25 MINUTE), 'Pamantasan ng Cabuyao Building', 'success');
 
 -- ============================================
--- Stored Procedures (QR Code Focused)
+-- Stored Procedures (Active Procedures Only)
 -- ============================================
+-- Note: sp_record_attendance_scan_secure is created in migration_004
+-- Note: Other procedures are handled via direct SQL queries in C# code
 
 DELIMITER //
-
--- Procedure: Register New Student
-CREATE PROCEDURE sp_register_student(
-    IN p_student_number VARCHAR(50),
-    IN p_first_name VARCHAR(50),
-    IN p_middle_name VARCHAR(50),
-    IN p_last_name VARCHAR(50),
-    IN p_email VARCHAR(100),
-    IN p_phone VARCHAR(20),
-    IN p_year_level VARCHAR(10),
-    IN p_program VARCHAR(100),
-    IN p_section VARCHAR(50),
-    IN p_home_address VARCHAR(255),
-    IN p_qr_code_data TEXT,
-    IN p_enrollment_date DATE,
-    OUT p_student_id INT,
-    OUT p_result VARCHAR(100)
-)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SET p_student_id = -1;
-        SET p_result = 'ERROR: Database error occurred';
-    END;
-    
-    -- Check for duplicate student number
-    IF EXISTS (SELECT 1 FROM students WHERE student_number = p_student_number) THEN
-        SET p_student_id = -1;
-        SET p_result = 'ERROR: Student number already exists';
-    ELSEIF EXISTS (SELECT 1 FROM students WHERE email = p_email) THEN
-        SET p_student_id = -1;
-        SET p_result = 'ERROR: Email already exists';
-    ELSE
-        START TRANSACTION;
-        
-        INSERT INTO students (
-            student_number, first_name, middle_name, last_name, 
-            email, phone, year_level, program, section, home_address,
-            qr_code_data, enrollment_date
-        ) VALUES (
-            p_student_number, p_first_name, p_middle_name, p_last_name,
-            p_email, p_phone, p_year_level, p_program, p_section, p_home_address,
-            p_qr_code_data, p_enrollment_date
-        );
-        
-        SET p_student_id = LAST_INSERT_ID();
-        
-        -- Create QR token
-        INSERT INTO tokens (student_id, token_type, token_value)
-        VALUES (p_student_id, 'QR', p_qr_code_data);
-        
-        COMMIT;
-        SET p_result = 'SUCCESS';
-    END IF;
-END //
-
--- Procedure: Record Attendance with Time In/Time Out Logic
-CREATE PROCEDURE sp_record_attendance_scan(
-    IN p_scan_data TEXT,
-    IN p_device_id INT,
-    IN p_location VARCHAR(100),
-    OUT p_result VARCHAR(200),
-    OUT p_student_name VARCHAR(200),
-    OUT p_student_number VARCHAR(50),
-    OUT p_scan_type VARCHAR(20)
-)
-BEGIN
-    DECLARE v_student_id INT;
-    DECLARE v_student_first VARCHAR(50);
-    DECLARE v_student_last VARCHAR(50);
-    DECLARE v_student_num VARCHAR(50);
-    DECLARE v_student_status VARCHAR(20);
-    DECLARE v_today_start DATETIME;
-    DECLARE v_today_end DATETIME;
-    DECLARE v_existing_scan_id INT;
-    DECLARE v_time_in DATETIME;
-    DECLARE v_time_out DATETIME;
-    DECLARE v_recent_scan DATETIME;
-    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SET p_result = 'ERROR: Database error occurred';
-        SET p_student_name = NULL;
-        SET p_student_number = NULL;
-        SET p_scan_type = 'ERROR';
-        ROLLBACK;
-    END;
-    
-    START TRANSACTION;
-    
-    -- Set today's date range
-    SET v_today_start = DATE(NOW());
-    SET v_today_end = DATE_ADD(v_today_start, INTERVAL 1 DAY);
-    
-    -- Find student by QR code data
-    SELECT student_id, first_name, last_name, student_number, status
-    INTO v_student_id, v_student_first, v_student_last, v_student_num, v_student_status
-    FROM students
-    WHERE qr_code_data = p_scan_data
-    LIMIT 1;
-    
-    -- Check if student exists
-    IF v_student_id IS NULL THEN
-        SET p_result = 'ERROR: Student not found';
-        SET p_student_name = NULL;
-        SET p_student_number = NULL;
-        SET p_scan_type = 'ERROR';
-        ROLLBACK;
-    -- Check if student is active
-    ELSEIF v_student_status != 'Active' THEN
-        SET p_result = CONCAT('ERROR: Student is ', v_student_status);
-        SET p_student_name = CONCAT(v_student_first, ' ', v_student_last);
-        SET p_student_number = v_student_num;
-        SET p_scan_type = 'ERROR';
-        ROLLBACK;
-    ELSE
-        SET p_student_name = CONCAT(v_student_first, ' ', v_student_last);
-        SET p_student_number = v_student_num;
-        
-        -- Check for duplicate scan within last 10 seconds (prevent double-scanning)
-        SELECT scan_datetime INTO v_recent_scan
-        FROM scan_history
-        WHERE student_id = v_student_id
-          AND scan_datetime > DATE_SUB(NOW(), INTERVAL 10 SECOND)
-        ORDER BY scan_datetime DESC
-        LIMIT 1;
-        
-        IF v_recent_scan IS NOT NULL THEN
-            SET p_result = 'ERROR: Please wait before scanning again (10 second cooldown)';
-            SET p_scan_type = 'DUPLICATE';
-            ROLLBACK;
-        ELSE
-            -- Check for existing Time In/Time Out for today
-            SELECT scan_id, scan_datetime, time_out
-            INTO v_existing_scan_id, v_time_in, v_time_out
-            FROM scan_history
-            WHERE student_id = v_student_id
-              AND scan_datetime >= v_today_start
-              AND scan_datetime < v_today_end
-              AND status = 'success'
-            ORDER BY scan_datetime DESC
-            LIMIT 1;
-            
-            -- CASE 1: No record for today - Record TIME IN
-            IF v_existing_scan_id IS NULL THEN
-                INSERT INTO scan_history (
-                    student_id, device_id, scan_type, scan_data, 
-                    scan_datetime, time_out, location, status, scan_purpose
-                ) VALUES (
-                    v_student_id, p_device_id, 'QR', p_scan_data,
-                    NOW(), NULL, p_location, 'success', 'attendance'
-                );
-                
-                SET p_result = CONCAT('SUCCESS: Time In recorded at ', DATE_FORMAT(NOW(), '%h:%i %p'));
-                SET p_scan_type = 'TIME_IN';
-                COMMIT;
-                
-            -- CASE 2: Time In exists, but no Time Out - Record TIME OUT
-            ELSEIF v_time_out IS NULL THEN
-                UPDATE scan_history
-                SET time_out = NOW()
-                WHERE scan_id = v_existing_scan_id;
-                
-                SET p_result = CONCAT('SUCCESS: Time Out recorded at ', DATE_FORMAT(NOW(), '%h:%i %p'));
-                SET p_scan_type = 'TIME_OUT';
-                COMMIT;
-                
-            -- CASE 3: Both Time In and Time Out exist - REJECT
-            ELSE
-                SET p_result = CONCAT('ERROR: Attendance already completed for today (Time In: ', 
-                                     DATE_FORMAT(v_time_in, '%h:%i %p'), 
-                                     ', Time Out: ', 
-                                     DATE_FORMAT(v_time_out, '%h:%i %p'), ')');
-                SET p_scan_type = 'COMPLETED';
-                ROLLBACK;
-            END IF;
-        END IF;
-    END IF;
-END //
-
--- Procedure: Get Scan History with Filters
-CREATE PROCEDURE sp_get_scan_history(
-    IN p_start_date DATE,
-    IN p_end_date DATE,
-    IN p_student_id INT,
-    IN p_limit INT,
-    IN p_offset INT
-)
-BEGIN
-    SELECT 
-        sh.scan_id,
-        s.student_number,
-        CONCAT(s.first_name, ' ', s.last_name) AS student_name,
-        sh.scan_type,
-        sh.scan_datetime,
-        sh.time_out,
-        sh.location,
-        sh.status,
-        d.device_name
-    FROM scan_history sh
-    JOIN students s ON sh.student_id = s.student_id
-    LEFT JOIN devices d ON sh.device_id = d.device_id
-    WHERE (p_start_date IS NULL OR DATE(sh.scan_datetime) >= p_start_date)
-      AND (p_end_date IS NULL OR DATE(sh.scan_datetime) <= p_end_date)
-      AND (p_student_id IS NULL OR sh.student_id = p_student_id)
-    ORDER BY sh.scan_datetime DESC
-    LIMIT p_limit OFFSET p_offset;
-END //
 
 -- Procedure: Get Daily Summary Statistics
 CREATE PROCEDURE sp_get_daily_summary(
@@ -437,63 +211,13 @@ BEGIN
     WHERE DATE(scan_datetime) = v_target_date;
 END //
 
--- Procedure: Get Student by QR Code
-CREATE PROCEDURE sp_get_student_by_qrcode(
-    IN p_qr_code TEXT,
-    OUT p_student_id INT,
-    OUT p_student_number VARCHAR(50),
-    OUT p_full_name VARCHAR(200),
-    OUT p_email VARCHAR(100),
-    OUT p_program VARCHAR(100),
-    OUT p_year_level VARCHAR(10),
-    OUT p_status VARCHAR(20)
-)
-BEGIN
-    SELECT 
-        student_id,
-        student_number,
-        CONCAT(first_name, ' ', IFNULL(middle_name, ''), ' ', last_name),
-        email,
-        program,
-        year_level,
-        status
-    INTO 
-        p_student_id,
-        p_student_number,
-        p_full_name,
-        p_email,
-        p_program,
-        p_year_level,
-        p_status
-    FROM students
-    WHERE qr_code_data = p_qr_code
-    LIMIT 1;
-END //
-
 DELIMITER ;
 
 -- ============================================
--- Views for Reporting
+-- Views for Reporting (Active Views Only)
 -- ============================================
-
--- View: Active Students with QR Codes
-CREATE VIEW vw_active_students AS
-SELECT 
-    s.student_id,
-    s.student_number,
-    CONCAT(s.first_name, ' ', IFNULL(s.middle_name, ''), ' ', s.last_name) AS full_name,
-    s.email,
-    s.phone,
-    s.year_level,
-    s.program,
-    s.section,
-    s.status,
-    s.enrollment_date,
-    COUNT(t.token_id) AS active_tokens
-FROM students s
-LEFT JOIN tokens t ON s.student_id = t.student_id AND t.is_active = TRUE
-WHERE s.status = 'Active'
-GROUP BY s.student_id;
+-- Note: Additional views (vw_scans_pending_review, vw_daily_offline_scans)
+--       are created in migration_004 for offline mode support
 
 -- View: Recent Scans (Last 24 Hours)
 CREATE VIEW vw_recent_scans AS
@@ -524,6 +248,7 @@ FROM scan_history sh
 JOIN students s ON sh.student_id = s.student_id
 LEFT JOIN devices d ON sh.device_id = d.device_id
 WHERE sh.scan_datetime >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+    AND sh.status != 'for_review'
 ORDER BY sh.scan_datetime DESC;
 
 -- View: Student Scan Statistics
@@ -542,21 +267,6 @@ FROM students s
 LEFT JOIN scan_history sh ON s.student_id = sh.student_id
 WHERE s.status = 'Active'
 GROUP BY s.student_id;
-
--- View: Device Usage Statistics
-CREATE VIEW vw_device_stats AS
-SELECT 
-    d.device_id,
-    d.device_name,
-    d.device_type,
-    d.location,
-    d.status,
-    COUNT(sh.scan_id) AS total_scans,
-    MAX(sh.scan_datetime) AS last_scan,
-    SUM(CASE WHEN DATE(sh.scan_datetime) = CURDATE() THEN 1 ELSE 0 END) AS scans_today
-FROM devices d
-LEFT JOIN scan_history sh ON d.device_id = sh.device_id
-GROUP BY d.device_id;
 
 -- ============================================
 -- Triggers for Audit Trail
@@ -620,11 +330,12 @@ CREATE INDEX idx_scan_student_date ON scan_history(student_id, scan_datetime, st
 -- ============================================
 
 SELECT 
-    'Database schema created successfully - QR Code Only System' AS message,
+    'Database schema created successfully - Clean and optimized for deployment' AS message,
     DATABASE() AS current_database,
     (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE()) AS total_tables,
     (SELECT COUNT(*) FROM information_schema.routines WHERE routine_schema = DATABASE()) AS total_procedures,
-    (SELECT COUNT(*) FROM information_schema.views WHERE table_schema = DATABASE()) AS total_views;
+    (SELECT COUNT(*) FROM information_schema.views WHERE table_schema = DATABASE()) AS total_views,
+    'Note: Run migration_004 after this schema for time validation support' AS migration_note;
 
 -- ============================================
 -- End of Schema - Ready for MySqlConnector

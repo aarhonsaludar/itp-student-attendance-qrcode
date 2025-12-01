@@ -1139,11 +1139,14 @@ namespace ITP104_FINAL_PROJECT
             NavigateToPage(3); // Index 3 = Student Records
         }
 
-        private void BtnReports_Click(object sender, EventArgs e)
+        private async void BtnReports_Click(object sender, EventArgs e)
         {
             // Open ScanHistoryScreen
             ScanHistoryScreen historyScreen = new ScanHistoryScreen();
             historyScreen.ShowDialog();
+
+            // Refresh dashboard after closing in case reviews were processed
+            await LoadRecentScansAsync();
         }
 
         private void BtnLogout_Click(object sender, EventArgs e)
@@ -1301,14 +1304,14 @@ namespace ITP104_FINAL_PROJECT
             // Handled by lambda in SetupEventHandlers
         }
 
-        private void btnNavReports_Click(object sender, EventArgs e)
+        private async void btnNavReports_Click(object sender, EventArgs e)
         {
             // Open Scan History Screen
             ScanHistoryScreen historyScreen = new ScanHistoryScreen();
-            historyScreen.Show();
+            historyScreen.ShowDialog();
 
-            // Refresh data
-            historyScreen.RefreshData();
+            // Refresh dashboard after closing in case reviews were processed
+            await LoadRecentScansAsync();
         }
 
         private void btnNavSettings_Click(object sender, EventArgs e)

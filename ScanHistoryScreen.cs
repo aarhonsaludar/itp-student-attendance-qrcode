@@ -17,7 +17,7 @@ namespace ITP104_FINAL_PROJECT
         private int itemsPerPage = 50; // Increased for better display
         private int totalRecords = 0;
         private readonly ScanHistoryRepository scanHistoryRepository;
-        
+
         // Optional: Timer for real-time date updates
         private Timer realTimeDateTimer;
         private List<ScanHistory> currentPagedData;
@@ -72,7 +72,7 @@ namespace ITP104_FINAL_PROJECT
             dtpDateTo.Visible = false;
             lblDateTo.Visible = false;
             cmbScanType.Visible = false;
-            
+
             // Add static label for Scan Type
             Label lblQrCodeStatic = new Label();
             lblQrCodeStatic.Text = "QR Code";
@@ -93,7 +93,7 @@ namespace ITP104_FINAL_PROJECT
             // to avoid excessive database calls if the Date part hasn't changed.
             if (dtpDateFrom.Value.Date != DateTime.Now.Date)
             {
-                 dtpDateFrom.Value = DateTime.Now;
+                dtpDateFrom.Value = DateTime.Now;
             }
         }
 
@@ -406,7 +406,7 @@ namespace ITP104_FINAL_PROJECT
             btnNextPage.Enabled = currentPage < totalPages;
         }
 
-        private void DgvScanHistory_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void DgvScanHistory_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == dgvScanHistory.Columns["Action"].Index)
             {
@@ -414,11 +414,17 @@ namespace ITP104_FINAL_PROJECT
                 if (currentPagedData != null && e.RowIndex < currentPagedData.Count)
                 {
                     var selectedScan = currentPagedData[e.RowIndex];
-                    
+
                     // Open details dialog
                     using (var detailsDialog = new ScanDetailsDialog(selectedScan))
                     {
                         detailsDialog.ShowDialog(this);
+
+                        // Automatically refresh the grid if Accept or Decline was clicked
+                        if (detailsDialog.ReviewActionTaken)
+                        {
+                            await LoadScanHistoryAsync();
+                        }
                     }
                 }
             }
@@ -620,7 +626,7 @@ namespace ITP104_FINAL_PROJECT
                 animationTimer.Stop();
                 animationTimer.Dispose();
             }
-            
+
             if (realTimeDateTimer != null)
             {
                 realTimeDateTimer.Stop();

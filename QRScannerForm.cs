@@ -9,6 +9,7 @@ using AForge.Video.DirectShow;
 using ZXing;
 using ITP104_FINAL_PROJECT.Data;
 using ITP104_FINAL_PROJECT.Models;
+using ITP104_FINAL_PROJECT.Services;
 
 namespace ITP104_FINAL_PROJECT
 {
@@ -294,14 +295,169 @@ namespace ITP104_FINAL_PROJECT
                 // Update UI to show processing
                 UpdateUI(() =>
                 {
-                    lblStatus.Text = "Status: Processing scan...";
+                    lblStatus.Text = "Status: Verifying student...";
                     lblStatus.ForeColor = Color.Orange;
                 });
 
                 // ===================================================
-                // CRITICAL: Record attendance with database timestamp
+                // STEP 1: Get student information from QR code
+                // ===================================================
+                var student = await studentRepository.GetByQRCodeAsync(qrData);
+                
+                if (student == null)
+                {
+                    UpdateUI(() =>
+                    {
+                        lblResult.Text = "Student not found";
+                        lblResult.ForeColor = Color.Red;
+                        lblStatus.Text = "✗ Scan failed";
+                        lblStatus.ForeColor = Color.Red;
+                    });
+                    SystemSounds.Hand.Play();
+                    isProcessingScan = false;
+                    return;
+                }
+
+                // ===================================================
+                // STEP 2: Determine attendance type (Time In or Time Out)
+                // ===================================================
+                var attendanceType = await DetermineAttendanceTypeAsync(student.StudentId);
+
+                // ===================================================
+                // STEP 3: Try to send OTP via email (skip if offline)
+                // ===================================================
+                OTPSession otpSession = null;
+                bool isOfflineMode = false;
+                
+                try
+                {
+                    UpdateUI(() =>
+                    {
+                        lblStatus.Text = "Status: Sending OTP to email...";
+                        lblStatus.ForeColor = Color.Blue;
+                    });
+
+                    otpSession = await OTPService.InitiateAttendanceAsync(student, attendanceType, qrData);
+                }
+                catch (Exception ex)
+                {
+                    // Check if it's a network/connection error (offline mode)
+                    bool isNetworkError = ex.Message.Contains("No such host is known") ||
+                                         ex.Message.Contains("Unable to connect") ||
+                                         ex.Message.Contains("network") ||
+                                         ex.Message.Contains("connection") ||
+                                         ex.GetType().Name.Contains("Socket") ||
+                                         ex.GetType().Name.Contains("Http");
+
+                    if (isNetworkError)
+                    {
+                        // OFFLINE MODE: Skip OTP verification
+                        isOfflineMode = true;
+                        
+                        DialogResult offlineResult = DialogResult.No;
+                        
+                        UpdateUI(() =>
+                        {
+                            offlineResult = MessageBox.Show(
+                                $"⚠️ OFFLINE MODE DETECTED\n\n" +
+                                $"Cannot send OTP email - No internet connection.\n\n" +
+                                $"Do you want to record attendance in OFFLINE MODE?\n\n" +
+                                $"Note: This attendance will be flagged for manual review.",
+                                "Offline Mode - Skip OTP Verification",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Warning
+                            );
+                        });
+
+                        if (offlineResult != DialogResult.Yes)
+                        {
+                            UpdateUI(() =>
+                            {
+                                lblResult.Text = "Offline attendance cancelled";
+                                lblResult.ForeColor = Color.Orange;
+                                lblStatus.Text = "⚠ Cancelled";
+                                lblStatus.ForeColor = Color.Orange;
+                            });
+                            SystemSounds.Exclamation.Play();
+                            isProcessingScan = false;
+                            return;
+                        }
+
+                        // User chose to proceed with offline mode
+                        UpdateUI(() =>
+                        {
+                            lblStatus.Text = "Status: Recording offline attendance...";
+                            lblStatus.ForeColor = Color.Orange;
+                        });
+                    }
+                    else
+                    {
+                        // Other error (not network related) - show error and exit
+                        UpdateUI(() =>
+                        {
+                            MessageBox.Show(
+                                $"Failed to send OTP:\n\n{ex.Message}\n\nPlease ensure the student has a valid email address registered.",
+                                "OTP Send Failed",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                            );
+                            lblResult.Text = "Failed to send OTP";
+                            lblResult.ForeColor = Color.Red;
+                            lblStatus.Text = "✗ OTP send failed";
+                            lblStatus.ForeColor = Color.Red;
+                        });
+                        SystemSounds.Hand.Play();
+                        isProcessingScan = false;
+                        return;
+                    }
+                }
+
+                // ===================================================
+                // STEP 4: Show OTP verification dialog (skip if offline)
+                // ===================================================
+                bool otpVerified = false;
+                
+                if (!isOfflineMode)
+                {
+                    UpdateUI(() =>
+                    {
+                        using (var otpDialog = new OTPVerificationDialog(otpSession))
+                        {
+                            var dialogResult = otpDialog.ShowDialog();
+                            otpVerified = (dialogResult == DialogResult.OK && otpDialog.IsVerified);
+                        }
+                    });
+
+                    if (!otpVerified)
+                    {
+                        UpdateUI(() =>
+                        {
+                            lblResult.Text = "OTP verification cancelled";
+                            lblResult.ForeColor = Color.Orange;
+                            lblStatus.Text = "⚠ Verification cancelled";
+                            lblStatus.ForeColor = Color.Orange;
+                        });
+                        SystemSounds.Exclamation.Play();
+                        isProcessingScan = false;
+                        return;
+                    }
+                }
+                else
+                {
+                    // Offline mode - OTP verification skipped
+                    otpVerified = true; // Allow attendance recording
+                }
+
+                // ===================================================
+                // STEP 5: OTP verified - Record attendance with database timestamp
                 // Client does NOT send any time - database generates it
                 // ===================================================
+                UpdateUI(() =>
+                {
+                    lblStatus.Text = "Status: Recording attendance...";
+                    lblStatus.ForeColor = Color.Blue;
+                });
+
                 var (success, message, scanType, timestamp, timeIn, timeOut) = await scanHistoryRepository.RecordAttendanceScanAsync(
                     qrData: qrData,
                     deviceId: DEFAULT_DEVICE_ID,
@@ -411,6 +567,24 @@ namespace ITP104_FINAL_PROJECT
                     resultColor = Color.Orange;
                     statusText = "⚠ Duplicate scan detected";
                 }
+                else if (scanType == "FOR_REVIEW")
+                {
+                    // Offline mode - Scan recorded but requires manual review
+                    resultColor = Color.Orange;
+                    statusText = "⚠ For Review - Offline Mode";
+                    playCustomBeep = true; // Play success sound since attendance was recorded
+
+                    // Show offline mode dialog
+                    UpdateUI(() =>
+                    {
+                        MessageBox.Show(
+                            message,
+                            "⚠ For Review - Offline Attendance",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                    });
+                }
                 else
                 {
                     // Error (student not found, inactive, or other error)
@@ -437,6 +611,10 @@ namespace ITP104_FINAL_PROJECT
                 {
                     // Warning sound for already completed or duplicate
                     SystemSounds.Exclamation.Play();
+                }
+                else if (scanType == "FOR_REVIEW")
+                {
+                    // Success sound already played above for FOR_REVIEW
                 }
                 else
                 {
@@ -528,6 +706,32 @@ namespace ITP104_FINAL_PROJECT
         private void btnExit_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// Determines whether the next scan should be Time In or Time Out
+        /// </summary>
+        private async Task<AttendanceType> DetermineAttendanceTypeAsync(int studentId)
+        {
+            try
+            {
+                // Check if student has an active Time In without Time Out for today
+                var hasActiveTimeIn = await scanHistoryRepository.HasActiveTodayTimeInAsync(studentId);
+                
+                if (hasActiveTimeIn)
+                {
+                    return AttendanceType.TimeOut;
+                }
+                else
+                {
+                    return AttendanceType.TimeIn;
+                }
+            }
+            catch
+            {
+                // Default to Time In if unable to determine
+                return AttendanceType.TimeIn;
+            }
         }
     }
 }

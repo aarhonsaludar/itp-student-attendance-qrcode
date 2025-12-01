@@ -25,11 +25,11 @@ namespace ITP104_FINAL_PROJECT.Data
             {
                 // ===================================================
                 // STEP 1: Validate client time against server time
-                // BLOCK recording if time tampering is detected
+                // Allow offline mode but flag for review
                 // ===================================================
                 var timeValidation = await TimeValidationService.ValidateClientTimeAsync();
 
-                if (!timeValidation.IsValid)
+                if (!timeValidation.IsValid && timeValidation.ValidationStatus != TimeValidationStatus.OfflineMode)
                 {
                     // Time tampering detected - BLOCK attendance recording
                     await ErrorLoggingService.LogWarningAsync(
@@ -45,6 +45,18 @@ namespace ITP104_FINAL_PROJECT.Data
                         $"⚠️ TIME TAMPERING DETECTED\n\n{timeValidation.ErrorMessage}\n\nAttendance recording is BLOCKED for security.",
                         "TIME_TAMPERED",
                         null, null, null);
+                }
+
+                // Log offline mode scans
+                if (timeValidation.RequiresManualReview)
+                {
+                    await ErrorLoggingService.LogWarningAsync(
+                        "⚠️ OFFLINE ATTENDANCE - Flagged for Review",
+                        $"Client Time: {timeValidation.ClientTime:yyyy-MM-dd HH:mm:ss}\n" +
+                        $"Validation Status: {timeValidation.ValidationStatus}\n" +
+                        $"QR Data: {qrData}\n" +
+                        $"This attendance will be flagged for manual review.",
+                        "offline_attendance");
                 }
 
                 // Validate input
@@ -67,11 +79,21 @@ namespace ITP104_FINAL_PROJECT.Data
 
                         // ===================================================
                         // INPUT PARAMETERS
-                        // Note: NO timestamp parameter - client cannot influence time
+                        // Include validation parameters for tracking
                         // ===================================================
                         command.Parameters.AddWithValue("@p_scan_data", qrData);
                         command.Parameters.AddWithValue("@p_device_id", deviceId);
                         command.Parameters.AddWithValue("@p_location", location ?? (object)DBNull.Value);
+
+                        // Add validation tracking parameters
+                        command.Parameters.AddWithValue("@p_validation_status",
+                            timeValidation.ValidationStatus == TimeValidationStatus.OfflineMode ? "offline_mode" : "verified");
+                        command.Parameters.AddWithValue("@p_requires_review", timeValidation.RequiresManualReview);
+                        command.Parameters.AddWithValue("@p_client_time", timeValidation.ClientTime);
+                        command.Parameters.AddWithValue("@p_server_time",
+                            timeValidation.ServerTime.HasValue ? (object)timeValidation.ServerTime.Value : DBNull.Value);
+                        command.Parameters.AddWithValue("@p_time_drift_seconds",
+                            timeValidation.ServerTime.HasValue ? (int)timeValidation.TimeDrift.TotalSeconds : (object)DBNull.Value);
 
                         // ===================================================
                         // OUTPUT PARAMETERS
@@ -533,6 +555,14 @@ namespace ITP104_FINAL_PROJECT.Data
             int programOrdinal = TryGetOrdinal("program");
             int deviceNameOrdinal = TryGetOrdinal("device_name");
 
+            // Additional columns from migrations
+            int validationStatusOrdinal = TryGetOrdinal("validation_status");
+            int requiresReviewOrdinal = TryGetOrdinal("requires_review");
+            int clientTimeOrdinal = TryGetOrdinal("client_time");
+            int serverTimeOrdinal = TryGetOrdinal("server_time");
+            int timeDriftSecondsOrdinal = TryGetOrdinal("time_drift_seconds");
+            int reviewStatusOrdinal = TryGetOrdinal("review_status");
+
             // Determine scan datetime - try scan_datetime first, then time_in
             DateTime scanDateTime;
             if (scanDatetimeOrdinal >= 0 && !reader.IsDBNull(scanDatetimeOrdinal))
@@ -562,11 +592,144 @@ namespace ITP104_FINAL_PROJECT.Data
                 Status = GetStringValue(statusOrdinal) ?? "unknown",
                 Notes = GetStringValue(notesOrdinal),
                 CreatedAt = GetDateTimeValue(createdAtOrdinal),
+                RequiresReview = requiresReviewOrdinal >= 0 && !reader.IsDBNull(requiresReviewOrdinal)
+                    ? reader.GetBoolean(requiresReviewOrdinal)
+                    : (GetStringValue(statusOrdinal)?.ToLower().Contains("review") ?? false),
                 StudentNumber = GetStringValue(studentNumberOrdinal),
                 StudentName = GetStringValue(studentNameOrdinal),
                 Program = GetStringValue(programOrdinal),
-                DeviceName = GetStringValue(deviceNameOrdinal)
+                DeviceName = GetStringValue(deviceNameOrdinal),
+
+                // Additional migration columns
+                ValidationStatus = GetStringValue(validationStatusOrdinal),
+                ClientTime = clientTimeOrdinal >= 0 && !reader.IsDBNull(clientTimeOrdinal) ? (DateTime?)reader.GetDateTime(clientTimeOrdinal) : null,
+                ServerTime = serverTimeOrdinal >= 0 && !reader.IsDBNull(serverTimeOrdinal) ? (DateTime?)reader.GetDateTime(serverTimeOrdinal) : null,
+                TimeDriftSeconds = timeDriftSecondsOrdinal >= 0 && !reader.IsDBNull(timeDriftSecondsOrdinal) ? (int?)reader.GetInt32(timeDriftSecondsOrdinal) : null,
+                ReviewStatus = GetStringValue(reviewStatusOrdinal)
             };
+        }
+
+        /// <summary>
+        /// Approve a scan that requires manual review (offline scans)
+        /// Updates the status from 'for_review' to 'success'
+        /// </summary>
+        public async Task<bool> ApproveScanAsync(int scanId)
+        {
+            try
+            {
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
+                {
+                    string query = @"
+                        UPDATE scan_history 
+                        SET status = 'success',
+                            notes = CONCAT(COALESCE(notes, ''), '\nApproved by admin on ', NOW())
+                        WHERE scan_id = @scanId 
+                        AND status = 'for_review'";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@scanId", scanId);
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                        {
+                            await ErrorLoggingService.LogInfoAsync(
+                                "Scan Approved",
+                                $"Scan ID {scanId} approved - status changed from 'for_review' to 'success'",
+                                "scan_review");
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Approve Scan Failed",
+                    ex,
+                    "scan_review");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Decline a scan that requires manual review (offline scans)
+        /// Updates the status from 'for_review' to 'failed'
+        /// </summary>
+        public async Task<bool> DeclineScanAsync(int scanId)
+        {
+            try
+            {
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
+                {
+                    string query = @"
+                        UPDATE scan_history 
+                        SET status = 'failed',
+                            notes = CONCAT(COALESCE(notes, ''), '\nDeclined by admin on ', NOW())
+                        WHERE scan_id = @scanId 
+                        AND status = 'for_review'";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@scanId", scanId);
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                        {
+                            await ErrorLoggingService.LogInfoAsync(
+                                "Scan Declined",
+                                $"Scan ID {scanId} declined - status changed from 'for_review' to 'failed'",
+                                "scan_review");
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Decline Scan Failed",
+                    ex,
+                    "scan_review");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if student has an active Time In for today without Time Out
+        /// </summary>
+        public async Task<bool> HasActiveTodayTimeInAsync(int studentId)
+        {
+            try
+            {
+                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
+                {
+                    string query = @"
+                        SELECT COUNT(*) 
+                        FROM scan_history 
+                        WHERE student_id = @studentId 
+                        AND DATE(scan_datetime) = CURDATE()
+                        AND time_out IS NULL
+                        AND status != 'failed'";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@studentId", studentId);
+                        var result = await command.ExecuteScalarAsync();
+                        return Convert.ToInt32(result) > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await ErrorLoggingService.LogErrorAsync(
+                    "Check Active Time In Failed",
+                    ex,
+                    "scan_history");
+                return false;
+            }
         }
     }
 }

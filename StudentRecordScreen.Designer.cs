@@ -187,8 +187,8 @@
             // 
             this.dgvScanHistory.AllowUserToAddRows = false;
             this.dgvScanHistory.AllowUserToDeleteRows = false;
-            this.dgvScanHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.dgvScanHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvScanHistory.BackgroundColor = System.Drawing.Color.White;
             this.dgvScanHistory.BorderStyle = System.Windows.Forms.BorderStyle.None;

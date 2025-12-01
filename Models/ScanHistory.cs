@@ -16,6 +16,14 @@ namespace ITP104_FINAL_PROJECT.Models
         public string Status { get; set; }
         public string Notes { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool RequiresReview { get; set; }
+
+        // Additional timestamp validation fields
+        public string ValidationStatus { get; set; }
+        public DateTime? ClientTime { get; set; }
+        public DateTime? ServerTime { get; set; }
+        public int? TimeDriftSeconds { get; set; }
+        public string ReviewStatus { get; set; }
 
         // Navigation properties
         public string StudentNumber { get; set; }

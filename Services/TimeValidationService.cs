@@ -14,10 +14,11 @@ namespace ITP104_FINAL_PROJECT.Services
     public static class TimeValidationService
     {
         /// <summary>
-        /// Maximum allowed time drift between client and server (2 minutes)
+        /// Maximum allowed time drift between client and server (5 minutes)
         /// If drift exceeds this, time tampering is suspected
+        /// Increased to 5 minutes to account for network delays and normal clock drift
         /// </summary>
-        private static readonly TimeSpan MaxAllowedTimeDrift = TimeSpan.FromMinutes(2);
+        private static readonly TimeSpan MaxAllowedTimeDrift = TimeSpan.FromMinutes(5);
 
         /// <summary>
         /// Validate that client system time is synchronized with internet time sources
@@ -36,14 +37,24 @@ namespace ITP104_FINAL_PROJECT.Services
 
                 if (!serverTime.HasValue)
                 {
+                    // HYBRID MODE: Allow offline attendance but flag for manual review
+                    await ErrorLoggingService.LogWarningAsync(
+                        "⚠️ OFFLINE ATTENDANCE - REQUIRES REVIEW",
+                        $"Client Time: {clientTime:yyyy-MM-dd HH:mm:ss}\n" +
+                        $"No internet connection - unable to validate time\n" +
+                        $"Source: All internet time sources unavailable (Google, TimeAPI, Microsoft)\n" +
+                        $"⚠️ THIS ATTENDANCE WILL BE FLAGGED FOR MANUAL REVIEW",
+                        "offline_attendance");
+
                     return new TimeValidationResult
                     {
-                        IsValid = false,
+                        IsValid = true, // Allow attendance
                         ClientTime = clientTime,
                         ServerTime = null,
                         TimeDrift = TimeSpan.Zero,
-                        ErrorMessage = "Unable to retrieve internet time from trusted sources (Google, TimeAPI, Microsoft)",
-                        ValidationStatus = TimeValidationStatus.NetworkError
+                        ErrorMessage = "⚠️ Offline Mode - No internet connection available.\n\nAttendance recorded using device time.\nThis record will be flagged for manual review.",
+                        ValidationStatus = TimeValidationStatus.OfflineMode,
+                        RequiresManualReview = true // Flag for review
                     };
                 }
 
@@ -149,21 +160,21 @@ namespace ITP104_FINAL_PROJECT.Services
         /// </summary>
         private static async Task<DateTime?> GetInternetTimeAsync()
         {
-            // Try Google first (fastest and most reliable)
-            var googleResult = await GetTimeFromHttpHeaderAsync("https://www.google.com");
-            if (googleResult.HasValue)
-            {
-                return googleResult;
-            }
-
-            // Fallback: Try TimeAPI.io
+            // Try TimeAPI.io first (returns Philippine local time directly)
             var timeApiResult = await GetTimeFromTimeAPIAsync();
             if (timeApiResult.HasValue)
             {
                 return timeApiResult;
             }
 
-            // Try Microsoft as final fallback
+            // Fallback: Try Google (returns UTC, will be converted to local)
+            var googleResult = await GetTimeFromHttpHeaderAsync("https://www.google.com");
+            if (googleResult.HasValue)
+            {
+                return googleResult;
+            }
+
+            // Try Microsoft as final fallback (returns UTC, will be converted to local)
             var microsoftResult = await GetTimeFromHttpHeaderAsync("https://www.microsoft.com");
             if (microsoftResult.HasValue)
             {
@@ -219,6 +230,7 @@ namespace ITP104_FINAL_PROJECT.Services
         /// <summary>
         /// Get time from HTTP Date header (fallback method)
         /// Uses Google.com or other reliable servers
+        /// NOTE: HTTP headers return UTC time, which is converted to local Philippine time
         /// </summary>
         private static async Task<DateTime?> GetTimeFromHttpHeaderAsync(string url)
         {
@@ -232,7 +244,10 @@ namespace ITP104_FINAL_PROJECT.Services
 
                     if (response.Headers.Date.HasValue)
                     {
-                        return response.Headers.Date.Value.DateTime;
+                        // HTTP Date header returns UTC time - convert to local Philippine time
+                        DateTime utcTime = response.Headers.Date.Value.DateTime;
+                        DateTime localTime = utcTime.ToLocalTime();
+                        return localTime;
                     }
                 }
             }
@@ -318,6 +333,12 @@ namespace ITP104_FINAL_PROJECT.Services
         /// Detailed validation status
         /// </summary>
         public TimeValidationStatus ValidationStatus { get; set; }
+
+        /// <summary>
+        /// Whether this attendance record requires manual review
+        /// Set to true for offline scans or suspicious activity
+        /// </summary>
+        public bool RequiresManualReview { get; set; }
     }
 
     /// <summary>
@@ -343,6 +364,11 @@ namespace ITP104_FINAL_PROJECT.Services
         /// <summary>
         /// Unknown error during validation
         /// </summary>
-        Unknown
+        Unknown,
+
+        /// <summary>
+        /// Offline mode - No internet connection, using device time (requires manual review)
+        /// </summary>
+        OfflineMode
     }
 }

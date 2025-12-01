@@ -59,6 +59,8 @@ namespace ITP104_FINAL_PROJECT
             this.lblLocationValue = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.btnClose = new Guna.UI2.WinForms.Guna2Button();
+            this.btnAccept = new Guna.UI2.WinForms.Guna2Button();
+            this.btnDecline = new Guna.UI2.WinForms.Guna2Button();
             this.guna2DragControl1 = new Guna.UI2.WinForms.Guna2DragControl(this.components);
             this.guna2ShadowForm1 = new Guna.UI2.WinForms.Guna2ShadowForm(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbStudentPhoto)).BeginInit();
@@ -430,6 +432,44 @@ namespace ITP104_FINAL_PROJECT
             this.btnClose.Text = "Close";
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // btnAccept
+            // 
+            this.btnAccept.BorderRadius = 5;
+            this.btnAccept.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnAccept.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnAccept.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnAccept.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnAccept.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
+            this.btnAccept.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnAccept.ForeColor = System.Drawing.Color.White;
+            this.btnAccept.Location = new System.Drawing.Point(32, 671);
+            this.btnAccept.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAccept.Name = "btnAccept";
+            this.btnAccept.Size = new System.Drawing.Size(200, 44);
+            this.btnAccept.TabIndex = 10;
+            this.btnAccept.Text = "✓ Accept";
+            this.btnAccept.Visible = false;
+            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
+            // 
+            // btnDecline
+            // 
+            this.btnDecline.BorderRadius = 5;
+            this.btnDecline.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnDecline.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnDecline.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnDecline.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnDecline.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(76)))), ((int)(((byte)(60)))));
+            this.btnDecline.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnDecline.ForeColor = System.Drawing.Color.White;
+            this.btnDecline.Location = new System.Drawing.Point(240, 671);
+            this.btnDecline.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnDecline.Name = "btnDecline";
+            this.btnDecline.Size = new System.Drawing.Size(200, 44);
+            this.btnDecline.TabIndex = 11;
+            this.btnDecline.Text = "✗ Decline";
+            this.btnDecline.Visible = false;
+            this.btnDecline.Click += new System.EventHandler(this.btnDecline_Click);
+            // 
             // guna2DragControl1
             // 
             this.guna2DragControl1.DockIndicatorTransparencyValue = 0.6D;
@@ -446,16 +486,18 @@ namespace ITP104_FINAL_PROJECT
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(667, 738);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblProgram);
-            this.Controls.Add(this.lblStudentNumber);
-            this.Controls.Add(this.lblStudentName);
             this.Controls.Add(this.pbStudentPhoto);
+            this.Controls.Add(this.lblStudentName);
+            this.Controls.Add(this.lblStudentNumber);
+            this.Controls.Add(this.lblProgram);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.btnAccept);
+            this.Controls.Add(this.btnDecline);
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ScanDetailsDialog";
             this.Text = "Scan Details";
@@ -501,6 +543,8 @@ namespace ITP104_FINAL_PROJECT
         private System.Windows.Forms.Label lblLocationValue;
         private System.Windows.Forms.Label label12;
         private Guna.UI2.WinForms.Guna2Button btnClose;
+        private Guna.UI2.WinForms.Guna2Button btnAccept;
+        private Guna.UI2.WinForms.Guna2Button btnDecline;
         private Guna.UI2.WinForms.Guna2DragControl guna2DragControl1;
         private Guna.UI2.WinForms.Guna2ShadowForm guna2ShadowForm1;
     }
