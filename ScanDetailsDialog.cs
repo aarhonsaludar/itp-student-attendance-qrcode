@@ -100,22 +100,70 @@ namespace ITP104_FINAL_PROJECT
             }
             lblStatusValue.Text = displayStatus;
 
-            // Solution 1: Validation checks
+            // ===== ENHANCED VALIDATION CHECKS (Multi-Layer Defense) =====
             var allWarnings = new System.Collections.Generic.List<string>();
 
             // Check 1: If this is a time-out record, validate against time-in
             if (_scanHistory.TimeOut.HasValue && !string.IsNullOrEmpty(_scanHistory.TimeInValidationMode))
             {
+                // Layer 1: Mode mismatch + TickCount verification
                 var (isValid, warnings) = Services.InputValidator.ValidateTimeOutAgainstTimeIn(
                     _scanHistory.ScanDateTime,
                     _scanHistory.TimeOut.Value,
                     _scanHistory.TimeInValidationMode,
-                    _scanHistory.TimeOutValidationMode
+                    _scanHistory.TimeOutValidationMode,
+                    _scanHistory.TimeInTickCount,      // NEW: Pass TickCount for tamper-proof verification
+                    _scanHistory.TimeOutTickCount      // NEW: Pass TickCount for tamper-proof verification
                 );
 
                 if (warnings.Length > 0)
                 {
                     allWarnings.AddRange(warnings);
+                }
+
+                // Layer 2: Additional TickCount-specific checks from ScanHistory model
+                if (_scanHistory.IsTimeOutTampered())
+                {
+                    double? realMinutes = _scanHistory.GetRealElapsedTimeMinutes();
+                    double claimedMinutes = (_scanHistory.TimeOut.Value - _scanHistory.ScanDateTime).TotalMinutes;
+
+                    allWarnings.Add("");
+                    allWarnings.Add("🚨🚨 ADDITIONAL TAMPERING EVIDENCE (TickCount Verification):");
+                    allWarnings.Add($"   → System clock CLAIMS: {FormatDuration(claimedMinutes)}");
+                    allWarnings.Add($"   → Tamper-proof timer PROVES: {FormatDuration(realMinutes ?? 0)}");
+                    allWarnings.Add($"   → Discrepancy: {FormatDuration(Math.Abs(claimedMinutes - (realMinutes ?? 0)))}");
+                    allWarnings.Add("   → This is STRONG PROOF of clock manipulation!");
+                }
+
+                // Layer 3: Suspicious offline behavior
+                if (_scanHistory.IsSuspiciousOfflineBehavior())
+                {
+                    allWarnings.Add("");
+                    allWarnings.Add("⚠️ SUSPICIOUS OFFLINE BEHAVIOR DETECTED:");
+
+                    if (_scanHistory.ConnectionDropCount.HasValue && _scanHistory.ConnectionDropCount > 0)
+                    {
+                        allWarnings.Add($"   → WiFi disconnected {_scanHistory.ConnectionDropCount} time(s) during session");
+                        if (_scanHistory.ConnectionDropCount >= 3)
+                        {
+                            allWarnings.Add("   → Multiple disconnections are HIGHLY SUSPICIOUS");
+                        }
+                    }
+
+                    if (_scanHistory.OfflineDurationMinutes.HasValue && _scanHistory.OfflineDurationMinutes > 60)
+                    {
+                        allWarnings.Add($"   → Offline for {_scanHistory.OfflineDurationMinutes:F0} minutes");
+                        allWarnings.Add("   → Extended offline period requires verification");
+                    }
+                }
+
+                // Layer 4: Time drift detection
+                if (_scanHistory.IsSuspiciousTimeDrift())
+                {
+                    allWarnings.Add("");
+                    allWarnings.Add("⚠️ SUSPICIOUS TIME DRIFT DETECTED:");
+                    allWarnings.Add($"   → Time drift: {_scanHistory.TimeDriftSeconds} seconds");
+                    allWarnings.Add("   → Device clock may have been adjusted");
                 }
             }
             // Check 2: If this is a time-in only (offline mode), validate the timestamp
@@ -141,20 +189,78 @@ namespace ITP104_FINAL_PROJECT
                 }
             }
 
-            // Display all warnings if any found
+            // ===== DISPLAY ALL WARNINGS WITH ENHANCED FORMATTING =====
             if (allWarnings.Count > 0)
             {
-                string warningText = "\n\n🚨 SUSPICIOUS PATTERNS DETECTED:\n" + string.Join("\n", allWarnings);
-                lblNotesValue.Text = (_scanHistory.Notes ?? "") + warningText;
+                // Count critical vs warning flags
+                int criticalCount = allWarnings.Count(w => w.Contains("🚨") || w.Contains("🔴") || w.Contains("CRITICAL"));
+                int warningCount = allWarnings.Count(w => w.Contains("🟠") || w.Contains("WARNING"));
 
-                // Change color if critical warnings detected
-                if (allWarnings.Any(w => w.Contains("CRITICAL")))
+                // Build header based on severity
+                string header = "";
+                if (criticalCount > 0)
                 {
-                    lblNotesValue.ForeColor = Color.Red;
+                    header = $"🚨🚨 CRITICAL SECURITY ALERTS ({criticalCount}) 🚨🚨";
+                }
+                else if (warningCount > 0)
+                {
+                    header = $"⚠️ SECURITY WARNINGS ({warningCount}) ⚠️";
                 }
                 else
                 {
+                    header = "ℹ️ INFORMATION NOTICES";
+                }
+
+                // Build recommendation based on flags
+                string recommendation = "";
+                if (allWarnings.Any(w => w.Contains("CONFIRMED TIME TAMPERING")))
+                {
+                    recommendation = "\n\n💡 ADMIN RECOMMENDATION:\n" +
+                                   "   ✖️ DECLINE this attendance record\n" +
+                                   "   → Strong evidence of deliberate time manipulation\n" +
+                                   "   → TickCount verification confirms tampering\n" +
+                                   "   → Request student explanation before accepting";
+                }
+                else if (allWarnings.Any(w => w.Contains("Mode mismatch") || w.Contains("ONLINE (verified) but time-out is OFFLINE")))
+                {
+                    recommendation = "\n\n💡 ADMIN RECOMMENDATION:\n" +
+                                   "   ⚠️ CAREFULLY REVIEW before accepting\n" +
+                                   "   → WiFi disconnect pattern detected\n" +
+                                   "   → Verify TickCount data matches claimed duration\n" +
+                                   "   → Ask student for valid explanation";
+                }
+                else if (criticalCount > 0)
+                {
+                    recommendation = "\n\n💡 ADMIN RECOMMENDATION:\n" +
+                                   "   ⚠️ REVIEW REQUIRED\n" +
+                                   "   → Critical issues detected\n" +
+                                   "   → Verify all details before accepting";
+                }
+
+                string warningText = $"\n\n{header}\n" +
+                                   new string('─', 60) + "\n" +
+                                   string.Join("\n", allWarnings) +
+                                   recommendation;
+
+                lblNotesValue.Text = (_scanHistory.Notes ?? "") + warningText;
+
+                // Enhanced color coding based on severity
+                if (allWarnings.Any(w => w.Contains("CONFIRMED TIME TAMPERING")))
+                {
+                    lblNotesValue.ForeColor = Color.DarkRed;
+                    lblNotesValue.BackColor = Color.MistyRose;
+                }
+                else if (allWarnings.Any(w => w.Contains("CRITICAL")))
+                {
+                    lblNotesValue.ForeColor = Color.Red;
+                }
+                else if (warningCount > 0)
+                {
                     lblNotesValue.ForeColor = Color.DarkOrange;
+                }
+                else
+                {
+                    lblNotesValue.ForeColor = Color.DarkBlue;
                 }
             }
 
@@ -336,6 +442,23 @@ namespace ITP104_FINAL_PROJECT
         private void ScanDetailsDialog_Load(object sender, EventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// Helper method to format duration in human-readable format
+        /// </summary>
+        private string FormatDuration(double minutes)
+        {
+            if (minutes < 60)
+            {
+                return $"{minutes:F0} minutes";
+            }
+            else
+            {
+                int hours = (int)(minutes / 60);
+                int mins = (int)(minutes % 60);
+                return $"{hours}h {mins}m";
+            }
         }
     }
 }

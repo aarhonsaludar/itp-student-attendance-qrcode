@@ -116,8 +116,9 @@ namespace ITP104_FINAL_PROJECT
 
             try
             {
-                // Generate QR code data with student number and name
-                string qrData = $"STUDENT-{txtStudentID.Text.Trim()}|NAME-{txtName.Text.Trim()}";
+                // Generate QR code data in the format expected by the database
+                // Format: QR|ID:{student_number}|Name:{full_name}|Program:{program}
+                string qrData = $"QR|ID:{txtStudentID.Text.Trim()}|Name:{txtName.Text.Trim()}|Program:{cmbCourse.Text}";
 
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);

@@ -303,7 +303,7 @@ namespace ITP104_FINAL_PROJECT
                 // STEP 1: Get student information from QR code
                 // ===================================================
                 var student = await studentRepository.GetByQRCodeAsync(qrData);
-                
+
                 if (student == null)
                 {
                     UpdateUI(() =>
@@ -319,16 +319,48 @@ namespace ITP104_FINAL_PROJECT
                 }
 
                 // ===================================================
-                // STEP 2: Determine attendance type (Time In or Time Out)
+                // STEP 2: CRITICAL - Validate time BEFORE OTP to prevent tampering
+                // ===================================================
+                UpdateUI(() =>
+                {
+                    lblStatus.Text = "Status: Validating time...";
+                    lblStatus.ForeColor = Color.Blue;
+                });
+
+                var timeValidation = await TimeValidationService.ValidateClientTimeAsync();
+
+                if (!timeValidation.IsValid && timeValidation.ValidationStatus != TimeValidationStatus.OfflineMode)
+                {
+                    // Time tampering detected - BLOCK everything (no OTP, no recording)
+                    UpdateUI(() =>
+                    {
+                        MessageBox.Show(
+                            $"⚠️ TIME TAMPERING DETECTED\n\n{timeValidation.ErrorMessage}\n\nAttendance recording is BLOCKED for security.\n\nYou cannot proceed with OTP verification.",
+                            "🚫 ATTENDANCE BLOCKED - Time Tampering Detected",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+                        lblResult.Text = "TIME TAMPERING DETECTED - BLOCKED";
+                        lblResult.ForeColor = Color.DarkRed;
+                        lblStatus.Text = "🚫 BLOCKED - Time Tampering";
+                        lblStatus.ForeColor = Color.DarkRed;
+                    });
+                    SystemSounds.Hand.Play();
+                    isProcessingScan = false;
+                    return;
+                }
+
+                // ===================================================
+                // STEP 3: Determine attendance type (Time In or Time Out)
                 // ===================================================
                 var attendanceType = await DetermineAttendanceTypeAsync(student.StudentId);
 
                 // ===================================================
-                // STEP 3: Try to send OTP via email (skip if offline)
+                // STEP 4: Try to send OTP via email (skip if offline)
                 // ===================================================
                 OTPSession otpSession = null;
                 bool isOfflineMode = false;
-                
+
                 try
                 {
                     UpdateUI(() =>
@@ -353,9 +385,9 @@ namespace ITP104_FINAL_PROJECT
                     {
                         // OFFLINE MODE: Skip OTP verification
                         isOfflineMode = true;
-                        
+
                         DialogResult offlineResult = DialogResult.No;
-                        
+
                         UpdateUI(() =>
                         {
                             offlineResult = MessageBox.Show(
@@ -413,10 +445,10 @@ namespace ITP104_FINAL_PROJECT
                 }
 
                 // ===================================================
-                // STEP 4: Show OTP verification dialog (skip if offline)
+                // STEP 5: Show OTP verification dialog (skip if offline)
                 // ===================================================
                 bool otpVerified = false;
-                
+
                 if (!isOfflineMode)
                 {
                     UpdateUI(() =>
@@ -449,7 +481,7 @@ namespace ITP104_FINAL_PROJECT
                 }
 
                 // ===================================================
-                // STEP 5: OTP verified - Record attendance with database timestamp
+                // STEP 6: OTP verified - Record attendance with database timestamp
                 // Client does NOT send any time - database generates it
                 // ===================================================
                 UpdateUI(() =>
@@ -717,7 +749,7 @@ namespace ITP104_FINAL_PROJECT
             {
                 // Check if student has an active Time In without Time Out for today
                 var hasActiveTimeIn = await scanHistoryRepository.HasActiveTodayTimeInAsync(studentId);
-                
+
                 if (hasActiveTimeIn)
                 {
                     return AttendanceType.TimeOut;

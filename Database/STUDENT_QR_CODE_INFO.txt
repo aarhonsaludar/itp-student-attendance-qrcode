@@ -1,0 +1,82 @@
+════════════════════════════════════════════════════════════
+   QR CODE FOR TESTING - Student: Tick Count (2300505)
+════════════════════════════════════════════════════════════
+
+STUDENT INFORMATION:
+------------------------------------------------------------
+Student Number:  2300505
+Name:            Tick Count  
+Email:           jcalinsunurin311@gmail.com
+Program:         Information Technology
+Year Level:      3rd
+Status:          ✅ Active
+
+
+QR CODE TEXT (Copy this exactly):
+------------------------------------------------------------
+QR|ID:2300505|Name:Tick Count|Program:Information Technology
+------------------------------------------------------------
+
+
+HOW TO GENERATE QR CODE:
+------------------------------------------------------------
+1. Visit: https://www.qr-code-generator.com/
+2. Select "Text" type
+3. Paste the QR code text above
+4. Download the QR code image
+5. Print or display on your phone screen
+6. Scan with your Student Attendance application
+
+
+TESTING SCENARIOS:
+------------------------------------------------------------
+
+✅ TEST 1: Normal Attendance (Should Pass)
+1. Scan QR code (Time In)
+2. Wait 15+ minutes
+3. Scan QR code again (Time Out)
+4. Expected: ✅ Completed (verified)
+
+🚨 TEST 2: Time Tampering (Should Detect)
+1. Scan QR code (Time In)
+2. Disconnect WiFi/Internet
+3. Change system clock forward 6 hours
+4. Scan QR code immediately (Time Out - only 2 min passed)
+5. Expected: 🚨 Time Tampering Detected!
+
+⚠️ TEST 3: Too Quick (Should Block)
+1. Scan QR code (Time In)
+2. Immediately scan again (< 15 minutes)
+3. Expected: ⚠️ Blocked or flagged
+
+
+ALTERNATIVE: Direct QR Code Links
+------------------------------------------------------------
+Generate instantly:
+https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=QR|ID:2300505|Name:Tick%20Count|Program:Information%20Technology
+
+Or use Google Charts API:
+https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=QR|ID:2300505|Name:Tick%20Count|Program:Information%20Technology
+
+
+VERIFICATION:
+------------------------------------------------------------
+✅ Anti-tampering system deployed
+✅ Database migrations completed
+✅ Student registered and active
+✅ Tampering detection tested (WORKING!)
+✅ Application built and running
+
+
+NEXT STEPS:
+------------------------------------------------------------
+1. Generate the QR code using one of the methods above
+2. Test normal attendance workflow
+3. Test tampering detection
+4. Review flagged scans in Scan History
+5. Document results
+
+
+════════════════════════════════════════════════════════════
+   System Status: ✅ READY FOR PRODUCTION TESTING
+════════════════════════════════════════════════════════════

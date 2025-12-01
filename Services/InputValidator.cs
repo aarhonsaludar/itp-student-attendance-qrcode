@@ -99,9 +99,9 @@ namespace ITP104_FINAL_PROJECT.Services
         /// Validate string length
         /// </summary>
         public static (bool IsValid, string ErrorMessage) ValidateLength(
-            string value, 
-            string fieldName, 
-            int minLength = 0, 
+            string value,
+            string fieldName,
+            int minLength = 0,
             int maxLength = int.MaxValue)
         {
             if (string.IsNullOrEmpty(value))
@@ -128,9 +128,9 @@ namespace ITP104_FINAL_PROJECT.Services
         /// Validate integer range
         /// </summary>
         public static (bool IsValid, string ErrorMessage) ValidateIntRange(
-            int value, 
-            string fieldName, 
-            int min = int.MinValue, 
+            int value,
+            string fieldName,
+            int min = int.MinValue,
             int max = int.MaxValue)
         {
             if (value < min || value > max)
@@ -144,9 +144,9 @@ namespace ITP104_FINAL_PROJECT.Services
         /// Validate date range
         /// </summary>
         public static (bool IsValid, string ErrorMessage) ValidateDateRange(
-            DateTime value, 
-            string fieldName, 
-            DateTime? minDate = null, 
+            DateTime value,
+            string fieldName,
+            DateTime? minDate = null,
             DateTime? maxDate = null)
         {
             DateTime min = minDate ?? DateTime.MinValue;
@@ -162,12 +162,15 @@ namespace ITP104_FINAL_PROJECT.Services
         /// <summary>
         /// Validate time-out against time-in to detect time manipulation
         /// Solution 1: Time-Out Validation Against Time-In
+        /// Enhanced with TickCount verification for offline tampering detection
         /// </summary>
         public static (bool IsValid, string[] SuspiciousFlags) ValidateTimeOutAgainstTimeIn(
             DateTime timeIn,
             DateTime timeOut,
             string timeInValidationMode,
-            string timeOutValidationMode)
+            string timeOutValidationMode,
+            long? timeInTickCount = null,
+            long? timeOutTickCount = null)
         {
             var flags = new System.Collections.Generic.List<string>();
             bool isValid = true;
@@ -180,6 +183,14 @@ namespace ITP104_FINAL_PROJECT.Services
             }
 
             TimeSpan duration = timeOut - timeIn;
+            double claimedMinutes = duration.TotalMinutes;
+
+            // NEW: Calculate real elapsed time using TickCount if available
+            double? realMinutes = null;
+            if (timeInTickCount.HasValue && timeOutTickCount.HasValue)
+            {
+                realMinutes = GetRealElapsedMinutes(timeInTickCount.Value, timeOutTickCount.Value);
+            }
 
             // Check 2: Too short (suspicious but not blocking)
             if (duration.TotalMinutes < 10)
@@ -213,16 +224,104 @@ namespace ITP104_FINAL_PROJECT.Services
                 {
                     flags.Add("🚨 CRITICAL: Time-in was ONLINE (verified) but time-out is OFFLINE (unverified)");
                     flags.Add("    → Student may have disconnected WiFi and changed device time");
+
+                    // NEW: Add TickCount verification if available
+                    if (realMinutes.HasValue)
+                    {
+                        flags.Add($"    → System clock claims: {claimedMinutes:F0} minutes");
+                        flags.Add($"    → Tamper-proof timer shows: {realMinutes:F0} minutes (actual elapsed)");
+
+                        double timeDifference = Math.Abs(claimedMinutes - realMinutes.Value);
+                        if (timeDifference > 3.0) // More than 3 minutes difference
+                        {
+                            flags.Add($"    → 🚨 CONFIRMED TIME TAMPERING! ({timeDifference:F0} min difference)");
+                            flags.Add("    → STRONG EVIDENCE of clock manipulation");
+                        }
+                        else
+                        {
+                            flags.Add("    → ✅ TickCount verification passed (times match)");
+                            flags.Add("    → Possibly legitimate offline usage - review WiFi disconnect reason");
+                        }
+                    }
+                    else
+                    {
+                        flags.Add("    → ⚠️ Cannot verify with TickCount (data not available)");
+                    }
+
                     flags.Add("    → RECOMMEND DECLINING unless student provides valid explanation");
                     // Don't set isValid = false to allow admin review, but heavily flag it
                 }
                 else if (timeInValidationMode == "offline" && timeOutValidationMode == "online")
                 {
                     flags.Add("🟡 INFO: Time-in was offline but time-out is online (less suspicious)");
+
+                    // NEW: Show TickCount verification for completeness
+                    if (realMinutes.HasValue)
+                    {
+                        double timeDifference = Math.Abs(claimedMinutes - realMinutes.Value);
+                        if (timeDifference > 3.0)
+                        {
+                            flags.Add($"    → ⚠️ TickCount shows {timeDifference:F0} min difference");
+                            flags.Add($"    → Claimed: {claimedMinutes:F0} min, Actual: {realMinutes:F0} min");
+                        }
+                    }
+                }
+                else if (timeInValidationMode == "offline" && timeOutValidationMode == "offline")
+                {
+                    // NEW: Both offline - TickCount is the ONLY way to verify
+                    if (realMinutes.HasValue)
+                    {
+                        double timeDifference = Math.Abs(claimedMinutes - realMinutes.Value);
+                        if (timeDifference > 3.0)
+                        {
+                            flags.Add("🚨 CRITICAL: TIME TAMPERING DETECTED (Offline Mode)");
+                            flags.Add($"    → System clock claims: {claimedMinutes:F0} minutes");
+                            flags.Add($"    → Tamper-proof timer shows: {realMinutes:F0} minutes (actual elapsed)");
+                            flags.Add($"    → Difference: {timeDifference:F0} minutes");
+                            flags.Add("    → Student likely changed device time while offline");
+                            flags.Add("    → RECOMMEND DECLINING - Clear evidence of tampering");
+                        }
+                        else
+                        {
+                            flags.Add($"✅ Offline session verified by TickCount ({realMinutes:F0} min actual)");
+                            flags.Add("    → Times match - likely legitimate offline usage");
+                        }
+                    }
+                    else
+                    {
+                        flags.Add("⚠️ Both scans were offline - TickCount verification recommended");
+                        flags.Add("    → Cannot confirm if time was tampered");
+                    }
                 }
             }
 
             return (isValid, flags.ToArray());
+        }
+
+        /// <summary>
+        /// Calculate real elapsed time from TickCount values (tamper-proof)
+        /// Uses Stopwatch.GetTimestamp() which cannot be manipulated by changing system time
+        /// </summary>
+        private static double? GetRealElapsedMinutes(long timeInTickCount, long timeOutTickCount)
+        {
+            try
+            {
+                if (timeOutTickCount <= timeInTickCount)
+                    return null; // Invalid - time-out tick should be after time-in tick
+
+                long elapsedTicks = timeOutTickCount - timeInTickCount;
+
+                // Convert ticks to seconds using Stopwatch.Frequency
+                // Frequency = ticks per second on this system
+                double elapsedSeconds = (double)elapsedTicks / System.Diagnostics.Stopwatch.Frequency;
+
+                // Convert to minutes
+                return elapsedSeconds / 60.0;
+            }
+            catch
+            {
+                return null; // Calculation error
+            }
         }
 
         /// <summary>
