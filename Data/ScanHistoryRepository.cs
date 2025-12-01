@@ -543,7 +543,6 @@ namespace ITP104_FINAL_PROJECT.Data
             int scanTypeOrdinal = TryGetOrdinal("scan_type");
             int scanDataOrdinal = TryGetOrdinal("scan_data");
             int scanDatetimeOrdinal = TryGetOrdinal("scan_datetime");
-            int timeInOrdinal = TryGetOrdinal("time_in");
             int timeOutOrdinal = TryGetOrdinal("time_out");
             int scanPurposeOrdinal = TryGetOrdinal("scan_purpose");
             int locationOrdinal = TryGetOrdinal("location");
@@ -561,17 +560,14 @@ namespace ITP104_FINAL_PROJECT.Data
             int clientTimeOrdinal = TryGetOrdinal("client_time");
             int serverTimeOrdinal = TryGetOrdinal("server_time");
             int timeDriftSecondsOrdinal = TryGetOrdinal("time_drift_seconds");
-            int reviewStatusOrdinal = TryGetOrdinal("review_status");
+            int timeInValidationModeOrdinal = TryGetOrdinal("time_in_validation_mode");
+            int timeOutValidationModeOrdinal = TryGetOrdinal("time_out_validation_mode");
 
-            // Determine scan datetime - try scan_datetime first, then time_in
+            // Determine scan datetime - use scan_datetime column
             DateTime scanDateTime;
             if (scanDatetimeOrdinal >= 0 && !reader.IsDBNull(scanDatetimeOrdinal))
             {
                 scanDateTime = reader.GetDateTime(scanDatetimeOrdinal);
-            }
-            else if (timeInOrdinal >= 0 && !reader.IsDBNull(timeInOrdinal))
-            {
-                scanDateTime = reader.GetDateTime(timeInOrdinal);
             }
             else
             {
@@ -605,7 +601,8 @@ namespace ITP104_FINAL_PROJECT.Data
                 ClientTime = clientTimeOrdinal >= 0 && !reader.IsDBNull(clientTimeOrdinal) ? (DateTime?)reader.GetDateTime(clientTimeOrdinal) : null,
                 ServerTime = serverTimeOrdinal >= 0 && !reader.IsDBNull(serverTimeOrdinal) ? (DateTime?)reader.GetDateTime(serverTimeOrdinal) : null,
                 TimeDriftSeconds = timeDriftSecondsOrdinal >= 0 && !reader.IsDBNull(timeDriftSecondsOrdinal) ? (int?)reader.GetInt32(timeDriftSecondsOrdinal) : null,
-                ReviewStatus = GetStringValue(reviewStatusOrdinal)
+                TimeInValidationMode = GetStringValue(timeInValidationModeOrdinal),
+                TimeOutValidationMode = GetStringValue(timeOutValidationModeOrdinal)
             };
         }
 

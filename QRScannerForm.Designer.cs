@@ -34,11 +34,11 @@ namespace ITP104_FINAL_PROJECT
             this.btnStopCamera = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.lblResult = new System.Windows.Forms.Label();
-            this.btnClear = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnExit = new Guna.UI2.WinForms.Guna2Button();
+            this.btnClear = new Guna.UI2.WinForms.Guna2Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCamera)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -59,19 +59,19 @@ namespace ITP104_FINAL_PROJECT
             // cmbCameras
             // 
             this.cmbCameras.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbCameras.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cmbCameras.Font = new System.Drawing.Font("Century Gothic", 10F);
             this.cmbCameras.FormattingEnabled = true;
-            this.cmbCameras.Location = new System.Drawing.Point(153, 18);
+            this.cmbCameras.Location = new System.Drawing.Point(167, 18);
             this.cmbCameras.Margin = new System.Windows.Forms.Padding(4);
             this.cmbCameras.Name = "cmbCameras";
-            this.cmbCameras.Size = new System.Drawing.Size(399, 31);
+            this.cmbCameras.Size = new System.Drawing.Size(392, 29);
             this.cmbCameras.TabIndex = 1;
             // 
             // btnStartCamera
             // 
             this.btnStartCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
             this.btnStartCamera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStartCamera.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnStartCamera.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
             this.btnStartCamera.ForeColor = System.Drawing.Color.White;
             this.btnStartCamera.Location = new System.Drawing.Point(573, 12);
             this.btnStartCamera.Margin = new System.Windows.Forms.Padding(4);
@@ -87,7 +87,7 @@ namespace ITP104_FINAL_PROJECT
             this.btnStopCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(76)))), ((int)(((byte)(60)))));
             this.btnStopCamera.Enabled = false;
             this.btnStopCamera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStopCamera.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnStopCamera.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
             this.btnStopCamera.ForeColor = System.Drawing.Color.White;
             this.btnStopCamera.Location = new System.Drawing.Point(720, 12);
             this.btnStopCamera.Margin = new System.Windows.Forms.Padding(4);
@@ -101,39 +101,24 @@ namespace ITP104_FINAL_PROJECT
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblStatus.Font = new System.Drawing.Font("Century Gothic", 10F);
             this.lblStatus.ForeColor = System.Drawing.Color.Gray;
-            this.lblStatus.Location = new System.Drawing.Point(20, 18);
+            this.lblStatus.Location = new System.Drawing.Point(20, 2);
             this.lblStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(191, 23);
+            this.lblStatus.Size = new System.Drawing.Size(217, 21);
             this.lblStatus.TabIndex = 4;
             this.lblStatus.Text = "Status: Camera stopped";
             // 
             // lblResult
             // 
-            this.lblResult.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblResult.Location = new System.Drawing.Point(20, 55);
+            this.lblResult.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
+            this.lblResult.Location = new System.Drawing.Point(16, 33);
             this.lblResult.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblResult.Name = "lblResult";
-            this.lblResult.Size = new System.Drawing.Size(700, 31);
+            this.lblResult.Size = new System.Drawing.Size(637, 71);
             this.lblResult.TabIndex = 5;
             this.lblResult.Text = "QR Code: (none)";
-            // 
-            // btnClear
-            // 
-            this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
-            this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClear.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnClear.ForeColor = System.Drawing.Color.White;
-            this.btnClear.Location = new System.Drawing.Point(621, 2);
-            this.btnClear.Margin = new System.Windows.Forms.Padding(4);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(113, 43);
-            this.btnClear.TabIndex = 6;
-            this.btnClear.Text = "Clear";
-            this.btnClear.UseVisualStyleBackColor = false;
-            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
             // 
             // panel1
             // 
@@ -152,11 +137,11 @@ namespace ITP104_FINAL_PROJECT
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
             this.label1.Location = new System.Drawing.Point(16, 22);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 23);
+            this.label1.Size = new System.Drawing.Size(136, 19);
             this.label1.TabIndex = 4;
             this.label1.Text = "Select Camera:";
             // 
@@ -168,7 +153,7 @@ namespace ITP104_FINAL_PROJECT
             this.panel2.Controls.Add(this.lblStatus);
             this.panel2.Controls.Add(this.lblResult);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 732);
+            this.panel2.Location = new System.Drawing.Point(0, 757);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(885, 106);
@@ -184,7 +169,7 @@ namespace ITP104_FINAL_PROJECT
             this.btnExit.FillColor = System.Drawing.Color.Red;
             this.btnExit.Font = new System.Drawing.Font("Century Gothic", 12F);
             this.btnExit.ForeColor = System.Drawing.Color.White;
-            this.btnExit.Location = new System.Drawing.Point(770, 2);
+            this.btnExit.Location = new System.Drawing.Point(770, 61);
             this.btnExit.Margin = new System.Windows.Forms.Padding(2);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(113, 43);
@@ -192,12 +177,29 @@ namespace ITP104_FINAL_PROJECT
             this.btnExit.Text = "Exit";
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // btnClear
+            // 
+            this.btnClear.BorderRadius = 10;
+            this.btnClear.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnClear.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnClear.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnClear.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnClear.FillColor = System.Drawing.SystemColors.ControlDark;
+            this.btnClear.Font = new System.Drawing.Font("Century Gothic", 12F);
+            this.btnClear.ForeColor = System.Drawing.Color.White;
+            this.btnClear.Location = new System.Drawing.Point(653, 61);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(113, 43);
+            this.btnClear.TabIndex = 19;
+            this.btnClear.Text = "Clear";
+            // 
             // QRScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
-            this.ClientSize = new System.Drawing.Size(885, 838);
+            this.ClientSize = new System.Drawing.Size(885, 863);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBoxCamera);
@@ -225,10 +227,11 @@ namespace ITP104_FINAL_PROJECT
         private System.Windows.Forms.Button btnStopCamera;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Label lblResult;
-        private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
         private Guna.UI2.WinForms.Guna2Button btnExit;
+        private Guna.UI2.WinForms.Guna2Button btnClear;
     }
 }
+

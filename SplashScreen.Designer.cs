@@ -1,4 +1,4 @@
-﻿namespace ITP104_FINAL_PROJECT
+namespace ITP104_FINAL_PROJECT
 {
     partial class SplashScreen
     {
@@ -78,3 +78,4 @@
         #endregion
     }
 }
+

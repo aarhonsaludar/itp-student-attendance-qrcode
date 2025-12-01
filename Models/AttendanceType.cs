@@ -6,6 +6,7 @@ namespace ITP104_FINAL_PROJECT.Models
     public enum AttendanceType
     {
         TimeIn,
-        TimeOut
+        TimeOut,
+        EmailChange
     }
 }

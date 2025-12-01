@@ -24,13 +24,9 @@ DELETE FROM scan_history;
 -- Step 4: Delete all student records
 DELETE FROM students;
 
--- Step 5: Delete all tokens (if any are linked to students)
-DELETE FROM tokens;
-
--- Step 6: Reset auto-increment counters to start from 1
+-- Step 5: Reset auto-increment counters to start from 1
 ALTER TABLE students AUTO_INCREMENT = 1;
 ALTER TABLE scan_history AUTO_INCREMENT = 1;
-ALTER TABLE tokens AUTO_INCREMENT = 1;
 
 -- Step 7: Re-enable foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;
@@ -39,8 +35,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 SELECT 
     'AFTER RESET' as Status,
     (SELECT COUNT(*) FROM students) as Total_Students,
-    (SELECT COUNT(*) FROM scan_history) as Total_Scans,
-    (SELECT COUNT(*) FROM tokens) as Total_Tokens;
+    (SELECT COUNT(*) FROM scan_history) as Total_Scans;
+
+-- Step 6: Verify deletion (should show 0 records)
+SELECT 
+    'AFTER RESET' as Status,
+    (SELECT COUNT(*) FROM students) as Total_Students,
+    (SELECT COUNT(*) FROM scan_history) as Total_Scans;
 
 -- Step 9: Show next auto-increment values
 SELECT 

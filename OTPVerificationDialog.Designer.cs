@@ -30,6 +30,7 @@ namespace ITP104_FINAL_PROJECT
         {
             this.components = new System.ComponentModel.Container();
             this.panelMain = new System.Windows.Forms.Panel();
+            this.btnCancel = new Guna.UI2.WinForms.Guna2ControlBox();
             this.btnResend = new System.Windows.Forms.Button();
             this.btnVerify = new System.Windows.Forms.Button();
             this.lblError = new System.Windows.Forms.Label();
@@ -41,7 +42,6 @@ namespace ITP104_FINAL_PROJECT
             this.lblTitle = new System.Windows.Forms.Label();
             this.timerCountdown = new System.Windows.Forms.Timer(this.components);
             this.guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
-            this.btnCancel = new Guna.UI2.WinForms.Guna2ControlBox();
             this.panelMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,12 +64,24 @@ namespace ITP104_FINAL_PROJECT
             this.panelMain.Size = new System.Drawing.Size(500, 433);
             this.panelMain.TabIndex = 0;
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.FillColor = System.Drawing.Color.Red;
+            this.btnCancel.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.IconColor = System.Drawing.Color.White;
+            this.btnCancel.Location = new System.Drawing.Point(447, -2);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(53, 34);
+            this.btnCancel.TabIndex = 9;
+            // 
             // btnResend
             // 
             this.btnResend.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
             this.btnResend.FlatAppearance.BorderSize = 0;
             this.btnResend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResend.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnResend.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnResend.ForeColor = System.Drawing.Color.Black;
             this.btnResend.Location = new System.Drawing.Point(260, 342);
             this.btnResend.Name = "btnResend";
@@ -84,7 +96,7 @@ namespace ITP104_FINAL_PROJECT
             this.btnVerify.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnVerify.FlatAppearance.BorderSize = 0;
             this.btnVerify.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnVerify.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnVerify.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnVerify.ForeColor = System.Drawing.Color.White;
             this.btnVerify.Location = new System.Drawing.Point(100, 342);
             this.btnVerify.Name = "btnVerify";
@@ -96,7 +108,7 @@ namespace ITP104_FINAL_PROJECT
             // 
             // lblError
             // 
-            this.lblError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblError.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.lblError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
             this.lblError.Location = new System.Drawing.Point(20, 290);
             this.lblError.Name = "lblError";
@@ -107,7 +119,7 @@ namespace ITP104_FINAL_PROJECT
             // 
             // lblTimer
             // 
-            this.lblTimer.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblTimer.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold);
             this.lblTimer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
             this.lblTimer.Location = new System.Drawing.Point(21, 290);
             this.lblTimer.Name = "lblTimer";
@@ -119,7 +131,7 @@ namespace ITP104_FINAL_PROJECT
             // txtOTP
             // 
             this.txtOTP.Font = new System.Drawing.Font("Courier New", 32F, System.Drawing.FontStyle.Bold);
-            this.txtOTP.Location = new System.Drawing.Point(100, 209);
+            this.txtOTP.Location = new System.Drawing.Point(100, 219);
             this.txtOTP.MaxLength = 6;
             this.txtOTP.Name = "txtOTP";
             this.txtOTP.Size = new System.Drawing.Size(300, 68);
@@ -129,7 +141,7 @@ namespace ITP104_FINAL_PROJECT
             // 
             // lblInstruction
             // 
-            this.lblInstruction.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblInstruction.Font = new System.Drawing.Font("Century Gothic", 10F);
             this.lblInstruction.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
             this.lblInstruction.Location = new System.Drawing.Point(20, 145);
             this.lblInstruction.Name = "lblInstruction";
@@ -141,7 +153,7 @@ namespace ITP104_FINAL_PROJECT
             // 
             // lblAttendanceType
             // 
-            this.lblAttendanceType.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblAttendanceType.Font = new System.Drawing.Font("Century Gothic", 14F, System.Drawing.FontStyle.Bold);
             this.lblAttendanceType.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.lblAttendanceType.Location = new System.Drawing.Point(20, 105);
             this.lblAttendanceType.Name = "lblAttendanceType";
@@ -152,7 +164,7 @@ namespace ITP104_FINAL_PROJECT
             // 
             // lblStudentInfo
             // 
-            this.lblStudentInfo.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblStudentInfo.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.lblStudentInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblStudentInfo.Location = new System.Drawing.Point(20, 75);
             this.lblStudentInfo.Name = "lblStudentInfo";
@@ -165,7 +177,7 @@ namespace ITP104_FINAL_PROJECT
             // 
             this.lblTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(123)))), ((int)(((byte)(255)))));
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Name = "lblTitle";
@@ -185,18 +197,6 @@ namespace ITP104_FINAL_PROJECT
             this.guna2BorderlessForm1.ContainerControl = this;
             this.guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             this.guna2BorderlessForm1.TransparentWhileDrag = true;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.FillColor = System.Drawing.Color.Red;
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.IconColor = System.Drawing.Color.White;
-            this.btnCancel.Location = new System.Drawing.Point(447, -2);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(53, 34);
-            this.btnCancel.TabIndex = 9;
             // 
             // OTPVerificationDialog
             // 
@@ -234,3 +234,4 @@ namespace ITP104_FINAL_PROJECT
         private Guna.UI2.WinForms.Guna2ControlBox btnCancel;
     }
 }
+

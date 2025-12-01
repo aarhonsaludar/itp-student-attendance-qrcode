@@ -1,4 +1,4 @@
-﻿namespace ITP104_FINAL_PROJECT
+namespace ITP104_FINAL_PROJECT
 {
     partial class StudentRecordScreen
     {
@@ -72,6 +72,7 @@
             this.btnExport = new Guna.UI2.WinForms.Guna2Button();
             this.btnBackToScan = new Guna.UI2.WinForms.Guna2Button();
             this.btnEdit = new Guna.UI2.WinForms.Guna2Button();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             this.pnlMainContent.SuspendLayout();
@@ -81,6 +82,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).BeginInit();
             this.pnlActions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // guna2BorderlessForm1
@@ -93,6 +95,7 @@
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.pnlHeader.Controls.Add(this.pictureBoxLogo);
             this.pnlHeader.Controls.Add(this.btnClose);
             this.pnlHeader.Controls.Add(this.guna2ControlBox2);
             this.pnlHeader.Controls.Add(this.lblHeaderTitle);
@@ -131,13 +134,13 @@
             // lblHeaderTitle
             // 
             this.lblHeaderTitle.AutoSize = true;
-            this.lblHeaderTitle.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
+            this.lblHeaderTitle.Font = new System.Drawing.Font("Century Gothic", 20F, System.Drawing.FontStyle.Bold);
             this.lblHeaderTitle.ForeColor = System.Drawing.Color.White;
-            this.lblHeaderTitle.Location = new System.Drawing.Point(47, 12);
+            this.lblHeaderTitle.Location = new System.Drawing.Point(133, 21);
             this.lblHeaderTitle.Name = "lblHeaderTitle";
-            this.lblHeaderTitle.Size = new System.Drawing.Size(322, 46);
+            this.lblHeaderTitle.Size = new System.Drawing.Size(393, 40);
             this.lblHeaderTitle.TabIndex = 1;
-            this.lblHeaderTitle.Text = "👤 Student Record";
+            this.lblHeaderTitle.Text = "Student Record Screen";
             // 
             // guna2PictureBox1
             // 
@@ -205,13 +208,13 @@
             // lblScanHistoryTitle
             // 
             this.lblScanHistoryTitle.AutoSize = true;
-            this.lblScanHistoryTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblScanHistoryTitle.Font = new System.Drawing.Font("Century Gothic", 16F, System.Drawing.FontStyle.Bold);
             this.lblScanHistoryTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
             this.lblScanHistoryTitle.Location = new System.Drawing.Point(20, 20);
             this.lblScanHistoryTitle.Name = "lblScanHistoryTitle";
-            this.lblScanHistoryTitle.Size = new System.Drawing.Size(376, 37);
+            this.lblScanHistoryTitle.Size = new System.Drawing.Size(320, 32);
             this.lblScanHistoryTitle.TabIndex = 0;
-            this.lblScanHistoryTitle.Text = "📊 Scan History for Student";
+            this.lblScanHistoryTitle.Text = "Scan History for Student";
             // 
             // pnlStudentInfo
             // 
@@ -268,11 +271,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.Lime;
             this.label2.Location = new System.Drawing.Point(668, 65);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 28);
+            this.label2.Size = new System.Drawing.Size(59, 23);
             this.label2.TabIndex = 26;
             this.label2.Text = "Male";
             // 
@@ -290,55 +293,55 @@
             // lblEnrollmentDateValue
             // 
             this.lblEnrollmentDateValue.AutoSize = true;
-            this.lblEnrollmentDateValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEnrollmentDateValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblEnrollmentDateValue.ForeColor = System.Drawing.Color.Lime;
             this.lblEnrollmentDateValue.Location = new System.Drawing.Point(838, 417);
             this.lblEnrollmentDateValue.Name = "lblEnrollmentDateValue";
-            this.lblEnrollmentDateValue.Size = new System.Drawing.Size(168, 28);
+            this.lblEnrollmentDateValue.Size = new System.Drawing.Size(161, 23);
             this.lblEnrollmentDateValue.TabIndex = 24;
             this.lblEnrollmentDateValue.Text = "August 15, 2022";
             // 
             // lblEnrollmentDate
             // 
             this.lblEnrollmentDate.AutoSize = true;
-            this.lblEnrollmentDate.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEnrollmentDate.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblEnrollmentDate.ForeColor = System.Drawing.Color.White;
             this.lblEnrollmentDate.Location = new System.Drawing.Point(668, 417);
             this.lblEnrollmentDate.Name = "lblEnrollmentDate";
-            this.lblEnrollmentDate.Size = new System.Drawing.Size(172, 28);
+            this.lblEnrollmentDate.Size = new System.Drawing.Size(169, 23);
             this.lblEnrollmentDate.TabIndex = 23;
             this.lblEnrollmentDate.Text = "Enrollment Date:";
             // 
             // lblAddressValue
             // 
             this.lblAddressValue.AutoSize = true;
-            this.lblAddressValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblAddressValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblAddressValue.ForeColor = System.Drawing.Color.Lime;
             this.lblAddressValue.Location = new System.Drawing.Point(838, 373);
             this.lblAddressValue.Name = "lblAddressValue";
-            this.lblAddressValue.Size = new System.Drawing.Size(318, 28);
+            this.lblAddressValue.Size = new System.Drawing.Size(312, 23);
             this.lblAddressValue.TabIndex = 22;
             this.lblAddressValue.Text = "123 Main St, Manila, Philippines";
             // 
             // lblAddress
             // 
             this.lblAddress.AutoSize = true;
-            this.lblAddress.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblAddress.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblAddress.ForeColor = System.Drawing.Color.White;
             this.lblAddress.Location = new System.Drawing.Point(668, 373);
             this.lblAddress.Name = "lblAddress";
-            this.lblAddress.Size = new System.Drawing.Size(154, 28);
+            this.lblAddress.Size = new System.Drawing.Size(159, 23);
             this.lblAddress.TabIndex = 21;
             this.lblAddress.Text = "Home Address:";
             // 
             // lblPhoneValue
             // 
             this.lblPhoneValue.AutoSize = true;
-            this.lblPhoneValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblPhoneValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblPhoneValue.ForeColor = System.Drawing.Color.Lime;
             this.lblPhoneValue.Location = new System.Drawing.Point(838, 327);
             this.lblPhoneValue.Name = "lblPhoneValue";
-            this.lblPhoneValue.Size = new System.Drawing.Size(188, 28);
+            this.lblPhoneValue.Size = new System.Drawing.Size(172, 23);
             this.lblPhoneValue.TabIndex = 20;
             this.lblPhoneValue.Text = "+63 912 345 6789";
             this.lblPhoneValue.Click += new System.EventHandler(this.lblPhoneValue_Click);
@@ -346,33 +349,33 @@
             // lblPhone
             // 
             this.lblPhone.AutoSize = true;
-            this.lblPhone.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblPhone.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblPhone.ForeColor = System.Drawing.Color.White;
             this.lblPhone.Location = new System.Drawing.Point(668, 327);
             this.lblPhone.Name = "lblPhone";
-            this.lblPhone.Size = new System.Drawing.Size(160, 28);
+            this.lblPhone.Size = new System.Drawing.Size(161, 23);
             this.lblPhone.TabIndex = 19;
             this.lblPhone.Text = "Phone Number:";
             // 
             // lblEmailValue
             // 
             this.lblEmailValue.AutoSize = true;
-            this.lblEmailValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEmailValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblEmailValue.ForeColor = System.Drawing.Color.Lime;
             this.lblEmailValue.Location = new System.Drawing.Point(837, 283);
             this.lblEmailValue.Name = "lblEmailValue";
-            this.lblEmailValue.Size = new System.Drawing.Size(290, 28);
+            this.lblEmailValue.Size = new System.Drawing.Size(292, 23);
             this.lblEmailValue.TabIndex = 18;
             this.lblEmailValue.Text = "juan.delacruz@university.edu";
             // 
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEmail.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblEmail.ForeColor = System.Drawing.Color.White;
             this.lblEmail.Location = new System.Drawing.Point(668, 283);
             this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(150, 28);
+            this.lblEmail.Size = new System.Drawing.Size(152, 23);
             this.lblEmail.TabIndex = 17;
             this.lblEmail.Text = "Email Address:";
             // 
@@ -384,95 +387,95 @@
             this.lblContactInfo.ForeColor = System.Drawing.Color.AliceBlue;
             this.lblContactInfo.Location = new System.Drawing.Point(668, 230);
             this.lblContactInfo.Name = "lblContactInfo";
-            this.lblContactInfo.Size = new System.Drawing.Size(291, 29);
+            this.lblContactInfo.Size = new System.Drawing.Size(254, 29);
             this.lblContactInfo.TabIndex = 15;
-            this.lblContactInfo.Text = "📞 Contact Information";
+            this.lblContactInfo.Text = "Contact Information";
             // 
             // lblScanCountValue
             // 
             this.lblScanCountValue.AutoSize = true;
-            this.lblScanCountValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblScanCountValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblScanCountValue.ForeColor = System.Drawing.Color.Lime;
             this.lblScanCountValue.Location = new System.Drawing.Point(279, 417);
             this.lblScanCountValue.Name = "lblScanCountValue";
-            this.lblScanCountValue.Size = new System.Drawing.Size(36, 28);
+            this.lblScanCountValue.Size = new System.Drawing.Size(32, 23);
             this.lblScanCountValue.TabIndex = 14;
             this.lblScanCountValue.Text = "47";
             // 
             // lblScanCount
             // 
             this.lblScanCount.AutoSize = true;
-            this.lblScanCount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblScanCount.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblScanCount.ForeColor = System.Drawing.Color.White;
             this.lblScanCount.Location = new System.Drawing.Point(53, 417);
             this.lblScanCount.Name = "lblScanCount";
-            this.lblScanCount.Size = new System.Drawing.Size(123, 28);
+            this.lblScanCount.Size = new System.Drawing.Size(129, 23);
             this.lblScanCount.TabIndex = 13;
             this.lblScanCount.Text = "Scan Count:";
             // 
             // lblStatusValue
             // 
             this.lblStatusValue.AutoSize = true;
-            this.lblStatusValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblStatusValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblStatusValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
             this.lblStatusValue.Location = new System.Drawing.Point(279, 373);
             this.lblStatusValue.Name = "lblStatusValue";
-            this.lblStatusValue.Size = new System.Drawing.Size(90, 28);
+            this.lblStatusValue.Size = new System.Drawing.Size(90, 23);
             this.lblStatusValue.TabIndex = 12;
-            this.lblStatusValue.Text = "● Active";
+            this.lblStatusValue.Text = "? Active";
             // 
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblStatus.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblStatus.ForeColor = System.Drawing.Color.White;
             this.lblStatus.Location = new System.Drawing.Point(53, 373);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(76, 28);
+            this.lblStatus.Size = new System.Drawing.Size(72, 23);
             this.lblStatus.TabIndex = 11;
             this.lblStatus.Text = "Status:";
             // 
             // lblYearLevelValue
             // 
             this.lblYearLevelValue.AutoSize = true;
-            this.lblYearLevelValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblYearLevelValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblYearLevelValue.ForeColor = System.Drawing.Color.Lime;
             this.lblYearLevelValue.Location = new System.Drawing.Point(279, 327);
             this.lblYearLevelValue.Name = "lblYearLevelValue";
-            this.lblYearLevelValue.Size = new System.Drawing.Size(90, 28);
+            this.lblYearLevelValue.Size = new System.Drawing.Size(90, 23);
             this.lblYearLevelValue.TabIndex = 10;
             this.lblYearLevelValue.Text = "3rd Year";
             // 
             // lblYearLevel
             // 
             this.lblYearLevel.AutoSize = true;
-            this.lblYearLevel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblYearLevel.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblYearLevel.ForeColor = System.Drawing.Color.White;
             this.lblYearLevel.Location = new System.Drawing.Point(53, 327);
             this.lblYearLevel.Name = "lblYearLevel";
-            this.lblYearLevel.Size = new System.Drawing.Size(112, 28);
+            this.lblYearLevel.Size = new System.Drawing.Size(117, 23);
             this.lblYearLevel.TabIndex = 9;
             this.lblYearLevel.Text = "Year Level:";
             // 
             // lblCourseValue
             // 
             this.lblCourseValue.AutoSize = true;
-            this.lblCourseValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblCourseValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblCourseValue.ForeColor = System.Drawing.Color.Lime;
             this.lblCourseValue.Location = new System.Drawing.Point(279, 283);
             this.lblCourseValue.Name = "lblCourseValue";
-            this.lblCourseValue.Size = new System.Drawing.Size(182, 28);
+            this.lblCourseValue.Size = new System.Drawing.Size(193, 23);
             this.lblCourseValue.TabIndex = 8;
             this.lblCourseValue.Text = "Computer Science";
             // 
             // lblCourse
             // 
             this.lblCourse.AutoSize = true;
-            this.lblCourse.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblCourse.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblCourse.ForeColor = System.Drawing.Color.White;
             this.lblCourse.Location = new System.Drawing.Point(53, 283);
             this.lblCourse.Name = "lblCourse";
-            this.lblCourse.Size = new System.Drawing.Size(183, 28);
+            this.lblCourse.Size = new System.Drawing.Size(187, 23);
             this.lblCourse.TabIndex = 7;
             this.lblCourse.Text = "Course / Program:";
             // 
@@ -480,11 +483,11 @@
             // 
             this.lblFullNameValue.AutoSize = true;
             this.lblFullNameValue.BackColor = System.Drawing.Color.Transparent;
-            this.lblFullNameValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblFullNameValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblFullNameValue.ForeColor = System.Drawing.Color.Lime;
             this.lblFullNameValue.Location = new System.Drawing.Point(286, 136);
             this.lblFullNameValue.Name = "lblFullNameValue";
-            this.lblFullNameValue.Size = new System.Drawing.Size(153, 28);
+            this.lblFullNameValue.Size = new System.Drawing.Size(157, 23);
             this.lblFullNameValue.TabIndex = 6;
             this.lblFullNameValue.Text = "Juan Dela Cruz";
             // 
@@ -503,11 +506,11 @@
             // 
             this.lblStudentIDValue.AutoSize = true;
             this.lblStudentIDValue.BackColor = System.Drawing.Color.Transparent;
-            this.lblStudentIDValue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblStudentIDValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.lblStudentIDValue.ForeColor = System.Drawing.Color.Lime;
             this.lblStudentIDValue.Location = new System.Drawing.Point(286, 65);
             this.lblStudentIDValue.Name = "lblStudentIDValue";
-            this.lblStudentIDValue.Size = new System.Drawing.Size(173, 28);
+            this.lblStudentIDValue.Size = new System.Drawing.Size(156, 23);
             this.lblStudentIDValue.TabIndex = 4;
             this.lblStudentIDValue.Text = "2024-STU-00001";
             // 
@@ -540,9 +543,9 @@
             this.lblStudentInfoTitle.ForeColor = System.Drawing.Color.AliceBlue;
             this.lblStudentInfoTitle.Location = new System.Drawing.Point(53, 230);
             this.lblStudentInfoTitle.Name = "lblStudentInfoTitle";
-            this.lblStudentInfoTitle.Size = new System.Drawing.Size(284, 29);
+            this.lblStudentInfoTitle.Size = new System.Drawing.Size(247, 29);
             this.lblStudentInfoTitle.TabIndex = 1;
-            this.lblStudentInfoTitle.Text = "📋 Student Information";
+            this.lblStudentInfoTitle.Text = "Student Information";
             // 
             // picProfilePhoto
             // 
@@ -580,7 +583,7 @@
             this.btnDelete.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnDelete.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnDelete.FillColor = System.Drawing.Color.Red;
-            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnDelete.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnDelete.ForeColor = System.Drawing.Color.White;
             this.btnDelete.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnDelete.ImageSize = new System.Drawing.Size(24, 24);
@@ -601,9 +604,8 @@
             this.btnExport.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnExport.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnExport.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(89)))), ((int)(((byte)(182)))));
-            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnExport.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.Image = global::ITP104_FINAL_PROJECT.Properties.Resources.download;
             this.btnExport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnExport.ImageSize = new System.Drawing.Size(24, 24);
             this.btnExport.Location = new System.Drawing.Point(887, 10);
@@ -611,7 +613,7 @@
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(200, 46);
             this.btnExport.TabIndex = 3;
-            this.btnExport.Text = "   Export";
+            this.btnExport.Text = "Export";
             // 
             // btnBackToScan
             // 
@@ -621,7 +623,7 @@
             this.btnBackToScan.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnBackToScan.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnBackToScan.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219)))));
-            this.btnBackToScan.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnBackToScan.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnBackToScan.ForeColor = System.Drawing.Color.White;
             this.btnBackToScan.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnBackToScan.ImageSize = new System.Drawing.Size(24, 24);
@@ -630,7 +632,7 @@
             this.btnBackToScan.Name = "btnBackToScan";
             this.btnBackToScan.Size = new System.Drawing.Size(200, 46);
             this.btnBackToScan.TabIndex = 1;
-            this.btnBackToScan.Text = "⬅️  Back to Scan";
+            this.btnBackToScan.Text = "Back to Scan";
             // 
             // btnEdit
             // 
@@ -640,7 +642,7 @@
             this.btnEdit.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnEdit.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnEdit.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(156)))), ((int)(((byte)(18)))));
-            this.btnEdit.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnEdit.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnEdit.ForeColor = System.Drawing.Color.White;
             this.btnEdit.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnEdit.ImageSize = new System.Drawing.Size(24, 24);
@@ -649,9 +651,22 @@
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(173, 46);
             this.btnEdit.TabIndex = 0;
-            this.btnEdit.Text = "✏️  Edit ";
+            this.btnEdit.Text = "Edit ";
             this.btnEdit.UseTransparentBackground = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click_1);
+            // 
+            // pictureBoxLogo
+            // 
+            this.pictureBoxLogo.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBoxLogo.BackgroundImage = global::ITP104_FINAL_PROJECT.Properties.Resources.attendancelogo2;
+            this.pictureBoxLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBoxLogo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.pictureBoxLogo.Location = new System.Drawing.Point(51, 6);
+            this.pictureBoxLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.Size = new System.Drawing.Size(76, 70);
+            this.pictureBoxLogo.TabIndex = 13;
+            this.pictureBoxLogo.TabStop = false;
             // 
             // StudentRecordScreen
             // 
@@ -677,6 +692,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picQRCode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();
             this.pnlActions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -726,5 +742,6 @@
         private System.Windows.Forms.Label label1;
         private Guna.UI2.WinForms.Guna2Button btnDelete;
         private System.Windows.Forms.PictureBox picQRCode;
+        private System.Windows.Forms.PictureBox pictureBoxLogo;
     }
 }

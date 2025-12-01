@@ -158,5 +158,123 @@ namespace ITP104_FINAL_PROJECT.Services
             }
             return (true, null);
         }
+
+        /// <summary>
+        /// Validate time-out against time-in to detect time manipulation
+        /// Solution 1: Time-Out Validation Against Time-In
+        /// </summary>
+        public static (bool IsValid, string[] SuspiciousFlags) ValidateTimeOutAgainstTimeIn(
+            DateTime timeIn,
+            DateTime timeOut,
+            string timeInValidationMode,
+            string timeOutValidationMode)
+        {
+            var flags = new System.Collections.Generic.List<string>();
+            bool isValid = true;
+
+            // Check 1: Basic physics - time-out must be after time-in
+            if (timeOut <= timeIn)
+            {
+                flags.Add("🔴 CRITICAL: Time-out must be after time-in");
+                isValid = false;
+            }
+
+            TimeSpan duration = timeOut - timeIn;
+
+            // Check 2: Too short (suspicious but not blocking)
+            if (duration.TotalMinutes < 10)
+            {
+                flags.Add($"🟡 INFO: Short duration ({duration.TotalMinutes:F0} minutes)");
+            }
+
+            // Check 3: Extremely short (within OTP window)
+            if (duration.TotalMinutes < 5)
+            {
+                flags.Add("🟠 WARNING: Extremely short duration - verify legitimacy");
+            }
+
+            // Check 4: Too long
+            if (duration.TotalHours > 12)
+            {
+                flags.Add($"🟠 WARNING: Long duration ({duration.TotalHours:F1} hours)");
+            }
+
+            // Check 5: Unrealistically long
+            if (duration.TotalHours > 18)
+            {
+                flags.Add($"🔴 CRITICAL: Duration exceeds 18 hours - likely tampering");
+            }
+
+            // Check 6: VALIDATION MODE MISMATCH (KEY SECURITY CHECK)
+            // This catches the WiFi disconnect + time change exploit
+            if (!string.IsNullOrEmpty(timeInValidationMode) && !string.IsNullOrEmpty(timeOutValidationMode))
+            {
+                if (timeInValidationMode == "online" && timeOutValidationMode == "offline")
+                {
+                    flags.Add("🚨 CRITICAL: Time-in was ONLINE (verified) but time-out is OFFLINE (unverified)");
+                    flags.Add("    → Student may have disconnected WiFi and changed device time");
+                    flags.Add("    → RECOMMEND DECLINING unless student provides valid explanation");
+                    // Don't set isValid = false to allow admin review, but heavily flag it
+                }
+                else if (timeInValidationMode == "offline" && timeOutValidationMode == "online")
+                {
+                    flags.Add("🟡 INFO: Time-in was offline but time-out is online (less suspicious)");
+                }
+            }
+
+            return (isValid, flags.ToArray());
+        }
+
+        /// <summary>
+        /// Validate scan timestamp for suspicious patterns
+        /// </summary>
+        public static (bool IsValid, string[] SuspiciousFlags) ValidateScanTimestamp(
+            DateTime scanTime,
+            DateTime? lastScanTime = null,
+            DateTime? serverTime = null)
+        {
+            var flags = new System.Collections.Generic.List<string>();
+            bool isValid = true;
+
+            // Use server time if available, otherwise use current time
+            DateTime referenceTime = serverTime ?? DateTime.Now;
+
+            // Check 1: Future timestamp (CRITICAL - definitely tampered)
+            if (scanTime > referenceTime.AddMinutes(10))
+            {
+                TimeSpan futureDiff = scanTime - referenceTime;
+                flags.Add($"🔴 CRITICAL: Timestamp is {futureDiff.Hours}h {futureDiff.Minutes}m in the future");
+                isValid = false;
+            }
+
+            // Check 2: Very old timestamp (suspicious)
+            if (scanTime < referenceTime.AddDays(-1))
+            {
+                TimeSpan age = referenceTime - scanTime;
+                flags.Add($"🟠 WARNING: Timestamp is {age.Days} day(s) {age.Hours}h old");
+            }
+
+            // Check 3: Time jumped backwards from last scan
+            if (lastScanTime.HasValue && scanTime < lastScanTime.Value)
+            {
+                TimeSpan diff = lastScanTime.Value - scanTime;
+                flags.Add($"🟠 WARNING: Time went backwards by {diff.Hours}h {diff.Minutes}m from previous scan");
+            }
+
+            // Check 4: Unrealistic hours (very early or very late)
+            int hour = scanTime.Hour;
+            if (hour < 6 || hour > 22)
+            {
+                flags.Add($"🟡 INFO: Unusual time ({scanTime:h:mm tt}) - outside typical hours (6 AM - 10 PM)");
+            }
+
+            // Check 5: Weekend scan
+            if (scanTime.DayOfWeek == DayOfWeek.Saturday || scanTime.DayOfWeek == DayOfWeek.Sunday)
+            {
+                flags.Add($"🟡 INFO: Weekend scan ({scanTime.DayOfWeek})");
+            }
+
+            return (isValid, flags.ToArray());
+        }
     }
 }

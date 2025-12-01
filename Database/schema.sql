@@ -87,16 +87,24 @@ CREATE TABLE scan_history (
     time_out DATETIME NULL,
     scan_purpose ENUM('attendance', 'identification', 'verification') DEFAULT 'attendance',
     location VARCHAR(100),
-    status ENUM('success', 'failed', 'duplicate') DEFAULT 'success',
+    status ENUM('success', 'failed', 'duplicate', 'for_review') DEFAULT 'success',
     notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    validation_status VARCHAR(30) DEFAULT 'verified',
+    time_in_validation_mode VARCHAR(20) DEFAULT NULL,
+    time_out_validation_mode VARCHAR(20) DEFAULT NULL,
+    requires_review BOOLEAN DEFAULT FALSE,
+    client_time DATETIME NULL,
+    server_time DATETIME NULL,
+    time_drift_seconds INT NULL,
     FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
     FOREIGN KEY (device_id) REFERENCES devices(device_id) ON DELETE SET NULL,
     INDEX idx_student_scan (student_id, scan_datetime),
     INDEX idx_device_scan (device_id, scan_datetime),
     INDEX idx_scan_date (scan_datetime),
     INDEX idx_scan_type (scan_type),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_validation_modes (time_in_validation_mode, time_out_validation_mode, status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================

@@ -13,13 +13,13 @@ namespace ITP104_FINAL_PROJECT.Services
     {
         // In-memory OTP sessions (for production, consider using Redis or database)
         private static Dictionary<string, OTPSession> activeSessions = new Dictionary<string, OTPSession>();
-        
+
         // Email configuration
         private const string SMTP_HOST = "smtp.gmail.com";
         private const int SMTP_PORT = 587; // TLS port
         private const string SENDER_EMAIL = "jeysixc.aguilan@gmail.com";
         private const string EMAIL_PASSWORD = "sdsagazlqhgcxvig"; // Gmail App Password
-        
+
 
 
         // OTP settings
@@ -98,7 +98,7 @@ namespace ITP104_FINAL_PROJECT.Services
             if (!session.OTP.Equals(enteredOTP?.Trim(), StringComparison.OrdinalIgnoreCase))
             {
                 session.FailedAttempts++;
-                
+
                 // Lock session after 3 failed attempts
                 if (session.FailedAttempts >= 3)
                 {
@@ -183,7 +183,7 @@ namespace ITP104_FINAL_PROJECT.Services
                 System.Diagnostics.Debug.WriteLine($"[OTP] Email: {SENDER_EMAIL}");
                 System.Diagnostics.Debug.WriteLine($"[OTP] Password Length: {EMAIL_PASSWORD.Length}");
                 System.Diagnostics.Debug.WriteLine($"[OTP] Target: {session.Email}");
-                
+
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("Student Attendance System", SENDER_EMAIL));
                 message.To.Add(new MailboxAddress("", session.Email));
@@ -200,18 +200,18 @@ namespace ITP104_FINAL_PROJECT.Services
                     // Connect to SMTP server
                     System.Diagnostics.Debug.WriteLine($"[OTP] Connecting to {SMTP_HOST}:{SMTP_PORT}...");
                     await client.ConnectAsync(SMTP_HOST, SMTP_PORT, SecureSocketOptions.StartTls);
-                    
+
                     // Authenticate
                     System.Diagnostics.Debug.WriteLine($"[OTP] Authenticating...");
                     await client.AuthenticateAsync(SENDER_EMAIL, EMAIL_PASSWORD);
-                    
+
                     // Send email
                     System.Diagnostics.Debug.WriteLine($"[OTP] Sending email...");
                     await client.SendAsync(message);
-                    
+
                     // Disconnect
                     await client.DisconnectAsync(true);
-                    
+
                     System.Diagnostics.Debug.WriteLine($"[OTP] Email sent successfully!");
                 }
             }
@@ -224,7 +224,7 @@ namespace ITP104_FINAL_PROJECT.Services
                                "2. Password/App Password is correct\n" +
                                "3. Account is not locked or suspended\n\n" +
                                "Error details: " + authEx.Message;
-                
+
                 System.Diagnostics.Debug.WriteLine($"[OTP] Authentication error: {authEx.Message}");
                 throw new Exception(detailedError);
             }
@@ -237,7 +237,7 @@ namespace ITP104_FINAL_PROJECT.Services
                                "2. Email credentials are correct\n" +
                                "3. Student has a valid email address\n\n" +
                                $"Technical details: {ex.GetType().Name}";
-                
+
                 System.Diagnostics.Debug.WriteLine($"[OTP] Error: {ex.Message}");
                 throw new Exception(detailedError);
             }
@@ -407,6 +407,190 @@ namespace ITP104_FINAL_PROJECT.Services
         {
             CleanupExpiredSessions();
             return activeSessions.Count;
+        }
+
+        /// <summary>
+        /// Initiates email change verification - Step 1: Verify OLD email
+        /// </summary>
+        public static async Task<OTPSession> InitiateEmailChangeVerifyOldAsync(Student student, string newEmail)
+        {
+            if (student == null)
+                throw new ArgumentNullException(nameof(student));
+
+            if (string.IsNullOrWhiteSpace(student.Email))
+                throw new Exception("Student current email address is not registered.");
+
+            if (string.IsNullOrWhiteSpace(newEmail))
+                throw new ArgumentException("New email address is required.");
+
+            // Generate 6-digit OTP
+            string otp = GenerateOTP();
+
+            // Create session for OLD email verification
+            var session = new OTPSession
+            {
+                SessionId = Guid.NewGuid().ToString(),
+                StudentId = student.StudentId.ToString(),
+                StudentNumber = student.StudentNumber,
+                StudentName = student.FullName,
+                Email = student.Email, // OLD email
+                OTP = otp,
+                AttendanceType = AttendanceType.EmailChange, // New type
+                QRData = newEmail, // Store new email in QRData field temporarily
+                CreatedAt = DateTime.Now,
+                ExpiresAt = DateTime.Now.AddMinutes(OTP_EXPIRY_MINUTES),
+                IsUsed = false,
+                IsVerified = false
+            };
+
+            // Store session
+            CleanupExpiredSessions();
+            activeSessions[session.SessionId] = session;
+
+            // Send OTP to OLD email
+            await SendEmailChangeOTPAsync(session, isOldEmail: true);
+
+            return session;
+        }
+
+        /// <summary>
+        /// Initiates email change verification - Step 2: Verify NEW email
+        /// </summary>
+        public static async Task<OTPSession> InitiateEmailChangeVerifyNewAsync(OTPSession oldEmailSession)
+        {
+            if (oldEmailSession == null || !oldEmailSession.IsVerified)
+                throw new Exception("Old email must be verified first.");
+
+            string newEmail = oldEmailSession.QRData; // New email stored in QRData
+
+            // Generate new OTP for new email
+            string otp = GenerateOTP();
+
+            // Create session for NEW email verification
+            var session = new OTPSession
+            {
+                SessionId = Guid.NewGuid().ToString(),
+                StudentId = oldEmailSession.StudentId,
+                StudentNumber = oldEmailSession.StudentNumber,
+                StudentName = oldEmailSession.StudentName,
+                Email = newEmail, // NEW email
+                OTP = otp,
+                AttendanceType = AttendanceType.EmailChange,
+                QRData = oldEmailSession.Email, // Store old email for reference
+                CreatedAt = DateTime.Now,
+                ExpiresAt = DateTime.Now.AddMinutes(OTP_EXPIRY_MINUTES),
+                IsUsed = false,
+                IsVerified = false
+            };
+
+            // Store session
+            activeSessions[session.SessionId] = session;
+
+            // Send OTP to NEW email
+            await SendEmailChangeOTPAsync(session, isOldEmail: false);
+
+            return session;
+        }
+
+        /// <summary>
+        /// Sends OTP email for email change verification
+        /// </summary>
+        private static async Task SendEmailChangeOTPAsync(OTPSession session, bool isOldEmail)
+        {
+            try
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("Student Attendance System", SENDER_EMAIL));
+                message.To.Add(new MailboxAddress(session.StudentName, session.Email));
+                message.Subject = isOldEmail ? "🔐 Verify Current Email - Email Change Request" : "✅ Verify New Email - Email Change Request";
+
+                string stepNumber = isOldEmail ? "1" : "2";
+                string stepDescription = isOldEmail ? "Verify Current Email" : "Verify New Email";
+                string emailType = isOldEmail ? "current" : "new";
+
+                message.Body = new TextPart("html")
+                {
+                    Text = $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+</head>
+<body style='margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;'>
+    <div style='max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);'>
+        <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center;'>
+            <h1 style='margin: 0; font-size: 28px;'>🔐 Email Change Verification</h1>
+            <p style='margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;'>Step {stepNumber} of 2: {stepDescription}</p>
+        </div>
+        
+        <div style='padding: 40px 30px;'>
+            <p style='font-size: 16px; color: #333; margin-bottom: 20px;'>
+                Hello <strong>{session.StudentName}</strong>,
+            </p>
+            
+            <p style='font-size: 15px; color: #555; line-height: 1.6;'>
+                {(isOldEmail ?
+                    "You have requested to change your email address. To proceed, please verify your CURRENT email by entering the code below:" :
+                    "Almost done! Please verify your NEW email address by entering the code below:")}
+            </p>
+            
+            <div style='background: #f8f9fa; border-left: 4px solid #667eea; padding: 20px; margin: 25px 0; border-radius: 5px;'>
+                <p style='margin: 0 0 10px 0; color: #666; font-size: 14px;'>Your Verification Code:</p>
+                <div style='font-size: 36px; font-weight: bold; color: #667eea; letter-spacing: 8px; font-family: monospace;'>
+                    {session.OTP}
+                </div>
+            </div>
+            
+            <div style='background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                <p style='margin: 0 0 10px 0; color: #856404; font-size: 14px;'><strong>📧 Email Change Details:</strong></p>
+                <p style='margin: 5px 0; font-size: 14px; color: #856404;'><strong>Student:</strong> {session.StudentName}</p>
+                <p style='margin: 5px 0; font-size: 14px; color: #856404;'><strong>Student Number:</strong> {session.StudentNumber}</p>
+                <p style='margin: 5px 0; font-size: 14px; color: #856404;'><strong>Verifying:</strong> {emailType.ToUpper()} email</p>
+                <p style='margin: 5px 0; font-size: 14px; color: #856404;'><strong>Expires At:</strong> {session.ExpiresAt:hh:mm tt}</p>
+            </div>
+            
+            <div style='background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                <p style='margin: 0; color: #0c5460; font-size: 14px;'>
+                    <strong>🔒 Security Notice:</strong><br>
+                    This code is for email change verification only. 
+                    Do not share this code with anyone. If you did not request this change, 
+                    please contact your administrator immediately.
+                </p>
+            </div>
+            
+            <p style='background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 12px; border-radius: 5px; font-size: 14px; margin: 20px 0;'>
+                ⏱️ This code will expire in {OTP_EXPIRY_MINUTES} minutes.
+            </p>
+        </div>
+        
+        <div style='background: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #dee2e6;'>
+            <p style='margin: 5px 0; color: #6c757d; font-size: 13px;'>This is an automated email from the Student Attendance System.</p>
+            <p style='margin: 5px 0; color: #6c757d; font-size: 13px;'>Please do not reply to this email.</p>
+            <p style='margin: 10px 0 0 0; color: #6c757d; font-size: 12px;'>© {DateTime.Now.Year} Student Attendance System. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>"
+                };
+
+                Console.WriteLine($"[OTP-Email Change] Sending OTP to {(isOldEmail ? "OLD" : "NEW")} email: {session.Email}");
+
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync(SMTP_HOST, SMTP_PORT, SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync(SENDER_EMAIL, EMAIL_PASSWORD);
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                }
+
+                Console.WriteLine($"[OTP-Email Change] Email sent successfully to {session.Email}!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[OTP-Email Change] Error sending email: {ex.Message}");
+                throw new Exception($"Failed to send verification email: {ex.Message}");
+            }
         }
     }
 }

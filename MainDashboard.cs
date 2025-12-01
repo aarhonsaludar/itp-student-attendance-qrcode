@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using QRCoder;
 using ITP104_FINAL_PROJECT.Data;
 using ITP104_FINAL_PROJECT.Models;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace ITP104_FINAL_PROJECT
 {

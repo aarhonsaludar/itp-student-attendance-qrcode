@@ -90,7 +90,7 @@ namespace ITP104_FINAL_PROJECT
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(305, 578);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 26);
@@ -163,7 +163,7 @@ namespace ITP104_FINAL_PROJECT
             // lblSection
             // 
             this.lblSection.AutoSize = true;
-            this.lblSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSection.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSection.Location = new System.Drawing.Point(310, 493);
             this.lblSection.Name = "lblSection";
             this.lblSection.Size = new System.Drawing.Size(91, 26);
@@ -182,7 +182,7 @@ namespace ITP104_FINAL_PROJECT
             this.txtSection.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.txtSection.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtSection.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic);
+            this.txtSection.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Italic);
             this.txtSection.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtSection.Location = new System.Drawing.Point(310, 523);
             this.txtSection.Margin = new System.Windows.Forms.Padding(4);
@@ -195,7 +195,7 @@ namespace ITP104_FINAL_PROJECT
             // lblYearLevel
             // 
             this.lblYearLevel.AutoSize = true;
-            this.lblYearLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYearLevel.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblYearLevel.Location = new System.Drawing.Point(45, 578);
             this.lblYearLevel.Name = "lblYearLevel";
             this.lblYearLevel.Size = new System.Drawing.Size(123, 26);
@@ -223,7 +223,7 @@ namespace ITP104_FINAL_PROJECT
             // lblCourse
             // 
             this.lblCourse.AutoSize = true;
-            this.lblCourse.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCourse.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCourse.Location = new System.Drawing.Point(45, 493);
             this.lblCourse.Name = "lblCourse";
             this.lblCourse.Size = new System.Drawing.Size(88, 26);
@@ -252,7 +252,7 @@ namespace ITP104_FINAL_PROJECT
             // lblPhone
             // 
             this.lblPhone.AutoSize = true;
-            this.lblPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPhone.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPhone.Location = new System.Drawing.Point(310, 378);
             this.lblPhone.Name = "lblPhone";
             this.lblPhone.Size = new System.Drawing.Size(81, 26);
@@ -271,7 +271,7 @@ namespace ITP104_FINAL_PROJECT
             this.txtPhone.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.txtPhone.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtPhone.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic);
+            this.txtPhone.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Italic);
             this.txtPhone.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtPhone.Location = new System.Drawing.Point(310, 408);
             this.txtPhone.Margin = new System.Windows.Forms.Padding(4);
@@ -284,7 +284,7 @@ namespace ITP104_FINAL_PROJECT
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEmail.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEmail.Location = new System.Drawing.Point(45, 378);
             this.lblEmail.Name = "lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(155, 26);
@@ -303,7 +303,7 @@ namespace ITP104_FINAL_PROJECT
             this.txtEmail.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.txtEmail.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtEmail.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic);
+            this.txtEmail.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Italic);
             this.txtEmail.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtEmail.Location = new System.Drawing.Point(50, 408);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(4);
@@ -316,7 +316,7 @@ namespace ITP104_FINAL_PROJECT
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblName.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.Location = new System.Drawing.Point(45, 263);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(158, 26);
@@ -335,7 +335,7 @@ namespace ITP104_FINAL_PROJECT
             this.txtName.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.txtName.FillColor = System.Drawing.Color.WhiteSmoke;
             this.txtName.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic);
+            this.txtName.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Italic);
             this.txtName.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtName.Location = new System.Drawing.Point(50, 293);
             this.txtName.Margin = new System.Windows.Forms.Padding(4);
@@ -348,7 +348,7 @@ namespace ITP104_FINAL_PROJECT
             // lblStudentID
             // 
             this.lblStudentID.AutoSize = true;
-            this.lblStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStudentID.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStudentID.Location = new System.Drawing.Point(45, 148);
             this.lblStudentID.Name = "lblStudentID";
             this.lblStudentID.Size = new System.Drawing.Size(245, 26);
@@ -368,7 +368,7 @@ namespace ITP104_FINAL_PROJECT
             this.txtStudentID.Enabled = false;
             this.txtStudentID.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.txtStudentID.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            this.txtStudentID.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.txtStudentID.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txtStudentID.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtStudentID.Location = new System.Drawing.Point(50, 178);
@@ -454,3 +454,4 @@ namespace ITP104_FINAL_PROJECT
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace ITP104_FINAL_PROJECT
+namespace ITP104_FINAL_PROJECT
 {
     partial class StudentRegistration
     {
@@ -114,7 +114,7 @@
             this.txtAddress.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtAddress.DefaultText = "";
             this.txtAddress.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.txtAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAddress.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAddress.Location = new System.Drawing.Point(46, 388);
             this.txtAddress.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtAddress.Name = "txtAddress";
@@ -126,22 +126,22 @@
             // lblAddress
             // 
             this.lblAddress.AutoSize = true;
-            this.lblAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAddress.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAddress.Location = new System.Drawing.Point(51, 359);
             this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAddress.Name = "lblAddress";
-            this.lblAddress.Size = new System.Drawing.Size(163, 26);
+            this.lblAddress.Size = new System.Drawing.Size(175, 25);
             this.lblAddress.TabIndex = 27;
             this.lblAddress.Text = "Home Address:";
             // 
             // lblSex
             // 
             this.lblSex.AutoSize = true;
-            this.lblSex.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSex.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSex.Location = new System.Drawing.Point(296, 513);
             this.lblSex.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSex.Name = "lblSex";
-            this.lblSex.Size = new System.Drawing.Size(56, 26);
+            this.lblSex.Size = new System.Drawing.Size(54, 25);
             this.lblSex.TabIndex = 26;
             this.lblSex.Text = "Sex:";
             // 
@@ -169,11 +169,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(51, 511);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(123, 26);
+            this.label4.Size = new System.Drawing.Size(131, 25);
             this.label4.TabIndex = 24;
             this.label4.Text = "Year Level:";
             // 
@@ -261,11 +261,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(51, 444);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 26);
+            this.label3.Size = new System.Drawing.Size(93, 25);
             this.label3.TabIndex = 3;
             this.label3.Text = "Course:";
             // 
@@ -290,55 +290,55 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(50, 268);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(155, 26);
+            this.label2.Size = new System.Drawing.Size(165, 25);
             this.label2.TabIndex = 5;
             this.label2.Text = "Student Email:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(49, 178);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(158, 26);
+            this.label1.Size = new System.Drawing.Size(173, 25);
             this.label1.TabIndex = 6;
             this.label1.Text = "Student Name:";
             // 
             // lblStudentID
             // 
             this.lblStudentID.AutoSize = true;
-            this.lblStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStudentID.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStudentID.Location = new System.Drawing.Point(50, 91);
             this.lblStudentID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStudentID.Name = "lblStudentID";
-            this.lblStudentID.Size = new System.Drawing.Size(121, 26);
+            this.lblStudentID.Size = new System.Drawing.Size(128, 25);
             this.lblStudentID.TabIndex = 8;
             this.lblStudentID.Text = "Student ID:";
             // 
             // lblPhone
             // 
             this.lblPhone.AutoSize = true;
-            this.lblPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPhone.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPhone.Location = new System.Drawing.Point(294, 268);
             this.lblPhone.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPhone.Name = "lblPhone";
-            this.lblPhone.Size = new System.Drawing.Size(81, 26);
+            this.lblPhone.Size = new System.Drawing.Size(85, 25);
             this.lblPhone.TabIndex = 19;
             this.lblPhone.Text = "Phone:";
             // 
             // lblSection
             // 
             this.lblSection.AutoSize = true;
-            this.lblSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSection.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSection.Location = new System.Drawing.Point(296, 444);
             this.lblSection.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSection.Name = "lblSection";
-            this.lblSection.Size = new System.Drawing.Size(91, 26);
+            this.lblSection.Size = new System.Drawing.Size(96, 25);
             this.lblSection.TabIndex = 20;
             this.lblSection.Text = "Section:";
             // 
@@ -374,7 +374,7 @@
             this.txtEmail.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtEmail.DefaultText = "";
             this.txtEmail.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.txtEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmail.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.Location = new System.Drawing.Point(46, 294);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtEmail.Name = "txtEmail";
@@ -390,7 +390,7 @@
             this.txtName.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtName.DefaultText = "";
             this.txtName.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtName.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtName.Location = new System.Drawing.Point(46, 204);
             this.txtName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtName.Name = "txtName";
@@ -406,7 +406,7 @@
             this.txtStudentID.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtStudentID.DefaultText = "";
             this.txtStudentID.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.txtStudentID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtStudentID.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtStudentID.Location = new System.Drawing.Point(46, 117);
             this.txtStudentID.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtStudentID.Name = "txtStudentID";
@@ -422,7 +422,7 @@
             this.txtPhone.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtPhone.DefaultText = "";
             this.txtPhone.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.txtPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPhone.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPhone.Location = new System.Drawing.Point(292, 294);
             this.txtPhone.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtPhone.Name = "txtPhone";
@@ -438,7 +438,7 @@
             this.txtSection.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtSection.DefaultText = "";
             this.txtSection.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.txtSection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSection.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSection.Location = new System.Drawing.Point(299, 470);
             this.txtSection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtSection.Name = "txtSection";
@@ -465,7 +465,7 @@
             this.lblStudentDetails.AutoSize = false;
             this.lblStudentDetails.BackColor = System.Drawing.Color.White;
             this.lblStudentDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblStudentDetails.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStudentDetails.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStudentDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblStudentDetails.Location = new System.Drawing.Point(47, 335);
             this.lblStudentDetails.Margin = new System.Windows.Forms.Padding(2);
@@ -558,7 +558,7 @@
             // 
             this.guna2HtmlLabel4.AutoSize = false;
             this.guna2HtmlLabel4.BackColor = System.Drawing.Color.Transparent;
-            this.guna2HtmlLabel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guna2HtmlLabel4.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2HtmlLabel4.ForeColor = System.Drawing.Color.Transparent;
             this.guna2HtmlLabel4.Location = new System.Drawing.Point(102, 52);
             this.guna2HtmlLabel4.Margin = new System.Windows.Forms.Padding(2);
@@ -590,7 +590,7 @@
             // 
             this.guna2HtmlLabel1.AutoSize = false;
             this.guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2HtmlLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guna2HtmlLabel1.Font = new System.Drawing.Font("Century Gothic", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2HtmlLabel1.ForeColor = System.Drawing.Color.White;
             this.guna2HtmlLabel1.Location = new System.Drawing.Point(102, 13);
             this.guna2HtmlLabel1.Margin = new System.Windows.Forms.Padding(2);
@@ -601,14 +601,14 @@
             // 
             // StudentRegistration
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1366, 868);
             this.Controls.Add(this.guna2Panel1);
             this.Controls.Add(this.pnlQRPreview);
             this.Controls.Add(this.pnlForm);
-            this.Font = new System.Drawing.Font("Arial", 8.25F);
+            this.Font = new System.Drawing.Font("Century Gothic", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "StudentRegistration";
@@ -664,3 +664,4 @@
         private System.Windows.Forms.Label lblAddress;
     }
 }
+

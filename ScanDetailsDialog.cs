@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ITP104_FINAL_PROJECT.Models;
@@ -46,7 +47,7 @@ namespace ITP104_FINAL_PROJECT
                 _scanHistory.Notes = currentScan.Notes;
                 _scanHistory.RequiresReview = currentScan.RequiresReview;
             }
-            
+
             LoadScanDetails();
         }
 
@@ -65,7 +66,7 @@ namespace ITP104_FINAL_PROJECT
             lblScanPurposeValue.Text = _scanHistory.ScanPurpose ?? "Attendance";
             lblNotesValue.Text = _scanHistory.Notes ?? "-";
             lblScanDataValue.Text = _scanHistory.ScanData ?? "N/A";
-            
+
             // Get current status from the refreshed scan data
             string status = (_scanHistory.Status ?? "").ToLower();
             string displayStatus = _scanHistory.Status ?? "N/A";
@@ -98,7 +99,65 @@ namespace ITP104_FINAL_PROJECT
                 lblStatusValue.ForeColor = Color.Orange;
             }
             lblStatusValue.Text = displayStatus;
-            
+
+            // Solution 1: Validation checks
+            var allWarnings = new System.Collections.Generic.List<string>();
+
+            // Check 1: If this is a time-out record, validate against time-in
+            if (_scanHistory.TimeOut.HasValue && !string.IsNullOrEmpty(_scanHistory.TimeInValidationMode))
+            {
+                var (isValid, warnings) = Services.InputValidator.ValidateTimeOutAgainstTimeIn(
+                    _scanHistory.ScanDateTime,
+                    _scanHistory.TimeOut.Value,
+                    _scanHistory.TimeInValidationMode,
+                    _scanHistory.TimeOutValidationMode
+                );
+
+                if (warnings.Length > 0)
+                {
+                    allWarnings.AddRange(warnings);
+                }
+            }
+            // Check 2: If this is a time-in only (offline mode), validate the timestamp
+            else if (!_scanHistory.TimeOut.HasValue && status == "for_review")
+            {
+                var (isValid, warnings) = Services.InputValidator.ValidateScanTimestamp(
+                    _scanHistory.ScanDateTime,
+                    null,
+                    _scanHistory.ServerTime
+                );
+
+                if (warnings.Length > 0)
+                {
+                    allWarnings.AddRange(warnings);
+                }
+
+                // Add specific warning for offline time-in
+                if (_scanHistory.TimeInValidationMode == "offline" || string.IsNullOrEmpty(_scanHistory.TimeInValidationMode))
+                {
+                    allWarnings.Add("🟠 WARNING: Time-in recorded in OFFLINE mode - timestamp cannot be verified");
+                    allWarnings.Add("   → Student device time may have been tampered with");
+                    allWarnings.Add("   → Verify student was actually present at the recorded time");
+                }
+            }
+
+            // Display all warnings if any found
+            if (allWarnings.Count > 0)
+            {
+                string warningText = "\n\n🚨 SUSPICIOUS PATTERNS DETECTED:\n" + string.Join("\n", allWarnings);
+                lblNotesValue.Text = (_scanHistory.Notes ?? "") + warningText;
+
+                // Change color if critical warnings detected
+                if (allWarnings.Any(w => w.Contains("CRITICAL")))
+                {
+                    lblNotesValue.ForeColor = Color.Red;
+                }
+                else
+                {
+                    lblNotesValue.ForeColor = Color.DarkOrange;
+                }
+            }
+
             // Only show review buttons if status is currently 'for_review'
             bool needsReview = status == "for_review" || status == "pending review";
             if (needsReview)

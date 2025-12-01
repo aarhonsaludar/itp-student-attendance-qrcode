@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using ITP104_FINAL_PROJECT.Models;
 using ITP104_FINAL_PROJECT.Data;
+using ITP104_FINAL_PROJECT.Services;
 using System.Text.RegularExpressions;
 
 namespace ITP104_FINAL_PROJECT
@@ -15,14 +16,16 @@ namespace ITP104_FINAL_PROJECT
     {
         private Student originalStudent;
         private StudentRepository studentRepository;
-        
+        private bool emailChangeVerified = false;
+        private string verifiedNewEmail = null;
+
         public Student UpdatedStudent { get; private set; }
 
         public EditStudentDialog(Student student)
         {
             originalStudent = student;
             studentRepository = new StudentRepository();
-            
+
             InitializeComponent();
             InitializeFormData();
             LoadStudentData();
@@ -94,14 +97,14 @@ namespace ITP104_FINAL_PROJECT
         private string GetFullName(Student student)
         {
             string fullName = student.FirstName;
-            
+
             if (!string.IsNullOrWhiteSpace(student.MiddleName))
             {
                 fullName += " " + student.MiddleName;
             }
-            
+
             fullName += " " + student.LastName;
-            
+
             return fullName.Trim();
         }
 
@@ -135,7 +138,7 @@ namespace ITP104_FINAL_PROJECT
         /// <summary>
         /// Save button click handler - Validates and updates student
         /// </summary>
-        private void BtnSave_Click(object sender, EventArgs e)
+        private async void BtnSave_Click(object sender, EventArgs e)
         {
             try
             {
@@ -160,6 +163,32 @@ namespace ITP104_FINAL_PROJECT
                     MessageBox.Show("Please enter a valid email address.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtEmail.Focus();
                     return;
+                }
+
+                // Check if email has changed - require OTP verification
+                bool emailHasChanged = !txtEmail.Text.Trim().Equals(originalStudent.Email?.Trim(), StringComparison.OrdinalIgnoreCase);
+
+                if (emailHasChanged)
+                {
+                    // Check if email change has been verified
+                    if (!emailChangeVerified || verifiedNewEmail != txtEmail.Text.Trim())
+                    {
+                        var verifyResult = MessageBox.Show(
+                            "Email address has changed!\n\n" +
+                            "For security reasons, you need to verify both:\n" +
+                            "1. Your CURRENT email (prove you own the account)\n" +
+                            "2. Your NEW email (prove you can access it)\n\n" +
+                            "Click YES to start the verification process.",
+                            "Email Change Verification Required",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information);
+
+                        if (verifyResult == DialogResult.Yes)
+                        {
+                            await VerifyEmailChangeAsync(txtEmail.Text.Trim());
+                        }
+                        return; // Don't proceed with save until verified
+                    }
                 }
 
                 if (cmbCourse.SelectedIndex == -1)
@@ -244,6 +273,91 @@ namespace ITP104_FINAL_PROJECT
             catch
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Verify email change with two-step OTP process
+        /// </summary>
+        private async System.Threading.Tasks.Task VerifyEmailChangeAsync(string newEmail)
+        {
+            try
+            {
+                // STEP 1: Verify OLD email
+                MessageBox.Show(
+                    "STEP 1 of 2: Verify Current Email\n\n" +
+                    $"An OTP code will be sent to your CURRENT email:\n{originalStudent.Email}\n\n" +
+                    "Please check your email and enter the code.",
+                    "Verify Current Email",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                // Send OTP to OLD email
+                var oldEmailSession = await OTPService.InitiateEmailChangeVerifyOldAsync(originalStudent, newEmail);
+
+                // Show OTP verification dialog for OLD email
+                using (var otpDialog = new OTPVerificationDialog(oldEmailSession))
+                {
+                    otpDialog.Text = "Verify Current Email - Step 1 of 2";
+
+                    if (otpDialog.ShowDialog() != DialogResult.OK || !otpDialog.IsVerified)
+                    {
+                        MessageBox.Show(
+                            "Current email verification failed or cancelled.\n\nEmail change cancelled.",
+                            "Verification Failed",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
+                // STEP 2: Verify NEW email
+                MessageBox.Show(
+                    "STEP 2 of 2: Verify New Email\n\n" +
+                    $"An OTP code will be sent to your NEW email:\n{newEmail}\n\n" +
+                    "Please check your email and enter the code.",
+                    "Verify New Email",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                // Send OTP to NEW email
+                var newEmailSession = await OTPService.InitiateEmailChangeVerifyNewAsync(oldEmailSession);
+
+                // Show OTP verification dialog for NEW email
+                using (var otpDialog = new OTPVerificationDialog(newEmailSession))
+                {
+                    otpDialog.Text = "Verify New Email - Step 2 of 2";
+
+                    if (otpDialog.ShowDialog() != DialogResult.OK || !otpDialog.IsVerified)
+                    {
+                        MessageBox.Show(
+                            "New email verification failed or cancelled.\n\nEmail change cancelled.",
+                            "Verification Failed",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
+                // Both verifications successful!
+                emailChangeVerified = true;
+                verifiedNewEmail = newEmail;
+
+                MessageBox.Show(
+                    "✅ Email Verification Complete!\n\n" +
+                    "Both your current and new email have been verified.\n" +
+                    "Click SAVE to apply the changes.",
+                    "Verification Successful",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Email verification error: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
     }

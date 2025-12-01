@@ -349,23 +349,33 @@ namespace ITP104_FINAL_PROJECT
                     string studentNumber = scan.StudentNumber ?? "N/A";
                     string studentName = scan.StudentName ?? "Unknown";
                     string scanType = scan.ScanType ?? "QR";
-                    string status = scan.Status ?? "success";
-
-                    // Format status with color coding
-                    status = status.ToLower() == "success" ? "Success" :
-                             status.ToLower() == "duplicate" ? "Duplicate" : "Failed";
+                    string status = scan.AttendanceStatus ?? "Unknown"; // Use computed AttendanceStatus instead of raw Status
 
                     dgvScanHistory.Rows.Add(date, timeIn, timeOut, studentNumber, studentName, scanType, status);
 
                     // Apply row color based on status
                     int rowIndex = dgvScanHistory.Rows.Count - 1;
-                    if (status == "Duplicate")
+
+                    // Color coding based on attendance status
+                    if (status.Contains("Pending"))
+                    {
+                        dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.FromArgb(255, 152, 0); // Orange for pending
+                    }
+                    else if (status.Contains("Incomplete") || status.Contains("For Review"))
+                    {
+                        dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.FromArgb(220, 53, 69); // Red for incomplete/review
+                    }
+                    else if (status.Contains("Failed"))
+                    {
+                        dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Red;
+                    }
+                    else if (status.Contains("Duplicate"))
                     {
                         dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Orange;
                     }
-                    else if (status == "Failed")
+                    else if (status.Contains("Completed"))
                     {
-                        dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Red;
+                        dgvScanHistory.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.FromArgb(40, 167, 69); // Green for completed
                     }
                 }
 
@@ -418,12 +428,28 @@ namespace ITP104_FINAL_PROJECT
                     // Open details dialog
                     using (var detailsDialog = new ScanDetailsDialog(selectedScan))
                     {
-                        detailsDialog.ShowDialog(this);
+                        var dialogResult = detailsDialog.ShowDialog(this);
 
                         // Automatically refresh the grid if Accept or Decline was clicked
                         if (detailsDialog.ReviewActionTaken)
                         {
+                            // Show loading indicator
+                            this.Cursor = Cursors.WaitCursor;
+                            dgvScanHistory.Enabled = false;
+
                             await LoadScanHistoryAsync();
+
+                            // Restore UI
+                            dgvScanHistory.Enabled = true;
+                            this.Cursor = Cursors.Default;
+
+                            // Show success message
+                            MessageBox.Show(
+                                "Scan history has been refreshed with the updated status.",
+                                "Refreshed",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information
+                            );
                         }
                     }
                 }
@@ -569,7 +595,7 @@ namespace ITP104_FINAL_PROJECT
                     string studentNumber = EscapeCsvField(scan.StudentNumber ?? "");
                     string studentName = EscapeCsvField(scan.StudentName ?? "");
                     string scanType = EscapeCsvField(scan.ScanType ?? "QR Code");
-                    string status = EscapeCsvField(scan.Status ?? "");
+                    string status = EscapeCsvField(scan.AttendanceStatus ?? "");
                     string location = EscapeCsvField(scan.Location ?? "");
                     string purpose = EscapeCsvField(scan.ScanPurpose ?? "");
                     string notes = EscapeCsvField(scan.Notes ?? "");

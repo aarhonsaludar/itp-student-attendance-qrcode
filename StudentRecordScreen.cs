@@ -591,7 +591,7 @@ namespace ITP104_FINAL_PROJECT
                         string timeOut = scan.TimeOut.HasValue ? scan.TimeOut.Value.ToString("HH:mm:ss") : "";
                         string scanType = EscapeCsvField(scan.ScanType ?? "QR Code");
                         string location = EscapeCsvField(scan.Location ?? "");
-                        string status = EscapeCsvField(scan.Status ?? "");
+                        string status = EscapeCsvField(scan.AttendanceStatus ?? "");
                         string purpose = EscapeCsvField(scan.ScanPurpose ?? "");
                         string notes = EscapeCsvField(scan.Notes ?? "");
 
