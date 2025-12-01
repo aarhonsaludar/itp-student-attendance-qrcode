@@ -264,9 +264,13 @@ namespace ITP104_FINAL_PROJECT
                 }
             }
 
-            // Only show review buttons if status is currently 'for_review'
+            // Only show review buttons if:
+            // 1. Status is 'for_review' AND
+            // 2. There's BOTH Time-In AND Time-Out (complete attendance record)
             bool needsReview = status == "for_review" || status == "pending review";
-            if (needsReview)
+            bool hasCompleteAttendance = _scanHistory.TimeOut.HasValue; // Has both Time-In (always present) and Time-Out
+
+            if (needsReview && hasCompleteAttendance)
             {
                 ShowReviewButtons();
             }
