@@ -361,3 +361,47 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# =========================
+# Student Attendance System - Project Specific
+# =========================
+
+# Student photos (user-generated content - may contain personal data)
+Resources/StudentPhotos/
+StudentPhotos/
+photos/
+
+# Database backups and exports
+*.sql.bak
+*.bak
+database_backup/
+backups/
+
+# Local configuration overrides (may contain sensitive credentials)
+App.config.local
+appsettings.local.json
+*.local.config
+secrets.json
+
+# Application error logs
+ErrorLogs/
+error_logs/
+
+# QR Code exports/generated files
+QRCodes/
+qr_exports/
+
+# Webcam/scanner temp files
+capture_temp/
+
+# Windows OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
