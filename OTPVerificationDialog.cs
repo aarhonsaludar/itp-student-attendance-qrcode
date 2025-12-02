@@ -35,6 +35,12 @@ namespace ITP104_FINAL_PROJECT
                 lblAttendanceType.ForeColor = Color.FromArgb(40, 167, 69); // Green
                 lblTitle.BackColor = Color.FromArgb(40, 167, 69);
             }
+            else if (session.AttendanceType == AttendanceType.EmailChange)
+            {
+                lblAttendanceType.Text = "📧 EMAIL VERIFICATION";
+                lblAttendanceType.ForeColor = Color.FromArgb(33, 150, 243); // Blue
+                lblTitle.BackColor = Color.FromArgb(33, 150, 243);
+            }
             else
             {
                 lblAttendanceType.Text = "⏰ TIME OUT";

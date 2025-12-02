@@ -89,6 +89,9 @@ namespace ITP104_FINAL_PROJECT
             {
                 cmbFinalSex.SelectedItem = originalStudent.Sex;
             }
+
+            // Address field (editable)
+            txtAddress.Text = originalStudent.Address ?? "";
         }
 
         /// <summary>
@@ -221,6 +224,35 @@ namespace ITP104_FINAL_PROJECT
                 // Extract year level number
                 string yearLevel = ConvertDisplayToYearLevel(cmbYearLevel.Text);
 
+                // Check if name or program changed - need to regenerate QR code
+                string newFullName = txtName.Text.Trim();
+                string newProgram = cmbCourse.Text;
+                string originalFullName = GetFullName(originalStudent);
+                bool nameChanged = !newFullName.Equals(originalFullName, StringComparison.OrdinalIgnoreCase);
+                bool programChanged = !newProgram.Equals(originalStudent.Program, StringComparison.OrdinalIgnoreCase);
+
+                string qrCodeData;
+                if (nameChanged || programChanged)
+                {
+                    // Regenerate QR code data with new name/program
+                    // Format: QR|ID:{student_number}|Name:{full_name}|Program:{program}
+                    qrCodeData = $"QR|ID:{originalStudent.StudentNumber}|Name:{newFullName}|Program:{newProgram}";
+
+                    MessageBox.Show(
+                        "⚠️ Name or Program has changed!\n\n" +
+                        "The QR code data has been updated in the database.\n" +
+                        "Please REPRINT the student's QR code for the changes to take effect when scanning.\n\n" +
+                        "The old printed QR code will NO LONGER work.",
+                        "QR Code Update Required",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    // Keep original QR code
+                    qrCodeData = originalStudent.QRCodeData;
+                }
+
                 // Create updated student object
                 UpdatedStudent = new Student
                 {
@@ -235,8 +267,9 @@ namespace ITP104_FINAL_PROJECT
                     YearLevel = yearLevel,
                     Program = cmbCourse.Text,
                     Section = string.IsNullOrWhiteSpace(txtSection.Text) ? null : txtSection.Text.Trim(),
+                    Address = string.IsNullOrWhiteSpace(txtAddress.Text) ? null : txtAddress.Text.Trim(), // Editable address
                     Status = originalStudent.Status, // Keep original status
-                    QRCodeData = originalStudent.QRCodeData, // Keep original QR code
+                    QRCodeData = qrCodeData, // Updated QR code if name/program changed
                     PhotoPath = originalStudent.PhotoPath, // Keep original photo
                     EnrollmentDate = originalStudent.EnrollmentDate, // Keep original enrollment date
                     CreatedAt = originalStudent.CreatedAt

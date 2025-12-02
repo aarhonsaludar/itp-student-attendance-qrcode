@@ -525,7 +525,7 @@ namespace ITP104_FINAL_PROJECT
             };
 
             // Handle View Details button click
-            dgvStudentsGrid.CellContentClick += (s, e) =>
+            dgvStudentsGrid.CellContentClick += async (s, e) =>
             {
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                 {
@@ -536,13 +536,32 @@ namespace ITP104_FINAL_PROJECT
                         {
                             StudentRecordScreen recordScreen = new StudentRecordScreen(studentId);
                             recordScreen.ShowDialog();
+
+                            // Refresh the grid after dialog closes to show any updates
+                            try
+                            {
+                                var students = await studentRepository.GetAllAsync(activeOnly: false);
+                                var displayList = students.Select(st => new
+                                {
+                                    st.StudentId,
+                                    st.StudentNumber,
+                                    FullName = $"{st.FirstName} {(string.IsNullOrEmpty(st.MiddleName) ? "" : st.MiddleName + " ")}{st.LastName}",
+                                    st.Email,
+                                    st.Program,
+                                    YearLevel = st.YearLevel + (st.YearLevel == "1" ? "st" : st.YearLevel == "2" ? "nd" : st.YearLevel == "3" ? "rd" : "th"),
+                                    st.Section,
+                                    st.Status
+                                }).ToList();
+                                dgvStudentsGrid.DataSource = displayList;
+                            }
+                            catch { /* Ignore refresh errors */ }
                         }
                     }
                 }
             };
 
             // Double-click also opens student details for convenience
-            dgvStudentsGrid.CellDoubleClick += (s, e) =>
+            dgvStudentsGrid.CellDoubleClick += async (s, e) =>
             {
                 if (e.RowIndex >= 0)
                 {
@@ -551,6 +570,25 @@ namespace ITP104_FINAL_PROJECT
                     {
                         StudentRecordScreen recordScreen = new StudentRecordScreen(studentId);
                         recordScreen.ShowDialog();
+
+                        // Refresh the grid after dialog closes to show any updates
+                        try
+                        {
+                            var students = await studentRepository.GetAllAsync(activeOnly: false);
+                            var displayList = students.Select(st => new
+                            {
+                                st.StudentId,
+                                st.StudentNumber,
+                                FullName = $"{st.FirstName} {(string.IsNullOrEmpty(st.MiddleName) ? "" : st.MiddleName + " ")}{st.LastName}",
+                                st.Email,
+                                st.Program,
+                                YearLevel = st.YearLevel + (st.YearLevel == "1" ? "st" : st.YearLevel == "2" ? "nd" : st.YearLevel == "3" ? "rd" : "th"),
+                                st.Section,
+                                st.Status
+                            }).ToList();
+                            dgvStudentsGrid.DataSource = displayList;
+                        }
+                        catch { /* Ignore refresh errors */ }
                     }
                 }
             };
