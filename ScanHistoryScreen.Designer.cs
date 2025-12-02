@@ -350,7 +350,7 @@ namespace ITP104_FINAL_PROJECT
             this.btnExport.ForeColor = System.Drawing.Color.White;
             this.btnExport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnExport.ImageSize = new System.Drawing.Size(24, 24);
-            this.btnExport.Location = new System.Drawing.Point(1362, 145);
+            this.btnExport.Location = new System.Drawing.Point(1375, 145);
             this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(147, 50);
@@ -368,7 +368,7 @@ namespace ITP104_FINAL_PROJECT
             this.btnClearFilter.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(76)))), ((int)(((byte)(60)))));
             this.btnClearFilter.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnClearFilter.ForeColor = System.Drawing.Color.White;
-            this.btnClearFilter.Location = new System.Drawing.Point(1206, 145);
+            this.btnClearFilter.Location = new System.Drawing.Point(186, 145);
             this.btnClearFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClearFilter.Name = "btnClearFilter";
             this.btnClearFilter.Size = new System.Drawing.Size(147, 50);
@@ -386,7 +386,7 @@ namespace ITP104_FINAL_PROJECT
             this.btnSearch.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219)))));
             this.btnSearch.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold);
             this.btnSearch.ForeColor = System.Drawing.Color.White;
-            this.btnSearch.Location = new System.Drawing.Point(1051, 145);
+            this.btnSearch.Location = new System.Drawing.Point(31, 145);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(147, 50);

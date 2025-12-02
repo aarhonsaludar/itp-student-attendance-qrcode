@@ -180,7 +180,7 @@ namespace ITP104_FINAL_PROJECT
             // lblNote
             // 
             this.lblNote.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNote.Location = new System.Drawing.Point(52, 58);
+            this.lblNote.Location = new System.Drawing.Point(42, 59);
             this.lblNote.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNote.Name = "lblNote";
             this.lblNote.Size = new System.Drawing.Size(225, 32);
@@ -467,11 +467,11 @@ namespace ITP104_FINAL_PROJECT
             this.lblStudentDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblStudentDetails.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStudentDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblStudentDetails.Location = new System.Drawing.Point(47, 335);
+            this.lblStudentDetails.Location = new System.Drawing.Point(47, 341);
             this.lblStudentDetails.Margin = new System.Windows.Forms.Padding(2);
             this.lblStudentDetails.Name = "lblStudentDetails";
             this.lblStudentDetails.Padding = new System.Windows.Forms.Padding(11, 13, 11, 13);
-            this.lblStudentDetails.Size = new System.Drawing.Size(489, 375);
+            this.lblStudentDetails.Size = new System.Drawing.Size(489, 381);
             this.lblStudentDetails.TabIndex = 2;
             this.lblStudentDetails.Text = null;
             // 

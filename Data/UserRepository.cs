@@ -136,82 +136,8 @@ namespace ITP104_FINAL_PROJECT.Data
         }
 
         /// <summary>
-        /// Create a new user with BCrypt hashed password
+        /// Get user by username
         /// </summary>
-        public async Task<(bool success, string message, int userId)> CreateUserAsync(User user, string plainPassword)
-        {
-            try
-            {
-                // Validate input
-                var validation = ValidateUser(user, plainPassword);
-                if (!validation.IsValid)
-                {
-                    return (false, validation.ErrorMessage, 0);
-                }
-
-                using (var connection = await DatabaseHelper.GetConnectionWithRetryAsync())
-                {
-                    // Check if username already exists
-                    string checkQuery = "SELECT COUNT(*) FROM users WHERE username = @username";
-                    using (var checkCommand = new MySqlCommand(checkQuery, connection))
-                    {
-                        checkCommand.Parameters.AddWithValue("@username", user.Username);
-                        long count = (long)await checkCommand.ExecuteScalarAsync();
-                        if (count > 0)
-                        {
-                            await ErrorLoggingService.LogInfoAsync(
-                                "Create User - Duplicate Username",
-                                $"Attempted to create user with existing username: {user.Username}",
-                                "users");
-                            return (false, "Username already exists", 0);
-                        }
-                    }
-
-                    // Insert new user with plaintext password
-                    string insertQuery = @"INSERT INTO users (username, password_hash, full_name, email, role, is_active)
-                                          VALUES (@username, @password, @fullName, @email, @role, @isActive);
-                                          SELECT LAST_INSERT_ID();";
-
-                    using (var command = new MySqlCommand(insertQuery, connection))
-                    {
-                        command.Parameters.AddWithValue("@username", user.Username);
-                        command.Parameters.AddWithValue("@password", plainPassword);
-                        command.Parameters.AddWithValue("@fullName", user.FullName);
-                        command.Parameters.AddWithValue("@email", user.Email ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@role", user.Role);
-                        command.Parameters.AddWithValue("@isActive", user.IsActive);
-
-                        var userId = Convert.ToInt32(await command.ExecuteScalarAsync());
-
-                        await ErrorLoggingService.LogInfoAsync(
-                            "Create User - Success",
-                            $"Created user: {user.Username} ({user.FullName})",
-                            "users",
-                            userId);
-
-                        return (true, "User created successfully", userId);
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                await ErrorLoggingService.LogErrorAsync(
-                    "Create User - Database Error",
-                    ex,
-                    "users");
-                return (false, ErrorLoggingService.GetUserFriendlyMessage(ex), 0);
-            }
-            catch (Exception ex)
-            {
-                await ErrorLoggingService.LogErrorAsync(
-                    "Create User - Error",
-                    ex,
-                    "users");
-                return (false, $"An error occurred: {ex.Message}", 0);
-            }
-        }        /// <summary>
-                 /// Get user by username
-                 /// </summary>
         public async Task<User> GetByUsernameAsync(string username)
         {
             try
@@ -309,63 +235,6 @@ namespace ITP104_FINAL_PROJECT.Data
                 CreatedAt = reader.GetDateTime("created_at"),
                 LastLogin = reader.IsDBNull(reader.GetOrdinal("last_login")) ? (DateTime?)null : reader.GetDateTime("last_login")
             };
-        }
-
-        /// <summary>
-        /// Validate user data before database operations
-        /// </summary>
-        private (bool IsValid, string ErrorMessage) ValidateUser(User user, string password)
-        {
-            if (user == null)
-            {
-                return (false, "User data cannot be null");
-            }
-
-            // Validate username
-            var usernameValidation = InputValidator.ValidateRequired(user.Username, "Username");
-            if (!usernameValidation.IsValid)
-                return usernameValidation;
-
-            var usernameLengthValidation = InputValidator.ValidateLength(user.Username, "Username", 3, 50);
-            if (!usernameLengthValidation.IsValid)
-                return usernameLengthValidation;
-
-            // Validate password
-            var passwordValidation = InputValidator.ValidateRequired(password, "Password");
-            if (!passwordValidation.IsValid)
-                return passwordValidation;
-
-            var passwordLengthValidation = InputValidator.ValidateLength(password, "Password", 6, 255);
-            if (!passwordLengthValidation.IsValid)
-                return passwordLengthValidation;
-
-            // Validate full name
-            var fullNameValidation = InputValidator.ValidateRequired(user.FullName, "Full Name");
-            if (!fullNameValidation.IsValid)
-                return fullNameValidation;
-
-            if (!InputValidator.IsValidName(user.FullName))
-            {
-                return (false, "Full name contains invalid characters");
-            }
-
-            // Validate email if provided
-            if (!string.IsNullOrWhiteSpace(user.Email) && !InputValidator.IsValidEmail(user.Email))
-            {
-                return (false, "Invalid email format");
-            }
-
-            // Validate role
-            var roleValidation = InputValidator.ValidateRequired(user.Role, "Role");
-            if (!roleValidation.IsValid)
-                return roleValidation;
-
-            if (user.Role != "admin" && user.Role != "staff" && user.Role != "teacher")
-            {
-                return (false, "Invalid role. Must be 'admin', 'staff', or 'teacher'");
-            }
-
-            return (true, null);
         }
     }
 }
