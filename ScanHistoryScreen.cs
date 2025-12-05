@@ -485,7 +485,7 @@ namespace ITP104_FINAL_PROJECT
             {
                 SaveFileDialog saveDialog = new SaveFileDialog
                 {
-                    Filter = "CSV File (*.csv)|*.csv|Excel File (*.xlsx)|*.xlsx",
+                    Filter = "PDF Document (*.pdf)|*.pdf|JSON File (*.json)|*.json|CSV File (*.csv)|*.csv",
                     Title = "Export Scan History",
                     FileName = $"Scan_History_{DateTime.Now:yyyyMMdd_HHmmss}"
                 };
@@ -529,34 +529,35 @@ namespace ITP104_FINAL_PROJECT
 
                     // Determine file type and export accordingly
                     string fileExtension = System.IO.Path.GetExtension(saveDialog.FileName).ToLower();
+                    Services.ExportFormat format;
 
-                    if (fileExtension == ".csv")
+                    switch (fileExtension)
                     {
-                        ExportToCsv(saveDialog.FileName, allScanHistory);
+                        case ".pdf":
+                            format = Services.ExportFormat.PDF;
+                            break;
+                        case ".json":
+                            format = Services.ExportFormat.JSON;
+                            break;
+                        case ".csv":
+                            format = Services.ExportFormat.CSV;
+                            break;
+                        default:
+                            MessageBox.Show("Unsupported file format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                     }
-                    else if (fileExtension == ".xlsx")
-                    {
-                        // For Excel export, we need additional libraries (EPPlus, ClosedXML, etc.)
-                        // For now, we'll export as CSV with .xlsx extension
-                        MessageBox.Show(
-                            "Excel export requires additional libraries.\n" +
-                            "Exporting as CSV format instead.",
-                            "Export Format",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information
-                        );
-                        // Change extension to .csv
-                        string csvFileName = System.IO.Path.ChangeExtension(saveDialog.FileName, ".csv");
-                        ExportToCsv(csvFileName, allScanHistory);
-                    }
+
+                    // Export using the ExportService
+                    Services.ExportService.ExportScanHistory(saveDialog.FileName, allScanHistory, format);
 
                     // Reset button state
                     this.Cursor = Cursors.Default;
                     btnExport.Enabled = true;
                     btnExport.Text = "Export";
 
+                    string formatName = fileExtension.TrimStart('.').ToUpper();
                     MessageBox.Show(
-                        $"Successfully exported {allScanHistory.Count} records!\n\n" +
+                        $"Successfully exported {allScanHistory.Count} records to {formatName}!\n\n" +
                         $"File saved to:\n{saveDialog.FileName}",
                         "Export Successful",
                         MessageBoxButtons.OK,

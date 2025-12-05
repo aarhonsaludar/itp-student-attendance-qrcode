@@ -167,31 +167,6 @@ INSERT INTO system_settings (setting_key, setting_value, setting_category, descr
 ('language', 'English', 'System', 'System language'),
 ('database_version', '1.0.0', 'Database', 'Current database schema version');
 
--- Sample Students for Testing
-INSERT INTO students (
-    student_number, first_name, middle_name, last_name, 
-    email, phone, year_level, program, section,
-    qr_code_data, enrollment_date, status
-) VALUES
-('2024-STU-0001', 'John', 'M.', 'Smith', 'john.smith@school.edu', '09171234567', '3', 'Computer Science', 'CS-3A', 
-'ID:2024-STU-0001|Name:John M. Smith|Email:john.smith@school.edu|Course:Computer Science|Year:3', '2021-08-15', 'Active'),
-('2024-STU-0002', 'Emily', 'R.', 'Johnson', 'emily.johnson@school.edu', '09181234567', '2', 'Information Technology', 'IT-2B', 
-'ID:2024-STU-0002|Name:Emily R. Johnson|Email:emily.johnson@school.edu|Course:Information Technology|Year:2', '2022-08-15', 'Active'),
-('2024-STU-0003', 'Michael', 'A.', 'Brown', 'michael.brown@school.edu', '09191234567', '4', 'Computer Science', 'CS-4A', 
-'ID:2024-STU-0003|Name:Michael A. Brown|Email:michael.brown@school.edu|Course:Computer Science|Year:4', '2020-08-15', 'Active'),
-('2024-STU-0004', 'Sarah', 'L.', 'Davis', 'sarah.davis@school.edu', '09201234567', '1', 'Information Technology', 'IT-1A', 
-'ID:2024-STU-0004|Name:Sarah L. Davis|Email:sarah.davis@school.edu|Course:Information Technology|Year:1', '2023-08-15', 'Active'),
-('2024-STU-0005', 'David', 'K.', 'Wilson', 'david.wilson@school.edu', '09211234567', '3', 'Computer Engineering', 'CE-3B', 
-'ID:2024-STU-0005|Name:David K. Wilson|Email:david.wilson@school.edu|Course:Computer Engineering|Year:3', '2021-08-15', 'Active');
-
--- Sample Scan History
-INSERT INTO scan_history (student_id, device_id, scan_type, scan_data, scan_datetime, location, status) VALUES
-(1, 1, 'QR', 'ID:2024-STU-0001|Name:John M. Smith|Email:john.smith@school.edu|Course:Computer Science|Year:3', NOW(), 'Pamantasan ng Cabuyao Building', 'success'),
-(2, 1, 'QR', 'ID:2024-STU-0002|Name:Emily R. Johnson|Email:emily.johnson@school.edu|Course:Information Technology|Year:2', DATE_SUB(NOW(), INTERVAL 5 MINUTE), 'Pamantasan ng Cabuyao Building', 'success'),
-(3, 1, 'QR', 'ID:2024-STU-0003|Name:Michael A. Brown|Email:michael.brown@school.edu|Course:Computer Science|Year:4', DATE_SUB(NOW(), INTERVAL 12 MINUTE), 'Pamantasan ng Cabuyao Building', 'success'),
-(4, 2, 'QR', 'ID:2024-STU-0004|Name:Sarah L. Davis|Email:sarah.davis@school.edu|Course:Information Technology|Year:1', DATE_SUB(NOW(), INTERVAL 18 MINUTE), 'Library', 'success'),
-(5, 1, 'QR', 'ID:2024-STU-0005|Name:David K. Wilson|Email:david.wilson@school.edu|Course:Computer Engineering|Year:3', DATE_SUB(NOW(), INTERVAL 25 MINUTE), 'Pamantasan ng Cabuyao Building', 'success');
-
 -- ============================================
 -- Stored Procedures (Active Procedures Only)
 -- ============================================

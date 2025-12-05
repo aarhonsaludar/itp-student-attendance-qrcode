@@ -46,6 +46,13 @@ namespace ITP104_FINAL_PROJECT
             picQRCode.Click += PicQRCode_Click; // Add click handler for QR code download
             picQRCode.Cursor = Cursors.Hand; // Change cursor to hand when hovering over QR code
 
+            // Add context menu to QR code for resending email
+            var qrContextMenu = new ContextMenuStrip();
+            var resendEmailItem = new ToolStripMenuItem("📧 Resend QR Code to Email");
+            resendEmailItem.Click += (s, e) => ResendQRCodeEmail();
+            qrContextMenu.Items.Add(resendEmailItem);
+            picQRCode.ContextMenuStrip = qrContextMenu;
+
             // Setup hover effects
             SetupHoverEffects();
 
@@ -465,7 +472,7 @@ namespace ITP104_FINAL_PROJECT
             {
                 SaveFileDialog saveDialog = new SaveFileDialog
                 {
-                    Filter = "CSV File (*.csv)|*.csv|Excel File (*.xlsx)|*.xlsx",
+                    Filter = "PDF Document (*.pdf)|*.pdf|JSON File (*.json)|*.json|CSV File (*.csv)|*.csv",
                     Title = "Export Student Record",
                     FileName = $"Student_Record_{lblStudentIDValue.Text}_{DateTime.Now:yyyyMMdd_HHmmss}"
                 };
@@ -492,33 +499,35 @@ namespace ITP104_FINAL_PROJECT
 
                     // Determine file type and export accordingly
                     string fileExtension = System.IO.Path.GetExtension(saveDialog.FileName).ToLower();
+                    Services.ExportFormat format;
 
-                    if (fileExtension == ".csv")
+                    switch (fileExtension)
                     {
-                        ExportStudentToCsv(saveDialog.FileName, student, scanHistory);
+                        case ".pdf":
+                            format = Services.ExportFormat.PDF;
+                            break;
+                        case ".json":
+                            format = Services.ExportFormat.JSON;
+                            break;
+                        case ".csv":
+                            format = Services.ExportFormat.CSV;
+                            break;
+                        default:
+                            MessageBox.Show("Unsupported file format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                     }
-                    else if (fileExtension == ".xlsx")
-                    {
-                        // For Excel export, we need additional libraries
-                        // For now, export as CSV format instead
-                        MessageBox.Show(
-                            "Excel export requires additional libraries.\n" +
-                            "Exporting as CSV format instead.",
-                            "Export Format",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information
-                        );
-                        string csvFileName = System.IO.Path.ChangeExtension(saveDialog.FileName, ".csv");
-                        ExportStudentToCsv(csvFileName, student, scanHistory);
-                    }
+
+                    // Export using the ExportService
+                    Services.ExportService.ExportStudentRecord(saveDialog.FileName, student, scanHistory, format);
 
                     // Reset button state
                     this.Cursor = Cursors.Default;
                     btnExport.Enabled = true;
                     btnExport.Text = "Export";
 
+                    string formatName = fileExtension.TrimStart('.').ToUpper();
                     MessageBox.Show(
-                        $"Successfully exported student record!\n\n" +
+                        $"Successfully exported student record to {formatName}!\n\n" +
                         $"Student: {lblFullNameValue.Text}\n" +
                         $"Scan History Records: {scanHistory?.Count ?? 0}\n\n" +
                         $"File saved to:\n{saveDialog.FileName}",
@@ -526,6 +535,13 @@ namespace ITP104_FINAL_PROJECT
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information
                     );
+
+                    // Open file location
+                    if (MessageBox.Show("Would you like to open the file location?", "Open File",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{saveDialog.FileName}\"");
+                    }
                 }
             }
             catch (Exception ex)
@@ -537,6 +553,103 @@ namespace ITP104_FINAL_PROJECT
                 MessageBox.Show(
                     $"Error exporting student record:\n{ex.Message}",
                     "Export Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
+
+        private async void ResendQRCodeEmail()
+        {
+            try
+            {
+                // Confirm action
+                var confirmResult = MessageBox.Show(
+                    $"Send QR code to student's email?\n\n" +
+                    $"Student: {lblFullNameValue.Text}\n" +
+                    $"Email: {lblEmailValue.Text}",
+                    "Resend QR Code",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (confirmResult != DialogResult.Yes)
+                    return;
+
+                // Show progress
+                this.Cursor = Cursors.WaitCursor;
+
+                // Get student data
+                int studentIdInt = int.Parse(studentId);
+                Student student = await studentRepository.GetByIdAsync(studentIdInt);
+
+                if (student == null)
+                {
+                    MessageBox.Show("Student data not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(student.Email))
+                {
+                    MessageBox.Show("Student email address is not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(student.QRCodeData))
+                {
+                    MessageBox.Show("Student does not have a QR code generated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Check internet connectivity first
+                bool isOnline = await Services.NetworkService.IsInternetAvailableAsync();
+
+                if (!isOnline)
+                {
+                    this.Cursor = Cursors.Default;
+                    MessageBox.Show(
+                        "No internet connection available.\n\n" +
+                        "Please connect to the internet and try again.",
+                        "Offline Mode",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
+
+                // Send QR code email
+                bool emailSent = await Services.QRCodeEmailService.SendQRCodeEmailAsync(student, student.QRCodeData);
+
+                this.Cursor = Cursors.Default;
+
+                if (emailSent)
+                {
+                    MessageBox.Show(
+                        $"QR code has been successfully sent to:\n{student.Email}",
+                        "Email Sent",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "Failed to send QR code email.\n\nPlease check:\n" +
+                        "- Email address is valid\n" +
+                        "- Internet connection is active\n" +
+                        "- Email service is configured correctly",
+                        "Email Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Cursor = Cursors.Default;
+                MessageBox.Show(
+                    $"Error sending QR code email:\n{ex.Message}",
+                    "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );

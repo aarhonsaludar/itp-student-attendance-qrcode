@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,9 +19,12 @@ namespace ITP104_FINAL_PROJECT
         private string currentUser = "Admin";
         private Timer statusUpdateTimer;
         private Timer dashboardRefreshTimer;
+        private Timer dateTimeUpdateTimer;
         private Random random = new Random();
         private readonly StudentRepository studentRepository;
         private readonly ScanHistoryRepository scanHistoryRepository;
+        private bool isOnlineMode = true;
+        private DateTime? lastInternetTime = null;
 
         // Panel references for navigation
         private Panel pnlDashboardContent;
@@ -71,6 +75,9 @@ namespace ITP104_FINAL_PROJECT
         {
             // Set user information
             lblUserName.Text = $"User: {currentUser}";
+
+            // Initialize date/time display immediately with system time
+            InitializeDateTimeDisplay();
 
             // Initialize panels for navigation
             InitializePanels();
@@ -895,7 +902,7 @@ namespace ITP104_FINAL_PROJECT
         private void SetupCardHoverEffects()
         {
             // Add hover effects to stat cards for visual feedback
-            var statCards = new[] { pnlTotalStudents, pnlScansToday, pnlMostUsedScan, pnlScannerModes };
+            var statCards = new[] { pnlTotalStudents, pnlScansToday, pnlScannerModes };
 
             foreach (var card in statCards)
             {
@@ -925,6 +932,12 @@ namespace ITP104_FINAL_PROJECT
             dashboardRefreshTimer.Interval = 5000; // Refresh every 5 seconds
             dashboardRefreshTimer.Tick += DashboardRefreshTimer_Tick;
             dashboardRefreshTimer.Start();
+
+            // Date/Time update timer
+            dateTimeUpdateTimer = new Timer();
+            dateTimeUpdateTimer.Interval = 1000; // Update every second for smooth display
+            dateTimeUpdateTimer.Tick += DateTimeUpdateTimer_Tick;
+            dateTimeUpdateTimer.Start();
         }
 
         private void StatusUpdateTimer_Tick(object sender, EventArgs e)
@@ -938,6 +951,186 @@ namespace ITP104_FINAL_PROJECT
             // Auto-refresh dashboard stats every 5 seconds
             await LoadDashboardStatsAsync();
             await LoadRecentScansAsync();
+        }
+
+        private void InitializeDateTimeDisplay()
+        {
+            // Show system time immediately to avoid blank display
+            lblTimeDate.Text = $"{DateTime.Now:dddd, MMMM dd, yyyy | hh:mm:ss tt}\n⏳ Checking...";
+            lblMode.Text = "● Checking Connection...";
+            lblMode.ForeColor = Color.Yellow;
+        }
+
+        private async void DateTimeUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            await UpdateDateTimeDisplayAsync();
+        }
+
+        private async Task UpdateDateTimeDisplayAsync()
+        {
+            try
+            {
+                DateTime displayTime;
+                string timeSource;
+
+                // Try to get internet time every 5 seconds for faster offline detection
+                if (lastInternetTime == null || (DateTime.Now - lastInternetTime.Value).TotalSeconds > 5)
+                {
+                    var internetTime = await GetInternetTimeAsync();
+                    if (internetTime.HasValue)
+                    {
+                        lastInternetTime = internetTime;
+                        displayTime = internetTime.Value;
+                        isOnlineMode = true;
+                        timeSource = "🌐 Online";
+                    }
+                    else
+                    {
+                        displayTime = DateTime.Now;
+                        isOnlineMode = false;
+                        timeSource = "💻 Offline";
+                    }
+                }
+                else
+                {
+                    // Use cached internet time with elapsed seconds added
+                    if (isOnlineMode && lastInternetTime.HasValue)
+                    {
+                        var elapsed = DateTime.Now - lastInternetTime.Value;
+                        displayTime = lastInternetTime.Value.Add(elapsed);
+                        timeSource = "🌐 Online";
+                    }
+                    else
+                    {
+                        displayTime = DateTime.Now;
+                        timeSource = "💻 Offline";
+                    }
+                }
+
+                // Update the label with formatted date/time
+                if (lblTimeDate.InvokeRequired)
+                {
+                    lblTimeDate.Invoke(new Action(() =>
+                    {
+                        lblTimeDate.Text = $"{displayTime:dddd, MMMM dd, yyyy | hh:mm:ss tt}\n{timeSource}";
+                    }));
+                }
+                else
+                {
+                    lblTimeDate.Text = $"{displayTime:dddd, MMMM dd, yyyy | hh:mm:ss tt}\n{timeSource}";
+                }
+
+                // Update mode indicator label
+                UpdateModeLabel();
+            }
+            catch
+            {
+                // Fallback to system time on error
+                if (lblTimeDate.InvokeRequired)
+                {
+                    lblTimeDate.Invoke(new Action(() =>
+                    {
+                        lblTimeDate.Text = $"{DateTime.Now:dddd, MMMM dd, yyyy | hh:mm:ss tt}\n💻 System Time";
+                    }));
+                }
+                else
+                {
+                    lblTimeDate.Text = $"{DateTime.Now:dddd, MMMM dd, yyyy | hh:mm:ss tt}\n💻 System Time";
+                }
+
+                // Update mode indicator label
+                UpdateModeLabel();
+            }
+        }
+
+        private void UpdateModeLabel()
+        {
+            try
+            {
+                if (lblMode.InvokeRequired)
+                {
+                    lblMode.Invoke(new Action(() =>
+                    {
+                        if (isOnlineMode)
+                        {
+                            lblMode.Text = "● Online Mode";
+                            lblMode.ForeColor = Color.Lime;
+                        }
+                        else
+                        {
+                            lblMode.Text = "● Offline Mode";
+                            lblMode.ForeColor = Color.Orange;
+                        }
+                    }));
+                }
+                else
+                {
+                    if (isOnlineMode)
+                    {
+                        lblMode.Text = "● Online Mode";
+                        lblMode.ForeColor = Color.Lime;
+                    }
+                    else
+                    {
+                        lblMode.Text = "● Offline Mode";
+                        lblMode.ForeColor = Color.Orange;
+                    }
+                }
+            }
+            catch { /* Prevent errors during UI updates */ }
+        }
+
+        private async Task<DateTime?> GetInternetTimeAsync()
+        {
+            try
+            {
+                // Try TimeAPI.io first (most reliable and returns local time)
+                using (var httpClient = new System.Net.Http.HttpClient())
+                {
+                    httpClient.Timeout = TimeSpan.FromSeconds(2);
+                    string url = "https://timeapi.io/api/Time/current/zone?timeZone=Asia/Manila";
+                    var response = await httpClient.GetStringAsync(url);
+
+                    // Parse JSON response
+                    int dateTimeIndex = response.IndexOf("\"dateTime\":\"");
+                    if (dateTimeIndex >= 0)
+                    {
+                        int startIndex = dateTimeIndex + 12;
+                        int endIndex = response.IndexOf("\"", startIndex);
+                        if (endIndex > startIndex)
+                        {
+                            string dateTimeStr = response.Substring(startIndex, endIndex - startIndex);
+                            if (DateTime.TryParse(dateTimeStr, out DateTime parsedTime))
+                            {
+                                return parsedTime;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Try fallback: Google.com HTTP header
+                try
+                {
+                    using (var httpClient = new System.Net.Http.HttpClient())
+                    {
+                        httpClient.Timeout = TimeSpan.FromSeconds(2);
+                        var response = await httpClient.GetAsync("https://www.google.com", System.Net.Http.HttpCompletionOption.ResponseHeadersRead);
+
+                        if (response.Headers.Date.HasValue)
+                        {
+                            return response.Headers.Date.Value.LocalDateTime;
+                        }
+                    }
+                }
+                catch
+                {
+                    // All internet sources failed
+                }
+            }
+
+            return null;
         }
 
         private void UpdateSystemStatus()
@@ -1010,14 +1203,12 @@ namespace ITP104_FINAL_PROJECT
                     {
                         lblTotalStudentsValue.Text = totalStudents.ToString("N0");
                         lblScansTodayValue.Text = scansToday.ToString("N0");
-                        lblMostUsedScanValue.Text = mostUsedScanType;
                     }));
                 }
                 else
                 {
                     lblTotalStudentsValue.Text = totalStudents.ToString("N0");
                     lblScansTodayValue.Text = scansToday.ToString("N0");
-                    lblMostUsedScanValue.Text = mostUsedScanType;
                 }
             }
             catch (Exception ex)
@@ -1058,14 +1249,12 @@ namespace ITP104_FINAL_PROJECT
                     {
                         lblTotalStudentsValue.Text = "Error";
                         lblScansTodayValue.Text = "Error";
-                        lblMostUsedScanValue.Text = "Error";
                     }));
                 }
                 else
                 {
                     lblTotalStudentsValue.Text = "Error";
                     lblScansTodayValue.Text = "Error";
-                    lblMostUsedScanValue.Text = "Error";
                 }
             }
         }
@@ -1464,6 +1653,11 @@ namespace ITP104_FINAL_PROJECT
 
         {
             ScanHistory scan = new ScanHistory();
+        }
+
+        private void pnlHeader_Paint(object sender, PaintEventArgs e)
+        {
+            // Paint event handler for pnlHeader
         }
     }
 }

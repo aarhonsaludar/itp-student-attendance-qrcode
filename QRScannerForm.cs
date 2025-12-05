@@ -36,7 +36,7 @@ namespace ITP104_FINAL_PROJECT
 
         // Scan throttling
         private DateTime lastScanTime = DateTime.MinValue;
-        private const int SCAN_COOLDOWN_MS = 2000;
+        private const int SCAN_COOLDOWN_MS = 5000; // 5 seconds
         private bool isProcessingScan = false;
 
         public QRScannerForm()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using QRCoder;
 using ITP104_FINAL_PROJECT.Data;
@@ -165,8 +166,34 @@ namespace ITP104_FINAL_PROJECT
                     btnSaveDownload.Enabled = true;
                     btnGenerateQR.Enabled = false;
 
+                    // Send QR code via email asynchronously
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            // Get the registered student details by QR code
+                            var registeredStudent = await studentRepository.GetByQRCodeAsync(qrData);
+                            if (registeredStudent != null)
+                            {
+                                // Check internet connectivity
+                                bool isOnline = await Services.NetworkService.IsInternetAvailableAsync();
+
+                                if (isOnline)
+                                {
+                                    // Online mode - attempt to send email
+                                    await Services.QRCodeEmailService.SendQRCodeEmailAsync(registeredStudent, qrData);
+                                }
+                                // Offline mode - silently skip email sending
+                            }
+                        }
+                        catch
+                        {
+                            // Silently fail - don't disrupt registration process
+                        }
+                    });
+
                     MessageBox.Show($"QR Code generated and student registered successfully!\nStudent ID: {result.StudentId}\n\n" +
-                        "You can now download the QR code.",
+                        "QR code is being sent to the student's email address.\nYou can also download it manually.",
                         "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else

@@ -64,9 +64,6 @@ namespace ITP104_FINAL_PROJECT
             this.pnlScansToday = new Guna.UI2.WinForms.Guna2Panel();
             this.lblScansTodayTitle = new System.Windows.Forms.Label();
             this.lblScansTodayValue = new System.Windows.Forms.Label();
-            this.pnlMostUsedScan = new Guna.UI2.WinForms.Guna2Panel();
-            this.lblMostUsedScanTitle = new System.Windows.Forms.Label();
-            this.lblMostUsedScanValue = new System.Windows.Forms.Label();
             this.pnlScannerModes = new Guna.UI2.WinForms.Guna2Panel();
             this.lblScannerModesTitle = new System.Windows.Forms.Label();
             this.lblQRStatus = new System.Windows.Forms.Label();
@@ -84,6 +81,11 @@ namespace ITP104_FINAL_PROJECT
             this.tabReports = new System.Windows.Forms.TabPage();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.tabLogout = new System.Windows.Forms.TabPage();
+            this.pnlDateTime = new Guna.UI2.WinForms.Guna2Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblTimeDate = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lblMode = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.pnlLeftNav.SuspendLayout();
@@ -92,11 +94,11 @@ namespace ITP104_FINAL_PROJECT
             this.tabDashboard.SuspendLayout();
             this.pnlTotalStudents.SuspendLayout();
             this.pnlScansToday.SuspendLayout();
-            this.pnlMostUsedScan.SuspendLayout();
             this.pnlScannerModes.SuspendLayout();
             this.pnlRecentScans.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentScans)).BeginInit();
             this.pnlQuickActions.SuspendLayout();
+            this.pnlDateTime.SuspendLayout();
             this.SuspendLayout();
             // 
             // guna2BorderlessForm1
@@ -118,6 +120,9 @@ namespace ITP104_FINAL_PROJECT
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.pnlHeader.Controls.Add(this.lblMode);
+            this.pnlHeader.Controls.Add(this.label2);
+            this.pnlHeader.Controls.Add(this.label1);
             this.pnlHeader.Controls.Add(this.guna2ControlBox3);
             this.pnlHeader.Controls.Add(this.guna2ControlBox2);
             this.pnlHeader.Controls.Add(this.guna2ControlBox1);
@@ -131,6 +136,7 @@ namespace ITP104_FINAL_PROJECT
             resources.ApplyResources(this.pnlHeader, "pnlHeader");
             this.pnlHeader.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlHeader_Paint);
             // 
             // guna2ControlBox3
             // 
@@ -377,9 +383,9 @@ namespace ITP104_FINAL_PROJECT
             // 
             resources.ApplyResources(this.tabDashboard, "tabDashboard");
             this.tabDashboard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
+            this.tabDashboard.Controls.Add(this.pnlDateTime);
             this.tabDashboard.Controls.Add(this.pnlTotalStudents);
             this.tabDashboard.Controls.Add(this.pnlScansToday);
-            this.tabDashboard.Controls.Add(this.pnlMostUsedScan);
             this.tabDashboard.Controls.Add(this.pnlScannerModes);
             this.tabDashboard.Controls.Add(this.pnlRecentScans);
             this.tabDashboard.Controls.Add(this.pnlQuickActions);
@@ -439,32 +445,6 @@ namespace ITP104_FINAL_PROJECT
             resources.ApplyResources(this.lblScansTodayValue, "lblScansTodayValue");
             this.lblScansTodayValue.ForeColor = System.Drawing.Color.Green;
             this.lblScansTodayValue.Name = "lblScansTodayValue";
-            // 
-            // pnlMostUsedScan
-            // 
-            this.pnlMostUsedScan.BackColor = System.Drawing.Color.Transparent;
-            this.pnlMostUsedScan.BorderColor = System.Drawing.Color.Black;
-            this.pnlMostUsedScan.BorderRadius = 12;
-            this.pnlMostUsedScan.BorderThickness = 1;
-            this.pnlMostUsedScan.Controls.Add(this.lblMostUsedScanTitle);
-            this.pnlMostUsedScan.Controls.Add(this.lblMostUsedScanValue);
-            this.pnlMostUsedScan.FillColor = System.Drawing.Color.Gainsboro;
-            resources.ApplyResources(this.pnlMostUsedScan, "pnlMostUsedScan");
-            this.pnlMostUsedScan.Name = "pnlMostUsedScan";
-            this.pnlMostUsedScan.ShadowDecoration.BorderRadius = 12;
-            this.pnlMostUsedScan.ShadowDecoration.Depth = 8;
-            // 
-            // lblMostUsedScanTitle
-            // 
-            resources.ApplyResources(this.lblMostUsedScanTitle, "lblMostUsedScanTitle");
-            this.lblMostUsedScanTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblMostUsedScanTitle.Name = "lblMostUsedScanTitle";
-            // 
-            // lblMostUsedScanValue
-            // 
-            resources.ApplyResources(this.lblMostUsedScanValue, "lblMostUsedScanValue");
-            this.lblMostUsedScanValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(152)))), ((int)(((byte)(0)))));
-            this.lblMostUsedScanValue.Name = "lblMostUsedScanValue";
             // 
             // pnlScannerModes
             // 
@@ -529,7 +509,7 @@ namespace ITP104_FINAL_PROJECT
             this.dgvRecentScans.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(150)))), ((int)(((byte)(200)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 10F);
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(150)))), ((int)(((byte)(200)))));
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
@@ -539,7 +519,7 @@ namespace ITP104_FINAL_PROJECT
             this.dgvRecentScans.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Century Gothic", 10F);
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 10F);
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
@@ -670,6 +650,46 @@ namespace ITP104_FINAL_PROJECT
             resources.ApplyResources(this.tabLogout, "tabLogout");
             this.tabLogout.Name = "tabLogout";
             // 
+            // pnlDateTime
+            // 
+            this.pnlDateTime.BackColor = System.Drawing.Color.Transparent;
+            this.pnlDateTime.BorderColor = System.Drawing.Color.Black;
+            this.pnlDateTime.BorderRadius = 12;
+            this.pnlDateTime.BorderThickness = 1;
+            this.pnlDateTime.Controls.Add(this.lblTimeDate);
+            this.pnlDateTime.FillColor = System.Drawing.Color.Gainsboro;
+            resources.ApplyResources(this.pnlDateTime, "pnlDateTime");
+            this.pnlDateTime.Name = "pnlDateTime";
+            this.pnlDateTime.ShadowDecoration.BorderRadius = 12;
+            this.pnlDateTime.ShadowDecoration.Depth = 8;
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.ForeColor = System.Drawing.Color.LightGray;
+            this.label1.Name = "label1";
+            // 
+            // lblTimeDate
+            // 
+            resources.ApplyResources(this.lblTimeDate, "lblTimeDate");
+            this.lblTimeDate.ForeColor = System.Drawing.Color.Green;
+            this.lblTimeDate.Name = "lblTimeDate";
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.ForeColor = System.Drawing.Color.Lime;
+            this.label2.Name = "label2";
+            // 
+            // lblMode
+            // 
+            resources.ApplyResources(this.lblMode, "lblMode");
+            this.lblMode.BackColor = System.Drawing.Color.Transparent;
+            this.lblMode.ForeColor = System.Drawing.Color.Lime;
+            this.lblMode.Name = "lblMode";
+            // 
             // MainDashboard
             // 
             resources.ApplyResources(this, "$this");
@@ -691,8 +711,6 @@ namespace ITP104_FINAL_PROJECT
             this.pnlTotalStudents.PerformLayout();
             this.pnlScansToday.ResumeLayout(false);
             this.pnlScansToday.PerformLayout();
-            this.pnlMostUsedScan.ResumeLayout(false);
-            this.pnlMostUsedScan.PerformLayout();
             this.pnlScannerModes.ResumeLayout(false);
             this.pnlScannerModes.PerformLayout();
             this.pnlRecentScans.ResumeLayout(false);
@@ -700,6 +718,7 @@ namespace ITP104_FINAL_PROJECT
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentScans)).EndInit();
             this.pnlQuickActions.ResumeLayout(false);
             this.pnlQuickActions.PerformLayout();
+            this.pnlDateTime.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -760,10 +779,6 @@ namespace ITP104_FINAL_PROJECT
         private System.Windows.Forms.Label lblScansTodayTitle;
         private System.Windows.Forms.Label lblScansTodayValue;
 
-        private Guna.UI2.WinForms.Guna2Panel pnlMostUsedScan;
-        private System.Windows.Forms.Label lblMostUsedScanTitle;
-        private System.Windows.Forms.Label lblMostUsedScanValue;
-
         private Guna.UI2.WinForms.Guna2Panel pnlScannerModes;
         private System.Windows.Forms.Label lblScannerModesTitle;
         private System.Windows.Forms.Label lblQRStatus;
@@ -779,5 +794,10 @@ namespace ITP104_FINAL_PROJECT
         private Guna.UI2.WinForms.Guna2Button btnStartScan;
         private Guna.UI2.WinForms.Guna2Button btnStudentRecords;
         private Guna.UI2.WinForms.Guna2Button btnReports;
+        private Guna.UI2.WinForms.Guna2Panel pnlDateTime;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblTimeDate;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblMode;
     }
 }
