@@ -29,10 +29,14 @@ namespace ITP104_FINAL_PROJECT
         private const int DEFAULT_DEVICE_ID = 1;
         private const string DEFAULT_LOCATION = "Pamantasan ng Cabuyao Building";
 
-        // Scan box dimensions and position
+        // Scan box dimensions and position (will be adjusted based on camera resolution)
         private Rectangle scanBox;
-        private const int SCAN_BOX_WIDTH = 600;
-        private const int SCAN_BOX_HEIGHT = 500;
+        private int scanBoxWidth = 600;  // Default, will be auto-adjusted
+        private int scanBoxHeight = 500; // Default, will be auto-adjusted
+
+        // Camera resolution tracking
+        private Size cameraResolution = Size.Empty;
+        private const double SCAN_BOX_RATIO = 0.75; // Scan box takes 75% of frame (smaller cameras get smaller box)
 
         // Scan throttling
         private DateTime lastScanTime = DateTime.MinValue;
@@ -103,13 +107,46 @@ namespace ITP104_FINAL_PROJECT
             try
             {
                 videoSource = new VideoCaptureDevice(videoDevices[cmbCameras.SelectedIndex].MonikerString);
+
+                // Auto-select best resolution for the camera
+                if (videoSource.VideoCapabilities.Length > 0)
+                {
+                    // Find the highest resolution capability
+                    VideoCapabilities bestCapability = videoSource.VideoCapabilities[0];
+                    int maxResolution = bestCapability.FrameSize.Width * bestCapability.FrameSize.Height;
+
+                    foreach (VideoCapabilities capability in videoSource.VideoCapabilities)
+                    {
+                        int currentResolution = capability.FrameSize.Width * capability.FrameSize.Height;
+                        if (currentResolution > maxResolution)
+                        {
+                            maxResolution = currentResolution;
+                            bestCapability = capability;
+                        }
+                    }
+
+                    // Set the best resolution
+                    videoSource.VideoResolution = bestCapability;
+                    cameraResolution = bestCapability.FrameSize;
+
+                    // Auto-adjust scan box based on camera resolution
+                    AdjustScanBoxForResolution(cameraResolution);
+
+                    // Update status with resolution info
+                    lblStatus.Text = $"Status: Camera running ({cameraResolution.Width}x{cameraResolution.Height}) - Position QR code in scan box";
+                }
+                else
+                {
+                    // Fallback if no capabilities detected
+                    lblStatus.Text = "Status: Camera running - Position QR code in scan box";
+                }
+
                 videoSource.NewFrame += VideoSource_NewFrame;
                 videoSource.Start();
                 IsScannerRunning = true;  // Update global scanner state
 
                 btnStartCamera.Enabled = false;
                 btnStopCamera.Enabled = true;
-                lblStatus.Text = "Status: Camera running - Position QR code in scan box";
                 lblStatus.ForeColor = Color.Green;
             }
             catch (Exception ex)
@@ -141,6 +178,52 @@ namespace ITP104_FINAL_PROJECT
             lblResult.Text = "QR Code: (none)";
             lblResult.ForeColor = Color.Black;
             pictureBoxCamera.Image = null;
+            cameraResolution = Size.Empty; // Reset resolution
+        }
+
+        /// <summary>
+        /// Automatically adjusts scan box size based on camera resolution
+        /// Small cameras (e.g., 640x480) get smaller boxes
+        /// High-quality cameras (e.g., 1920x1080) get larger boxes
+        /// </summary>
+        private void AdjustScanBoxForResolution(Size resolution)
+        {
+            if (resolution.IsEmpty || resolution.Width == 0 || resolution.Height == 0)
+            {
+                // Fallback to default values
+                scanBoxWidth = 600;
+                scanBoxHeight = 500;
+                return;
+            }
+
+            // Calculate scan box dimensions as percentage of camera resolution
+            // Use 75% of the smaller dimension to ensure QR code fits well
+            int baseSize = (int)Math.Min(resolution.Width, resolution.Height);
+            int scanBoxSize = (int)(baseSize * SCAN_BOX_RATIO);
+
+            // Set width slightly wider than height (aspect ratio ~1.2:1)
+            scanBoxWidth = (int)(scanBoxSize * 1.2);
+            scanBoxHeight = scanBoxSize;
+
+            // Apply min/max constraints for usability
+            // Minimum: 300x250 (for very small cameras like 320x240)
+            // Maximum: 900x750 (for ultra HD cameras)
+            scanBoxWidth = Math.Max(300, Math.Min(900, scanBoxWidth));
+            scanBoxHeight = Math.Max(250, Math.Min(750, scanBoxHeight));
+
+            // Ensure scan box fits within frame with margin
+            int maxWidth = resolution.Width - 40; // 20px margin on each side
+            int maxHeight = resolution.Height - 40;
+
+            if (scanBoxWidth > maxWidth)
+            {
+                scanBoxWidth = maxWidth;
+            }
+
+            if (scanBoxHeight > maxHeight)
+            {
+                scanBoxHeight = maxHeight;
+            }
         }
 
         private void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -158,9 +241,10 @@ namespace ITP104_FINAL_PROJECT
                 currentFrame = (Bitmap)frame.Clone();
 
                 // Calculate scan box position (centered on the frame)
-                int boxX = (frame.Width - SCAN_BOX_WIDTH) / 2;
-                int boxY = (frame.Height - SCAN_BOX_HEIGHT) / 2;
-                scanBox = new Rectangle(boxX, boxY, SCAN_BOX_WIDTH, SCAN_BOX_HEIGHT);
+                // Use dynamic dimensions based on camera resolution
+                int boxX = (frame.Width - scanBoxWidth) / 2;
+                int boxY = (frame.Height - scanBoxHeight) / 2;
+                scanBox = new Rectangle(boxX, boxY, scanBoxWidth, scanBoxHeight);
 
                 // Draw scan box overlay on the frame
                 using (Graphics g = Graphics.FromImage(frame))
@@ -171,11 +255,11 @@ namespace ITP104_FINAL_PROJECT
                         // Top overlay
                         g.FillRectangle(overlayBrush, 0, 0, frame.Width, boxY);
                         // Bottom overlay
-                        g.FillRectangle(overlayBrush, 0, boxY + SCAN_BOX_HEIGHT, frame.Width, frame.Height - boxY - SCAN_BOX_HEIGHT);
+                        g.FillRectangle(overlayBrush, 0, boxY + scanBoxHeight, frame.Width, frame.Height - boxY - scanBoxHeight);
                         // Left overlay
-                        g.FillRectangle(overlayBrush, 0, boxY, boxX, SCAN_BOX_HEIGHT);
+                        g.FillRectangle(overlayBrush, 0, boxY, boxX, scanBoxHeight);
                         // Right overlay
-                        g.FillRectangle(overlayBrush, boxX + SCAN_BOX_WIDTH, boxY, frame.Width - boxX - SCAN_BOX_WIDTH, SCAN_BOX_HEIGHT);
+                        g.FillRectangle(overlayBrush, boxX + scanBoxWidth, boxY, frame.Width - boxX - scanBoxWidth, scanBoxHeight);
                     }
 
                     // Draw scan box border
@@ -183,31 +267,32 @@ namespace ITP104_FINAL_PROJECT
                     g.DrawRectangle(borderPen, scanBox);
                     borderPen.Dispose();
 
-                    // Draw corner brackets
+                    // Draw corner brackets (scaled proportionally to scan box size)
                     using (Pen cornerPen = new Pen(Color.White, 6))
                     {
-                        int cornerLength = 30;
+                        int cornerLength = Math.Min(40, scanBoxWidth / 15); // Scale corner length
 
                         // Top-left corner
                         g.DrawLine(cornerPen, boxX, boxY, boxX + cornerLength, boxY);
                         g.DrawLine(cornerPen, boxX, boxY, boxX, boxY + cornerLength);
 
                         // Top-right corner
-                        g.DrawLine(cornerPen, boxX + SCAN_BOX_WIDTH - cornerLength, boxY, boxX + SCAN_BOX_WIDTH, boxY);
-                        g.DrawLine(cornerPen, boxX + SCAN_BOX_WIDTH, boxY, boxX + SCAN_BOX_WIDTH, boxY + cornerLength);
+                        g.DrawLine(cornerPen, boxX + scanBoxWidth - cornerLength, boxY, boxX + scanBoxWidth, boxY);
+                        g.DrawLine(cornerPen, boxX + scanBoxWidth, boxY, boxX + scanBoxWidth, boxY + cornerLength);
 
                         // Bottom-left corner
-                        g.DrawLine(cornerPen, boxX, boxY + SCAN_BOX_HEIGHT - cornerLength, boxX, boxY + SCAN_BOX_HEIGHT);
-                        g.DrawLine(cornerPen, boxX, boxY + SCAN_BOX_HEIGHT, boxX + cornerLength, boxY + SCAN_BOX_HEIGHT);
+                        g.DrawLine(cornerPen, boxX, boxY + scanBoxHeight - cornerLength, boxX, boxY + scanBoxHeight);
+                        g.DrawLine(cornerPen, boxX, boxY + scanBoxHeight, boxX + cornerLength, boxY + scanBoxHeight);
 
                         // Bottom-right corner
-                        g.DrawLine(cornerPen, boxX + SCAN_BOX_WIDTH - cornerLength, boxY + SCAN_BOX_HEIGHT, boxX + SCAN_BOX_WIDTH, boxY + SCAN_BOX_HEIGHT);
-                        g.DrawLine(cornerPen, boxX + SCAN_BOX_WIDTH, boxY + SCAN_BOX_HEIGHT - cornerLength, boxX + SCAN_BOX_WIDTH, boxY + SCAN_BOX_HEIGHT);
+                        g.DrawLine(cornerPen, boxX + scanBoxWidth - cornerLength, boxY + scanBoxHeight, boxX + scanBoxWidth, boxY + scanBoxHeight);
+                        g.DrawLine(cornerPen, boxX + scanBoxWidth, boxY + scanBoxHeight - cornerLength, boxX + scanBoxWidth, boxY + scanBoxHeight);
                     }
 
-                    // Draw scan instruction text
+                    // Draw scan instruction text (scaled font size based on resolution)
                     string instruction = "Position QR code inside the box";
-                    using (Font font = new Font("Segoe UI", 14, FontStyle.Bold))
+                    int fontSize = Math.Max(10, Math.Min(16, frame.Width / 60)); // Scale font: 10-16pt
+                    using (Font font = new Font("Segoe UI", fontSize, FontStyle.Bold))
                     using (SolidBrush textBrush = new SolidBrush(Color.White))
                     {
                         SizeF textSize = g.MeasureString(instruction, font);
